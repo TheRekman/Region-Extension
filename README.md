@@ -12,11 +12,13 @@ Plugin add more commands for better region management & add context parameters.
 Context uses for faster command input and result their result depends on external factors. Also works with /region
 - $this - take regionname of player current region.
 - $myname - take username of player account.
+
 Example: /region info $this. return info about player current region.
 ### Config
 - ContextSpecifier, default: "$"
 - ContextAllow, default: true
-- AutoCompleteSameName, default: true // if player define region with existing region name, plugin will automatically change new re
+- AutoCompleteSameName, default: true // if player define region with existing region name, plugin will automatically change new region name with specific format.
+
 Example: if region name "rname" already exist, define name automatically changes into "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" //{0} - region name, {1} - region number
 ### Permissions
@@ -34,11 +36,13 @@ Plugin dont use new permissions. All player with manageregion permission, alread
 Контекст используется для быстрого ввода команд без поиска необходимых параметров. Также работает с /region
 - $this - берет имя региона в котором находится игрок.
 - $myname - берет имя аккаунта игрока.
+
 Пример: /region info $this. Вернет информацию о регионе, в котором находится игрок.
 ### Конфиг
 - ContextSpecifier, default: "$" //Начальный символ для контекстных параметров.
 - ContextAllow, default: true //Разрешает/запрещает использование контекста.
-- AutoCompleteSameName, default: true // Если игрок задает имя для нового региона, которое уже используется, плагин автоматически з
+- AutoCompleteSameName, default: true // Если игрок задает имя для нового региона, которое уже используется, плагин автоматически заменает имя в соответсвии с форматом.
+
 Пример: Если регион с именем "rname", уже существует, новое имя автоматически будет заменено на "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" // Формат замены имени нового региона. {0} - имя региона, {1} - номер нового регио
 ### Привилегии
