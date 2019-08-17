@@ -4,7 +4,7 @@ Plugin add more commands for better region management & add context parameters.
 ### Commands
 - //re rename \<oldname> \<newname> - Set the newname of the region with given oldname.
 - //re move \<regionname> \<u/d/r/l> \<amount> - Move region coordinate at the given direction. up, down, right, left
-- //re fastregion/fr \<regionname> [ownername] [z] [protect] - Defines the region with given points. Also allow set point with The 
+- //re fastregion/fr \<regionname> [ownername] [z] [protect] - Defines the region with given points. Also allow set point with The Grand Design.
 - //re frbreak - Break fastregion request.
 - //re clearm \<regionname> - Clear all allowed members at the given region.
 - //re setowner \<regionname> \<username> - Set region owner.
@@ -28,7 +28,7 @@ Plugin dont use new permissions. All player with manageregion permission, alread
 ### Комманды
 - //re rename \<oldname> \<newname> - Устанавливает новое имя (newname) для указанного региона (oldname).
 - //re move \<regionname> \<u/d/r/l> \<amount> - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вп
-- //re fastregion/fr \<regionname> [ownername] [z] [protect] - Задает регион с указанными параметрами и запрашивает точки региона. 
+- //re fastregion/fr \<regionname> [ownername] [z] [protect] - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
 - //re frbreak - Отменяет активный запрос на быстрый регион (fastregion).
 - //re clearm \<regionname> - Очищает список всего игроков, что могут строить в регионе (regionname).
 - //re setowner \<regionname> \<username> - Задает нового владельца регоина (username) для указаного региона.
