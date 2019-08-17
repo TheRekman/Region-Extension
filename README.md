@@ -25,7 +25,7 @@ Example: if region name "rname" already exist, define name automatically changes
 Plugin dont use new permissions. All players with manageregion permission, already can use commands and contexts.
 ## RU
 Плагин добавляет больше команд для лучшего использования регионов, также добавляет контекстные параметры.
-### Комманды
+### Команды
 - //re rename \<oldname> \<newname> - Устанавливает новое имя (newname) для указанного региона (oldname).
 - //re move \<regionname> \<u/d/r/l> \<amount> - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
 - //re fastregion/fr \<regionname> [ownername] [z] [protect] - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
