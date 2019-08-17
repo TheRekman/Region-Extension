@@ -22,7 +22,7 @@ Example: /region info $this. return info about player current region.
 Example: if region name "rname" already exist, define name automatically changes into "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" //{0} - region name, {1} - region number
 ### Permissions
-Plugin dont use new permissions. All player with manageregion permission, already can use commands and contexts.
+Plugin dont use new permissions. All players with manageregion permission, already can use commands and contexts.
 ## RU
 Плагин добавляет больше команд для лучшего использования регионов, также добавляет контекстные параметры.
 ### Комманды
@@ -31,7 +31,7 @@ Plugin dont use new permissions. All player with manageregion permission, alread
 - //re fastregion/fr \<regionname> [ownername] [z] [protect] - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
 - //re frbreak - Отменяет активный запрос на быстрый регион (fastregion).
 - //re clearm \<regionname> - Очищает список всего игроков, что могут строить в регионе (regionname).
-- //re setowner \<regionname> \<username> - Задает нового владельца регоина (username) для указаного региона.
+- //re setowner \<regionname> \<username> - Задает нового владельца региона (username) для указаного региона.
 ### Контекст
 Контекст используется для быстрого ввода команд без поиска необходимых параметров. Также работает с /region
 - $this - берет имя региона в котором находится игрок.
@@ -41,7 +41,7 @@ Plugin dont use new permissions. All player with manageregion permission, alread
 ### Конфиг
 - ContextSpecifier, default: "$" //Начальный символ для контекстных параметров.
 - ContextAllow, default: true //Разрешает/запрещает использование контекста.
-- AutoCompleteSameName, default: true // Если игрок задает имя для нового региона, которое уже используется, плагин автоматически заменает имя в соответсвии с форматом.
+- AutoCompleteSameName, default: true // Если игрок задает имя для нового региона, которое уже используется, плагин автоматически заменяет имя в соответствии с форматом.
 
 Пример: Если регион с именем "rname", уже существует, новое имя автоматически будет заменено на "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" // Формат замены имени нового региона. {0} - имя региона, {1} - номер нового региона.
