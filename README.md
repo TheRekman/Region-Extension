@@ -30,7 +30,7 @@ Plugin dont use new permissions. All players with manageregion permission, alrea
 - //re move \<regionname> \<u/d/r/l> \<amount> - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
 - //re fastregion/fr \<regionname> [ownername] [z] [protect] - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
 - //re frbreak - Отменяет активный запрос на быстрый регион (fastregion).
-- //re clearm \<regionname> - Очищает список всего игроков, что могут строить в регионе (regionname).
+- //re clearm \<regionname> - Очищает список всех игроков, что могут строить в регионе (regionname).
 - //re setowner \<regionname> \<username> - Задает нового владельца региона (username) для указаного региона.
 ### Контекст
 Контекст используется для быстрого ввода команд без поиска необходимых параметров. Также работает с /region
