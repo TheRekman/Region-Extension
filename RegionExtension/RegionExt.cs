@@ -12,16 +12,21 @@ namespace RegionExtension
     [ApiVersion(2, 1)]
     public class RegionExt : TerrariaPlugin
     {
-
+        #region plugin overrides
         public override string Author => "Rekman";
         public override string Description => "More region command & functionality";
         public override string Name => "Region Extension";
-        public override Version Version => new Version(1,0,0,0);
+        public override Version Version => new Version(1,0,0,1);
+        #endregion
 
+        #region fields
         private List<ContextCommand> Contexts;
         private List<FastRegion> FastRegions;
         private ConfigFile Config;
         private RegionExtManager ExtManager;
+        #endregion
+
+        #region initialize
         public RegionExt(Main game) : base(game)
         {
 
@@ -56,7 +61,9 @@ namespace RegionExtension
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
     }
+        #endregion
 
+        #region hooks & events
         private void OnPlayerLogout(PlayerLogoutEventArgs e)
         {
             int id = FindFastRegionByUser(e.Player.User);
@@ -99,6 +106,7 @@ namespace RegionExtension
                     break;
             }
         }
+
         private int FindFastRegionByUser(User user)
         {
             for (int i = 0; i < FastRegions.Count; i++)
@@ -141,6 +149,8 @@ namespace RegionExtension
                     break;
             }
         }
+        #endregion
+
         private string AutoCompleteSameName(string oldName)
         {
             string newName = oldName;
@@ -153,6 +163,7 @@ namespace RegionExtension
             return newName;
         }
 
+        #region context
         private void ContextThis(PlayerCommandEventArgs args, int paramID)
         {
             if (args.Player.CurrentRegion == null)
@@ -166,6 +177,7 @@ namespace RegionExtension
 
         private void ContextMyName(PlayerCommandEventArgs args, int paramID)
             => args.Parameters[paramID] = args.Player.User.Name;
+        #endregion
 
         private void RegionExtenionCmd(CommandArgs args)
         {
@@ -175,6 +187,7 @@ namespace RegionExtension
             int pCount = param.Count;
             string specifier = TShock.Config.CommandSpecifier;
             string regionName;
+            List<string> lines;
 
             switch (param[0])
             {
@@ -362,6 +375,32 @@ namespace RegionExtension
                     else plr.SendErrorMessage("Region changeowner failed!");
                     break;
                 #endregion
+                #region context list
+                case "context":
+                case "con":
+                    int pageNumber = 1;
+                    if (args.Parameters.Count > 1)
+                    {
+                        int pageParamIndex = 1;
+                        if (!PaginationTools.TryParsePageNumber(param, pageParamIndex, plr, out pageNumber))
+                            return;
+                    }
+
+                    lines = new List<string> {
+                        $"{Config.ContextSpecifier}this - get current region.",
+                        $"{Config.ContextSpecifier}myname - get account username."
+                        };
+
+                    PaginationTools.SendPage(
+                      plr, pageNumber, lines,
+                      new PaginationTools.Settings
+                      {
+                          HeaderFormat = "Available contexts command ({0}/{1}):",
+                          FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(specifier)
+                      }
+                    );
+                    break;
+                #endregion
                 #region help
                 case "help":
                     int pageNumber = 1;
@@ -372,7 +411,7 @@ namespace RegionExtension
                             return;
                     }
 
-                    List<string> lines = new List<string> {
+                    lines = new List<string> {
                         "/re rename <oldname> <newname> - Set the name of the region.",
                         "/re move <regionname> <u/d/r/l> <amount> - Move region coordinate at the given direction.",
                         "/re fr <regionname> [ownername] [z] [protect] - Defines the region with given points.",
@@ -380,13 +419,14 @@ namespace RegionExtension
                         "/re clearm <regionname> - Clear all allowed members at the given region.",
                         "/re setowner <regionname> <username> - Set region owner."
                         };
+                    if (Config.ContextAllow) lines.Add("/re contexts [page] - Show available contexts command.");
 
                     PaginationTools.SendPage(
                       plr, pageNumber, lines,
                       new PaginationTools.Settings
                       {
                           HeaderFormat = "Available Region Extension Sub-Commands ({0}/{1}):",
-                          FooterFormat = "Type {0}re help {{0}} for more sub-commands.".SFormat(specifier)
+                          FooterFormat = "Type {0}/re help {{0}} for more sub-commands.".SFormat(specifier)
                       }
                     );
                     break;
