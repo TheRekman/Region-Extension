@@ -378,11 +378,11 @@ namespace RegionExtension
                 #region context list
                 case "context":
                 case "con":
-                    int pageNumber = 1;
+                    int pageNumberCon = 1;
                     if (args.Parameters.Count > 1)
                     {
-                        int pageParamIndex = 1;
-                        if (!PaginationTools.TryParsePageNumber(param, pageParamIndex, plr, out pageNumber))
+                        int pageParamIndexCon = 1;
+                        if (!PaginationTools.TryParsePageNumber(param, pageParamIndexCon, plr, out pageNumberCon))
                             return;
                     }
 
@@ -392,7 +392,7 @@ namespace RegionExtension
                         };
 
                     PaginationTools.SendPage(
-                      plr, pageNumber, lines,
+                      plr, pageNumberCon, lines,
                       new PaginationTools.Settings
                       {
                           HeaderFormat = "Available contexts command ({0}/{1}):",
