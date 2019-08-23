@@ -68,6 +68,6 @@ Example: if region name "rname" already exist, define name automatically changes
 Пример: Если регион с именем "rname", уже существует, новое имя автоматически будет заменено на "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" // Формат замены имени нового региона. {0} - имя региона, {1} - номер нового региона.
 ### Привилегии
-- `tshock.admin.region` - позволяет использовать комманды //regionext. 
-- `regionext.own` - позволяет использовать комманды //regionown.
+- `tshock.admin.region` - позволяет использовать команды //regionext. 
+- `regionext.own` - позволяет использовать команды //regionown.
 
