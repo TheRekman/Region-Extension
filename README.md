@@ -39,12 +39,12 @@ Example: if region name "rname" already exist, define name automatically changes
 Плагин добавляет больше команд для лучшего использования регионов, также добавляет контекстные параметры.
 ### Команды
 #### RegionExt (//re, //regionext)
-- `//re rename \<oldname> \<newname>` - Устанавливает новое имя (newname) для указанного региона (oldname).
-- `//re move \<regionname> \<u/d/r/l> \<amount>` - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
-- `//re fastregion/fr \<regionname> [ownername] [z] [protect]` - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
+- `//re rename <oldname> <newname>` - Устанавливает новое имя (newname) для указанного региона (oldname).
+- `//re move <regionname> <u/d/r/l> <amount>` - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
+- `//re fastregion/fr <regionname> [ownername] [z] [protect]` - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
 - `//re frbreak` - Отменяет активный запрос на быстрый регион (fastregion).
-- `//re clearm \<regionname>` - Очищает список всех игроков, что могут строить в регионе (regionname).
-- `//re setowner \<regionname> \<username>` - Задает нового владельца региона (username) для указаного региона.
+- `//re clearm <regionname>` - Очищает список всех игроков, что могут строить в регионе (regionname).
+- `//re setowner <regionname> <username>` - Задает нового владельца региона (username) для указаного региона.
 - `//re contexts [page]` - Отображение всех доступных контекстных команд.
 #### RegionOwn (//ro, //regionown)
 Команды для владельцев регионов.
