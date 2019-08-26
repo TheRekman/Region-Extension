@@ -120,11 +120,13 @@ namespace RegionExtension
 
         private void OnPlayerCommand(PlayerCommandEventArgs args)
         {
-            if (!args.Player.HasPermission(Permissions.manageregion)) return;
+            if (!args.Player.HasPermission(Permissions.manageregion) && !args.Player.HasPermission("regionext.own")) return;
             switch (args.CommandName)
             {
                 case "/re":
                 case "/regionext":
+                case "/ro":
+                case "/regionown":
                 case "region":
                     for(int i = 1; i < args.Parameters.Count; i++)
                     {
