@@ -56,8 +56,8 @@ namespace RegionExtension
 
         private void OnInitialize(EventArgs args)
         {
-            Commands.ChatCommands.Add(new Command(Permissions.manageregion, RegionExtenionCmd, "/re", "/regionext"));
-            Commands.ChatCommands.Add(new Command("regionext.own", RegionOwningCmd, "/ro", "/regionown"));
+            Commands.ChatCommands.Add(new Command(Permissions.manageregion, RegionExtenionCmd, "/regionext", "/re"));
+            Commands.ChatCommands.Add(new Command("regionext.own", RegionOwningCmd, "/regionown", "/ro"));
             Contexts = new List<ContextCommand>();
             Contexts.Add(new ContextCommand("this", ContextThis));
             Contexts.Add(new ContextCommand("myname", ContextMyName));
@@ -70,13 +70,13 @@ namespace RegionExtension
         #region hooks & events
         private void OnPlayerLogout(PlayerLogoutEventArgs e)
         {
-            int id = FindFastRegionByUser(e.Player.User);
+            int id = FindFastRegionByUser(e.Player.Account);
             if (id != -1) FastRegions.RemoveAt(id);
         }
 
         private void OnGetData(GetDataEventArgs args)
         {
-            int id = FindFastRegionByUser(TShock.Players[args.Msg.whoAmI].User);
+            int id = FindFastRegionByUser(TShock.Players[args.Msg.whoAmI].Account);
             if (id == -1) return;
             switch (args.MsgID)
             {
@@ -111,7 +111,7 @@ namespace RegionExtension
             }
         }
 
-        private int FindFastRegionByUser(User user)
+        private int FindFastRegionByUser(UserAccount user)
         {
             for (int i = 0; i < FastRegions.Count; i++)
                 if (FastRegions[i].User == user) return i;
@@ -182,7 +182,7 @@ namespace RegionExtension
         }
 
         private void ContextMyName(PlayerCommandEventArgs args, int paramID)
-            => args.Parameters[paramID] = args.Player.User.Name;
+            => args.Parameters[paramID] = args.Player.Account.Name;
         #endregion
 
         private void RegionExtenionCmd(CommandArgs args)
@@ -237,7 +237,7 @@ namespace RegionExtension
                 case "move":
                     if(pCount != 4)
                     {
-                        plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/re fr <regionname> <u/d/r/l> <amount>", specifier);
+                        plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/re move <regionname> <u/d/r/l> <amount>", specifier);
                         return;
                     }
 
@@ -277,10 +277,10 @@ namespace RegionExtension
                 case "fr":
                     if (pCount < 2)
                     {
-                        plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/re fr <regionname/username> [username] [z] [protect]", specifier);
+                        plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/re fr <regionname> [username] [z] [protect]", specifier);
                         return;
                     }
-                    if (FindFastRegionByUser(plr.User) != -1)
+                    if (FindFastRegionByUser(plr.Account) != -1)
                     {
                         plr.SendErrorMessage("You already have active fastregion request!");
                         return;
@@ -296,12 +296,12 @@ namespace RegionExtension
                             return;
                         }
                     }
-                    string ownerName = plr.User.Name;
+                    string ownerName = plr.Account.Name;
                     int z = 0;
                     bool protect = true;
                     if (pCount > 2)
                     {
-                        if(TShock.Users.GetUserByName(param[2]) == null)
+                        if(TShock.UserAccounts.GetUserAccountByName(param[2]) == null)
                         {
                             plr.SendErrorMessage("Invalid user name!");
                             return;
@@ -330,7 +330,7 @@ namespace RegionExtension
                 case "frbreak":
                 case "fastregionbreak":
                 case "fastregionb":
-                    int id = FindFastRegionByUser(plr.User);
+                    int id = FindFastRegionByUser(plr.Account);
                     if (id == -1)
                     {
                         plr.SendErrorMessage("You dont have active fastregion request!");
@@ -370,7 +370,7 @@ namespace RegionExtension
                         plr.SendErrorMessage($"Invalid region \"{param[1]}\".");
                         return;
                     }
-                    if(TShock.Users.GetUserByName(param[2]) == null)
+                    if(TShock.UserAccounts.GetUserAccountByName(param[2]) == null)
                     {
                         plr.SendErrorMessage($"Invalid username \"{param[2]}\".");
                     }
@@ -414,12 +414,12 @@ namespace RegionExtension
                         return;
 
                     lines = new List<string> {
-                        "/re rename <oldname> <newname> - Set the name of the region.",
-                        "/re move <regionname> <u/d/r/l> <amount> - Move region coordinate at the given direction.",
-                        "/re fr <regionname> [ownername] [z] [protect] - Defines the region with given points.",
-                        "/re frbreak - Break fastregion request.",
-                        "/re clearm <regionname> - Clear all allowed members at the given region.",
-                        "/re setowner <regionname> <username> - Set region owner."
+                        "rename <oldname> <newname> - Set the name of the region.",
+                        "move <regionname> <u/d/r/l> <amount> - Move region coordinate at the given direction.",
+                        "fr <regionname> [ownername] [z] [protect] - Defines the region with given points.",
+                        "frbreak - Break fastregion request.",
+                        "clearm <regionname> - Clear all allowed members at the given region.",
+                        "setowner <regionname> <username> - Set region owner."
                         };
                     if (Config.ContextAllow) lines.Add("/re contexts [page] - Show available contexts command.");
 
@@ -446,7 +446,7 @@ namespace RegionExtension
             if (param.Count < 1) param.Add("help");
             int pCount = param.Count;
             string specifier = TShock.Config.CommandSpecifier;
-            var regions = TShock.Regions.Regions.FindAll(reg => reg.Owner == plr.User.Name && reg.WorldID == Main.worldID.ToString());
+            var regions = TShock.Regions.Regions.FindAll(reg => reg.Owner == plr.Account.Name && reg.WorldID == Main.worldID.ToString());
 
             switch (param[0])
             {
@@ -500,7 +500,7 @@ namespace RegionExtension
                     {
                         IEnumerable<string> sharedUsersSelector = region.AllowedIDs.Select(userId =>
                         {
-                            User user = TShock.Users.GetUserByID(userId);
+                            UserAccount user = TShock.UserAccounts.GetUserAccountByID(userId);
                             if (user != null)
                                 return user.Name;
 
@@ -547,7 +547,7 @@ namespace RegionExtension
                         plr.SendErrorMessage($"Invalid region \"{param[2]}\".");
                         return;
                     }
-                    if (TShock.Users.GetUserByName(param[1]) == null)
+                    if (TShock.UserAccounts.GetUserAccountByName(param[1]) == null)
                     {
                         plr.SendErrorMessage($"Invalid username \"{param[1]}\".");
                         return;
@@ -567,7 +567,7 @@ namespace RegionExtension
                         plr.SendErrorMessage($"Invalid region \"{param[2]}\".");
                         return;
                     }
-                    if (TShock.Users.GetUserByName(param[1]) == null)
+                    if (TShock.UserAccounts.GetUserAccountByName(param[1]) == null)
                     {
                         plr.SendErrorMessage($"Invalid username \"{param[1]}\".");
                     }
@@ -606,7 +606,7 @@ namespace RegionExtension
                         plr.SendErrorMessage($"Invalid region \"{param[2]}\".");
                         return;
                     }
-                    if (TShock.Users.GetUserByName(param[1]) == null)
+                    if (TShock.UserAccounts.GetUserAccountByName(param[1]) == null)
                     {
                         plr.SendErrorMessage($"Invalid username \"{param[1]}\".");
                     }
@@ -651,7 +651,8 @@ namespace RegionExtension
                           "list - Lists of all your regions.",
                           "allow <user> <region> - Allows a user to a region.",
                           "remove <user> <region> - Removes a user from a region.",
-                          "giveown <user> <region> - Change owner of region.",
+                          "giveown <user> <region> - Change owner of region (You lose own for region!).",
+                          "clearm <regionname> - Removes all allowed users from region",
                           "info <region> - Displays several information about the given region."
                         };
                     if (Config.ContextAllow) lines.Add("contexts [page] - Show available contexts command.");

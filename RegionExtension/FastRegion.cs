@@ -7,7 +7,7 @@ namespace RegionExtension
     class FastRegion
     {
         TSPlayer Player;
-        public User User { get { return Player.User; } }
+        public UserAccount User { get { return Player.Account; } }
         int X1, Y1, X2, Y2;
         int point;
         string RegionName;
