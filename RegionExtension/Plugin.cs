@@ -13,7 +13,7 @@ using TShockAPI.Hooks;
 namespace RegionExtension
 {
     [ApiVersion(2, 1)]
-    public class RegionExt : TerrariaPlugin
+    public class Plugin : TerrariaPlugin
     {
         #region plugin overrides
         public override string Author => "Rekman";
@@ -30,7 +30,7 @@ namespace RegionExtension
         #endregion
 
         #region initialize
-        public RegionExt(Main game) : base(game)
+        public Plugin(Main game) : base(game)
         {
 
         }
@@ -61,6 +61,7 @@ namespace RegionExtension
             Contexts = new List<ContextCommand>();
             Contexts.Add(new ContextCommand("this", ContextThis));
             Contexts.Add(new ContextCommand("myname", ContextMyName));
+            Contexts.Add(new ContextCommand("near", ContextNearPlayer));
             ExtManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
@@ -183,6 +184,40 @@ namespace RegionExtension
 
         private void ContextMyName(PlayerCommandEventArgs args, int paramID)
             => args.Parameters[paramID] = args.Player.Account.Name;
+
+        private void ContextNearPlayer(PlayerCommandEventArgs args, int paramID)
+        {
+            if (TShock.Utils.GetActivePlayerCount() == 1)
+            {
+                args.Player.SendErrorMessage("You are alone on server!");
+                args.Handled = true;
+                return;
+            }
+
+            float x = args.Player.X;
+            float y = args.Player.Y;
+            var player = TShock.Players.FirstOrDefault(plr => plr != null && plr.Active && plr != args.Player && plr.Account != null);
+            if (player == null)
+            {
+                args.Player.SendErrorMessage("Failed found nearest player!");
+                args.Handled = true;
+                return;
+            }
+            float minDistance = CountDistance(x, y, player.X, player.Y);
+            for (int i = 0; i < TShock.Players.Length; i++)
+                if (TShock.Players[i] != null && TShock.Players[i].Active && TShock.Players[i] != args.Player && TShock.Players[i].Account != null)
+                {
+                    float distance = CountDistance(x, y, TShock.Players[i].X, TShock.Players[i].Y);
+                    if (minDistance > distance)
+                    {
+                        player = TShock.Players[i];
+                        minDistance = distance;
+                    }
+                }
+            args.Parameters[paramID] = player.Account.Name;
+        }
+        private float CountDistance(float x1, float y1, float x2, float y2) =>
+            (float)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
         #endregion
 
         private void RegionExtenionCmd(CommandArgs args)
@@ -421,7 +456,7 @@ namespace RegionExtension
                         "clearm <regionname> - Clear all allowed members at the given region.",
                         "setowner <regionname> <username> - Set region owner."
                         };
-                    if (Config.ContextAllow) lines.Add("/re contexts [page] - Show available contexts command.");
+                    if (Config.ContextAllow) lines.Add("/re context [page] - Show available contexts command.");
 
                     PaginationTools.SendPage(
                       plr, pageNumber, lines,
@@ -655,7 +690,7 @@ namespace RegionExtension
                           "clearm <regionname> - Removes all allowed users from region",
                           "info <region> - Displays several information about the given region."
                         };
-                    if (Config.ContextAllow) lines.Add("contexts [page] - Show available contexts command.");
+                    if (Config.ContextAllow) lines.Add("context [page] - Show available contexts command.");
 
                     PaginationTools.SendPage(
                       plr, pageNumber, lines,
