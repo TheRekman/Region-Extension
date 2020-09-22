@@ -277,8 +277,8 @@ namespace RegionExtension
                     }
 
                     regionName = param[1];
-                    var reg = TShock.Regions.GetRegionByName(regionName);
-                    if (reg == null)
+                    var region = TShock.Regions.GetRegionByName(regionName);
+                    if (region == null)
                     {
                         plr.SendErrorMessage($"Invalid region \"{param[1]}\".");
                         return;
@@ -302,7 +302,7 @@ namespace RegionExtension
                         return;
                     }
 
-                    if (TShock.Regions.PositionRegion(regionName, reg.Area.X + addX, reg.Area.Y + addY, reg.Area.Width, reg.Area.Height))
+                    if (TShock.Regions.PositionRegion(regionName, region.Area.X + addX, region.Area.Y + addY, region.Area.Width, region.Area.Height))
                         plr.SendSuccessMessage("Region move success!");
                     else plr.SendErrorMessage("Region move failed!");
                     break;
@@ -414,6 +414,35 @@ namespace RegionExtension
                         plr.SendSuccessMessage("Region changeowner success!");
                     }
                     else plr.SendErrorMessage("Region changeowner failed!");
+                    break;
+                #endregion
+                #region listown
+                case "lo":
+                case "listown":
+                    if(pCount != 3)
+                    {
+                        plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/re lo <playername> <page>", specifier);
+                        return;
+                    };
+                    if (TShock.UserAccounts.GetUserAccountByName(param[1]) == null)
+                    {
+                        plr.SendErrorMessage($"Invalid username \"{param[1]}\".");
+                    };
+                    var player = TShock.UserAccounts.GetUserAccountByName(param[1]);
+                    var regions = TShock.Regions.Regions.FindAll(reg => reg.Owner == player.Name && reg.WorldID == Main.worldID.ToString());
+                    int pageNumberList;
+                    if (!PaginationTools.TryParsePageNumber(param, 2, plr, out pageNumberList))
+                        return;
+                    List<string> regionNamesList = new List<string>();
+                    for (int i = 0; i < regions.Count; i++)
+                        regionNamesList.Add(regions[i].Name);
+                    PaginationTools.SendPage(plr, pageNumberList, PaginationTools.BuildLinesFromTerms(regionNamesList),
+                        new PaginationTools.Settings
+                        {
+                            HeaderFormat = "Player regions ({0}/{1}):",
+                            FooterFormat = "Type {0}/re lo {1} {{0}} for more.".SFormat(specifier, param[1]),
+                            NothingToDisplayString = "There are currently no regions."
+                        });
                     break;
                 #endregion
                 #region context list
@@ -630,7 +659,9 @@ namespace RegionExtension
                 #endregion
                 #region giveowner
                 case "giveowner":
+                case "giveown":
                 case "gow":
+                case "go":
                     if (pCount != 3)
                     {
                         plr.SendErrorMessage("Invalid syntax! Proper syntax: {0}/ro gow <user> <region>", specifier);
