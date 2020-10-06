@@ -5,7 +5,7 @@ using TShockAPI;
 
 namespace RegionExtension
 {
-    class ConfigFile
+    public class ConfigFile
     {
         [JsonIgnore]
         private static readonly string Path = System.IO.Path.Combine(TShock.SavePath, "RegionExtention.json");

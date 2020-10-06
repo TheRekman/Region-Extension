@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PluginCommands.cs" />
     <Compile Include="FastRegion.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -81,6 +82,7 @@
     <Compile Include="RegionExtManager.cs" />
     <Compile Include="ConfigFile.cs" />
     <Compile Include="ContextCommand.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Resources.resx">

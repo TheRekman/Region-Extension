@@ -7,7 +7,7 @@ using TShockAPI.DB;
 
 namespace RegionExtension
 {
-    class RegionExtManager
+    public class RegionExtManager
     {
         private IDbConnection database;
 

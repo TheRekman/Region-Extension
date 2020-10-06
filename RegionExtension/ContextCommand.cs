@@ -3,7 +3,7 @@ using TShockAPI.Hooks;
 
 namespace RegionExtension
 {
-    class ContextCommand
+    public class ContextCommand
     {
         public string Context { get; private set; }
         Action<PlayerCommandEventArgs, int> action;

@@ -4,7 +4,7 @@ using TShockAPI.DB;
 
 namespace RegionExtension
 {
-    class FastRegion
+    public class FastRegion
     {
         TSPlayer Player;
         public UserAccount User { get { return Player.Account; } }
