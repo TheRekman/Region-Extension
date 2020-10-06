@@ -23,7 +23,7 @@ namespace RegionExtension
         #endregion
 
         #region fields
-        public List<ContextCommand> Contexts;
+        public ContextManager Contexts;
         public List<FastRegion> FastRegions;
         public ConfigFile Config;
         public RegionExtManager ExtManager;
@@ -56,10 +56,8 @@ namespace RegionExtension
 
         private void OnInitialize(EventArgs args)
         {
-            Contexts = new List<ContextCommand>();
-            Contexts.Add(new ContextCommand("this", ContextThis));
-            Contexts.Add(new ContextCommand("myname", ContextMyName));
-            Contexts.Add(new ContextCommand("near", ContextNearPlayer));
+            Contexts = new ContextManager();
+            Contexts.Initialize();
             ExtManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
@@ -128,27 +126,8 @@ namespace RegionExtension
                 case "/regionown":
                 case "region":
                     for(int i = 1; i < args.Parameters.Count; i++)
-                    {
                         if (args.Parameters[i].StartsWith(Config.ContextSpecifier))
-                        {
-                            bool success = false;
-                            for(int j = 0; j < Contexts.Count; j++)
-                            {
-                                if(Contexts[j].Context == args.Parameters[i].Remove(0, 1))
-                                {
-                                    Contexts[j].Initialize(args, i);
-                                    success = true;
-                                    break;
-                                }
-                            }
-                            if (!success)
-                            {
-                                args.Player.SendErrorMessage("Context: Invalid context command!");
-                                args.Handled = true;
-                                return;
-                            }
-                        }
-                    }
+                            Contexts.InitializeContext(i, args);
                     if (Config.AutoCompleteSameName && args.Parameters.Count > 1 && "define" == args.Parameters[0])
                         args.Parameters[1] = Utils.AutoCompleteSameName(args.Parameters[1], Config.AutoCompleteSameNameFormat);
                     break;
@@ -156,54 +135,6 @@ namespace RegionExtension
         }
         #endregion
 
-
-        #region context
-        private void ContextThis(PlayerCommandEventArgs args, int paramID)
-        {
-            if (args.Player.CurrentRegion == null)
-            {
-                args.Player.SendErrorMessage("Context: You are not in a region!");
-                args.Handled = true;
-                return;
-            }
-            args.Parameters[paramID] = args.Player.CurrentRegion.Name;
-        }
-
-        private void ContextMyName(PlayerCommandEventArgs args, int paramID)
-            => args.Parameters[paramID] = args.Player.Account.Name;
-
-        private void ContextNearPlayer(PlayerCommandEventArgs args, int paramID)
-        {
-            if (TShock.Utils.GetActivePlayerCount() == 1)
-            {
-                args.Player.SendErrorMessage("You are alone on server!");
-                args.Handled = true;
-                return;
-            }
-
-            float x = args.Player.X;
-            float y = args.Player.Y;
-            var player = TShock.Players.FirstOrDefault(plr => plr != null && plr.Active && plr != args.Player && plr.Account != null);
-            if (player == null)
-            {
-                args.Player.SendErrorMessage("Failed found nearest player!");
-                args.Handled = true;
-                return;
-            }
-            float minDistance = Utils.CountDistance(x, y, player.X, player.Y);
-            for (int i = 0; i < TShock.Players.Length; i++)
-                if (TShock.Players[i] != null && TShock.Players[i].Active && TShock.Players[i] != args.Player && TShock.Players[i].Account != null)
-                {
-                    float distance = Utils.CountDistance(x, y, TShock.Players[i].X, TShock.Players[i].Y);
-                    if (minDistance > distance)
-                    {
-                        player = TShock.Players[i];
-                        minDistance = distance;
-                    }
-                }
-            args.Parameters[paramID] = player.Account.Name;
-        }
-        #endregion
 
     }
 }

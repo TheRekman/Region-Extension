@@ -5,18 +5,14 @@ namespace RegionExtension
 {
     public class ContextCommand
     {
-        public string Context { get; private set; }
-        Action<PlayerCommandEventArgs, int> action;
+        public string[] Names{ get; private set; }
+        public string Description { get; set; }
+        public Action<PlayerCommandEventArgs, int> Action { get; private set; }
 
-        public ContextCommand(string context, Action<PlayerCommandEventArgs, int> action)
+        public ContextCommand(Action<PlayerCommandEventArgs, int> action, params string[] names)
         {
-            Context = context;
-            this.action = action;
-        }
-
-        public void Initialize(PlayerCommandEventArgs args, int paramID)
-        {
-            action(args, paramID);
+            Names = names;
+            this.Action = action;
         }
     }
 }

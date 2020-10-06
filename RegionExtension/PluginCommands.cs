@@ -245,32 +245,6 @@ namespace RegionExtension
                         });
                     break;
                 #endregion
-                #region context list
-                case "context":
-                case "con":
-                    int pageNumberCon = 1;
-                    if (args.Parameters.Count > 1)
-                    {
-                        int pageParamIndexCon = 1;
-                        if (!PaginationTools.TryParsePageNumber(param, pageParamIndexCon, plr, out pageNumberCon))
-                            return;
-                    }
-
-                    lines = new List<string> {
-                        $"{Plugin.Config.ContextSpecifier}this - get current region.",
-                        $"{Plugin.Config.ContextSpecifier}myname - get account username."
-                        };
-
-                    PaginationTools.SendPage(
-                      plr, pageNumberCon, lines,
-                      new PaginationTools.Settings
-                      {
-                          HeaderFormat = "Available contexts command ({0}/{1}):",
-                          FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(specifier)
-                      }
-                    );
-                    break;
-                #endregion
                 #region help
                 case "help":
                     int pageNumber;
@@ -285,7 +259,6 @@ namespace RegionExtension
                         "clearm <regionname> - Clear all allowed members at the given region.",
                         "setowner <regionname> <username> - Set region owner."
                         };
-                    if (Plugin.Config.ContextAllow) lines.Add("/re context [page] - Show available contexts command.");
 
                     PaginationTools.SendPage(
                       plr, pageNumber, lines,
@@ -481,32 +454,6 @@ namespace RegionExtension
                     else plr.SendErrorMessage("Region changeowner failed!");
                     break;
                 #endregion
-                #region context list
-                case "context":
-                case "con":
-                    int pageNumberCon = 1;
-                    if (args.Parameters.Count > 1)
-                    {
-                        int pageParamIndexCon = 1;
-                        if (!PaginationTools.TryParsePageNumber(param, pageParamIndexCon, plr, out pageNumberCon))
-                            return;
-                    }
-
-                    lines = new List<string> {
-                        $"{Plugin.Config.ContextSpecifier}this - get current region.",
-                        $"{Plugin.Config.ContextSpecifier}myname - get account username."
-                        };
-
-                    PaginationTools.SendPage(
-                      plr, pageNumberCon, lines,
-                      new PaginationTools.Settings
-                      {
-                          HeaderFormat = "Available contexts command ({0}/{1}):",
-                          FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(specifier)
-                      }
-                    );
-                    break;
-                #endregion
                 #region help
                 case "help":
                     int pageNumber;
@@ -521,7 +468,6 @@ namespace RegionExtension
                           "clearm <regionname> - Removes all allowed users from region",
                           "info <region> - Displays several information about the given region."
                         };
-                    if (Plugin.Config.ContextAllow) lines.Add("context [page] - Show available contexts command.");
 
                     PaginationTools.SendPage(
                       plr, pageNumber, lines,

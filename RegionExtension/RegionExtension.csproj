@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextManager.cs" />
     <Compile Include="PluginCommands.cs" />
     <Compile Include="FastRegion.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
