@@ -11,11 +11,12 @@ namespace RegionExtension
 {
     public static class PluginCommands
     {
-        public static Plugin Plugin;
+        public static Plugin Plugin { get {return _plugin; } }
+        private static Plugin _plugin;
 
         public static void Initialize(Plugin plugin)
         {
-            Plugin = plugin;
+            _plugin = plugin;
 
             Commands.ChatCommands.Add(new Command(Permissions.manageregion, RegionExtenionCmd, "/regionext", "/re"));
             Commands.ChatCommands.Add(new Command("regionext.own", RegionOwningCmd, "/regionown", "/ro"));
@@ -26,7 +27,7 @@ namespace RegionExtension
             var plr = args.Player;
             if (param.Count < 1) param.Add("help");
             int pCount = param.Count;
-            string specifier = TShock.Config.CommandSpecifier;
+            string specifier = TShock.Config.Settings.CommandSpecifier;
             string regionName;
             List<string> lines;
 
@@ -92,10 +93,10 @@ namespace RegionExtension
                     }
                     int addX = 0;
                     int addY = 0;
-                    if (param[2].Contains("u")) addY = -amount;
-                    else if (param[2].Contains("d")) addY = amount;
-                    if (param[2].Contains("r")) addX = amount;
-                    else if (param[2].Contains("l")) addX = -amount;
+                    if (param[2].Contains('u')) addY = -amount;
+                    else if (param[2].Contains('d')) addY = amount;
+                    if (param[2].Contains('r')) addX = amount;
+                    else if (param[2].Contains('l')) addX = -amount;
                     else
                     {
                         plr.SendErrorMessage("Invalid direction! u/d/r/l only!", specifier);
@@ -233,7 +234,7 @@ namespace RegionExtension
                     int pageNumberList;
                     if (!PaginationTools.TryParsePageNumber(param, 2, plr, out pageNumberList))
                         return;
-                    List<string> regionNamesList = new List<string>();
+                    var regionNamesList = new List<string>();
                     for (int i = 0; i < regions.Count; i++)
                         regionNamesList.Add(regions[i].Name);
                     PaginationTools.SendPage(plr, pageNumberList, PaginationTools.BuildLinesFromTerms(regionNamesList),
@@ -282,7 +283,7 @@ namespace RegionExtension
             var plr = args.Player;
             if (param.Count < 1) param.Add("help");
             int pCount = param.Count;
-            string specifier = TShock.Config.CommandSpecifier;
+            string specifier = TShock.Config.Settings.CommandSpecifier;
             var regions = TShock.Regions.Regions.FindAll(reg => reg.Owner == plr.Account.Name && reg.WorldID == Main.worldID.ToString());
 
             switch (param[0])
@@ -292,7 +293,7 @@ namespace RegionExtension
                     int pageNumberList;
                     if (!PaginationTools.TryParsePageNumber(param, 1, plr, out pageNumberList))
                         return;
-                    List<string> regionNamesList = new List<string>();
+                    var regionNamesList = new List<string>();
                     for (int i = 0; i < regions.Count; i++)
                         regionNamesList.Add(regions[i].Name);
                     PaginationTools.SendPage(plr, pageNumberList, PaginationTools.BuildLinesFromTerms(regionNamesList),
@@ -326,7 +327,7 @@ namespace RegionExtension
                     if (!PaginationTools.TryParsePageNumber(param, pageNumberIndex, plr, out pageNumberInfo))
                         return;
 
-                    List<string> lines = new List<string>
+                    var lines = new List<string>
                         {
                             string.Format("X: {0}; Y: {1}; W: {2}; H: {3}, Z: {4}", region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Z),
                             string.Concat("Owner: ", region.Owner),

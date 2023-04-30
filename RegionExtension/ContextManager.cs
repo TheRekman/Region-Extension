@@ -59,7 +59,7 @@ namespace RegionExtension
               new PaginationTools.Settings
               {
                   HeaderFormat = "Available contexts command ({0}/{1}):",
-                  FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(TShock.Config.CommandSpecifier)
+                  FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(TShock.Config.Settings.CommandSpecifier)
               }
             );
 
