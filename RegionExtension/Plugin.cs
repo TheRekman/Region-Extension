@@ -58,6 +58,7 @@ namespace RegionExtension
         {
             Contexts = new ContextManager();
             Contexts.Initialize();
+            PluginCommands.Initialize(this);
             ExtManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();

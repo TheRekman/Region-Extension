@@ -31,7 +31,7 @@ namespace RegionExtension
                 Description = "get nearest player"
             });
 
-            Commands.ChatCommands.Add(new Command(new List<string> { Permissions.manageregion, "regionext.own" }, Help, "context"));
+            TShockAPI.Commands.ChatCommands.Add(new Command(new List<string> { Permissions.manageregion, "regionext.own" }, Help, "context"));
         }
 
         private void Help(CommandArgs args)
