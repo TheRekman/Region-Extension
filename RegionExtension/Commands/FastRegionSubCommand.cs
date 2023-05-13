@@ -31,7 +31,6 @@ namespace RegionExtension.Commands
             var z = (int)Params[2].Value;
             var protect = (bool)Params[3].Value;
             CreateFastRegionRequest(args, regionname, username, z, protect);
-            base.Execute(args);
         }
 
         private void CreateFastRegionRequest(CommandArgsExtension args, string regionName, UserAccount username, int z, bool protect)

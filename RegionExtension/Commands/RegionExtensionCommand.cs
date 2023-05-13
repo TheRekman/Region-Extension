@@ -28,6 +28,6 @@ namespace RegionExtension.Commands
             new FastRegionSubCommand(),
             new FastRegionBreakSubCommand(),
             new OwnerList()
-        };
+        }.Concat(base.SubCommands).ToArray();
     }
 }

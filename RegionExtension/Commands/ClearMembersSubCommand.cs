@@ -32,7 +32,6 @@ namespace RegionExtension.Commands
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
                 return;
             ClearMembersInRegion(args, region);
-            base.Execute(args);
         }
 
         private void ClearMembersInRegion(CommandArgsExtension args, Region region)

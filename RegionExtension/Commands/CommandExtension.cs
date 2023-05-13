@@ -13,7 +13,11 @@ namespace RegionExtension.Commands
         public virtual string[] Names { get; private set; }
         public virtual string[] Permissions { get; private set; }
         public virtual string HelpText { get; }
-        public virtual ISubCommand[] SubCommands { get; private set; }
+        public virtual ISubCommand[] SubCommands { get => new ISubCommand[]
+        { 
+            new HelpCmd(this),
+            new HelpSubCmd(this)
+        }; }
 
         public void InitializeCommand(CommandArgsExtension args)
         {
@@ -22,7 +26,7 @@ namespace RegionExtension.Commands
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             if (subCommand == null)
                 args.Player.SendErrorMessage(string.Format("Invalid sub-command '{0}'! Use '{1}{2} help' for more information.",
-                                                            args.Message, TShockAPI.Commands.Specifier, usedName));
+                                                           subCommandName, TShockAPI.Commands.Specifier, usedName));
             else
                 subCommand.InitializeCommand(args);
         }
