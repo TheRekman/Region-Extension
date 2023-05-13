@@ -24,7 +24,8 @@ namespace RegionExtension.Commands
             new MoveSubCommand(),
             new SetOwnerSubCommand(),
             new ClearMembersSubCommand(),
-            new FastRegionSubCommand()
+            new FastRegionSubCommand(),
+            new FastRegionBreakSubCommand()
         };
     }
 }
