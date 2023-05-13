@@ -44,7 +44,7 @@ namespace RegionExtension.Commands
                       args.Player, 1, paramsInfo.ToList(),
                         new PaginationTools.Settings
                         {
-                            HeaderFormat = "Params of '{0}' Sub-Commands:".SFormat(subCmd)
+                            HeaderFormat = "Params of '{0}' Sub-Commands:".SFormat(subCommandName)
                         });
         }
     }

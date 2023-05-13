@@ -21,7 +21,7 @@ namespace RegionExtension.Commands
             _params = new ICommandParam[]
             {
                 new StringParam("newname", "new name for region."),
-                new RegionParam("region", "which region must be renamed.")
+                new RegionParam("region", "which region must be renamed. Default: region in your location.", true)
             };
         }
 
@@ -44,7 +44,7 @@ namespace RegionExtension.Commands
 
         private void RenameRegion(CommandArgsExtension args, string newname, Region region)
         {
-            if (args.Plugin.ExtManager.Rename(newname, region.Name))
+            if (args.Plugin.ExtManager.Rename(region.Name, newname))
                 args.Player.SendSuccessMessage("Region renamed.");
             else
                 args.Player.SendErrorMessage("Failed rename region.");
