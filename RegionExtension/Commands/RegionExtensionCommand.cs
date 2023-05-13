@@ -16,6 +16,7 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "/regionext", "/re"};
 
         public override string[] Permissions => new[] { TShockAPI.Permissions.manageregion };
+        public override string HelpText => "Provides more commands for region managment";
 
         public override ISubCommand[] SubCommands =>
             new ISubCommand[]

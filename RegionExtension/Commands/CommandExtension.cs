@@ -12,6 +12,7 @@ namespace RegionExtension.Commands
     {
         public virtual string[] Names { get; private set; }
         public virtual string[] Permissions { get; private set; }
+        public virtual string HelpText { get; }
         public virtual ISubCommand[] SubCommands { get; private set; }
 
         public void InitializeCommand(CommandArgsExtension args)
