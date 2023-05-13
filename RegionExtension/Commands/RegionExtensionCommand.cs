@@ -23,6 +23,7 @@ namespace RegionExtension.Commands
             new RenameSubCommand(),
             new MoveSubCommand(),
             new SetOwnerSubCommand(),
+            new ClearMembersSubCommand()
         };
     }
 }
