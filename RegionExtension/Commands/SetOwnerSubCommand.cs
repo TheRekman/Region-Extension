@@ -20,8 +20,8 @@ namespace RegionExtension.Commands
         {
             _params = new ICommandParam[]
             {
-                new RegionParam("region", "which region owner be rewriten. default: region in your location", true),
-                new UserAccountParam("useraccount", "which player be defined as owner. default: your user account", true)
+                new UserAccountParam("useraccount", "which player be defined as owner. default: your user account", true),
+                new RegionParam("region", "which region owner be rewriten. default: region in your location", true)
             };
         }
 
@@ -33,8 +33,8 @@ namespace RegionExtension.Commands
 
         public override void Execute(CommandArgsExtension args)
         {
-            var region = (Region)Params[0].Value;
-            var userAccount = (UserAccount)Params[1].Value;
+            var userAccount = (UserAccount)Params[0].Value;
+            var region = (Region)Params[1].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
                 return;
             SetRegionOwn(args, userAccount, region);
