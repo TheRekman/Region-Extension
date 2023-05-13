@@ -32,8 +32,8 @@ namespace RegionExtension.Commands.Parameters
 
         public bool TryGetUserAccountFromNameStart(string str, CommandArgsExtension args, out UserAccount account)
         {
-            args?.Player.SendInfoMessage("Failed find user account with \"{0}\" name. Trying find from active players with name start.");
-            var players = TShock.Players.Where(p => p.Name.StartsWith(str) && p.IsLoggedIn);
+            args?.Player.SendInfoMessage("Failed find user account with \"{0}\" name. Trying find from active players with name start.".SFormat(str));
+            var players = TShock.Players.Where(p => p != null && p.Name.StartsWith(str) && p.IsLoggedIn);
             if(players.Count() == 0)
             {
                 args.Player.SendInfoMessage("Failed find player with \"{0}\" name start.");
