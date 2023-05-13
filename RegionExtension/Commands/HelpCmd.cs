@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TShockAPI.DB;
 using TShockAPI;
+using Microsoft.Xna.Framework;
 
 namespace RegionExtension.Commands
 {
@@ -43,12 +44,12 @@ namespace RegionExtension.Commands
                                                                                                string.Join(' ', sc.Params.Select(p => p.GetBracketName())),
                                                                                                sc.Description));
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
-            PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(commandsInfo),
+            PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),
                         new PaginationTools.Settings
                         {
                             HeaderFormat = "Available '{0}' Sub-Commands ({{0}}/{{1}}):".SFormat(usedName),
                             FooterFormat = "Type {0}{1} help {{0}} for more sub-commands."
-                                          .SFormat(TShockAPI.Commands.Specifier, usedName)
+                                          .SFormat(TShockAPI.Commands.Specifier, usedName),
                         });
             args.Player.SendInfoMessage("Additional names: " + string.Join(' ', _targetCommand.Names));
         }
