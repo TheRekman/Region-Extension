@@ -21,7 +21,8 @@ namespace RegionExtension.Commands
             new ISubCommand[]
         {
             new RenameSubCommand(),
-            new MoveSubCommand()
+            new MoveSubCommand(),
+            new SetOwnerSubCommand(),
         };
     }
 }

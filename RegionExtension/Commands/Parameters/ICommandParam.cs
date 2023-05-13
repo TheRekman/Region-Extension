@@ -11,6 +11,6 @@ namespace RegionExtension.Commands.Parameters
         bool Optional { get; }
         public string GetBracketName();
         bool TrySetValue(string str, CommandArgsExtension args = null);
-        bool TrySetValue(string str, CommandArgs args = null);
+        bool TrySetDefaultValue(CommandArgs args = null);
     }
 }

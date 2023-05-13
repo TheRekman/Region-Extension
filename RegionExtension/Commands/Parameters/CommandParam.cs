@@ -20,7 +20,7 @@ namespace RegionExtension.Commands.Parameters
 
         public string Name => _name;
         public string Description => _description;
-        public object Value { get => _defined ? _value : _defaultValue; }
+        public object Value { get => _value; }
         public bool Optional => _optional;
         public Type Type => throw new NotImplementedException();
 
@@ -38,6 +38,15 @@ namespace RegionExtension.Commands.Parameters
         public virtual bool TrySetValue(string str, CommandArgsExtension args = null)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual bool TrySetDefaultValue(CommandArgs args = null)
+        {
+            if (!_optional)
+                return false;
+            _value = _defaultValue;
+            _defined = true;
+            return true;
         }
     }
 }

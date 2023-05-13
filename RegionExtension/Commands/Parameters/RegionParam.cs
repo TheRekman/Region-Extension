@@ -27,5 +27,13 @@ namespace RegionExtension.Commands.Parameters
             _value = region;
             return true;
         }
+
+        public override bool TrySetDefaultValue(CommandArgs args = null)
+        {
+            if (args.Player.CurrentRegion == null)
+                return false;
+            _defaultValue = args.Player.CurrentRegion;
+            return base.TrySetDefaultValue(args);
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace RegionExtension.Commands
                     if (!Params[i].TrySetValue(enumerator.Current, args))
                         return false;
                 }
-                else if (!Params[i].Optional)
+                else if (!Params[i].TrySetDefaultValue(args))
                 {
                     args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}{1} {2} {3}"
                                                  .SFormat(TShockAPI.Commands.Specifier, usedCommandName, usedSubCommandName,
