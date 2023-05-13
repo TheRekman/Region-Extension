@@ -11,7 +11,7 @@ namespace RegionExtension
 {
     public static class PluginCommands
     {
-        public static Plugin Plugin { get {return _plugin; } }
+        public static Plugin Plugin { get { return _plugin; } }
         private static Plugin _plugin;
 
         public static void Initialize(Plugin plugin)
