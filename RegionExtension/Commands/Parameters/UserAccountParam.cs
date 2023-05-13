@@ -26,7 +26,6 @@ namespace RegionExtension.Commands.Parameters
                 if (!TryGetUserAccountFromNameStart(str, args, out account))
                     return false;
             }
-            _defined = true;
             _value = account;
             return true;
         }

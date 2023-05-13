@@ -13,15 +13,18 @@ namespace RegionExtension.Commands
 
         public override string Description => "get list of regions which the given player is owner";
 
-        public override ICommandParam[] Params => new ICommandParam[]
+        public override void InitializeParams()
         {
-            new IntParam("page", "page of the list. Default: 1", true, 1),
-            new UserAccountParam("username", "which useraccount check. Default: your account", true)
-        };
+            _params = new ICommandParam[]
+            {
+                new IntParam("page", "page of the list. Default: 1", true, 1),
+                new UserAccountParam("username", "which useraccount check. Default: your account", true)
+            };
+        }
 
         public override void Execute(CommandArgsExtension args)
         {
-            var page = (int)Params[0].Value;
+            var page = ((IntParam)Params[0]).TValue;
             var userAccount = (UserAccount)Params[1].Value;
             SendOwnerList(args, page, userAccount);
         }

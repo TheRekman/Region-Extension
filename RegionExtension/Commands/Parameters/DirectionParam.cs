@@ -25,7 +25,6 @@ namespace RegionExtension.Commands.Parameters
                                               .SFormat(Name, string.Join('/', types.Select(el => el.str))));
                 return false;
             }
-            _defined = true;
             _value = new Direction(types.First().dir);
             return true;
         }

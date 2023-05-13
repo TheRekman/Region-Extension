@@ -23,7 +23,6 @@ namespace RegionExtension.Commands.Parameters
                 args?.Player.SendErrorMessage("Invalid region '{0}'!".SFormat(str));
                 return false;
             }
-            _defined = true;
             _value = region;
             return true;
         }

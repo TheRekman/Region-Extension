@@ -22,7 +22,6 @@ namespace RegionExtension.Commands.Parameters
                 args?.Player.SendErrorMessage("Invalid number '{0}'!".SFormat(Name));
                 return false;
             }
-            _defined = true;
             _value = value;
             return true;
         }

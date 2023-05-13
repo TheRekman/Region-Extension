@@ -16,11 +16,15 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "setowner", "so" };
         public override string Description => "Set region owner";
 
-        public override ICommandParam[] Params => new ICommandParam[]
+        public override void InitializeParams()
         {
-            new RegionParam("region", "which region owner be rewriten. default: region in your location", true),
-            new UserAccountParam("useraccount", "which player be defined as owner. default: your user account", true)
-        };
+            _params = new ICommandParam[]
+            {
+                new RegionParam("region", "which region owner be rewriten. default: region in your location", true),
+                new UserAccountParam("useraccount", "which player be defined as owner. default: your user account", true)
+            };
+        }
+
 
         public SetOwnerSubCommand(bool checkRegionOwn = false)
         {

@@ -11,9 +11,24 @@ namespace RegionExtension.Commands
 {
     public abstract class SubCommand : ISubCommand
     {
+        protected ICommandParam[] _params;
+
         public virtual string[] Names => new[] { "name" };
         public virtual string Description => "descrition";
-        public virtual ICommandParam[] Params => new ICommandParam[0];
+        public ICommandParam[] Params
+        {
+            get
+            {
+                if(_params == null)
+                    InitializeParams();
+                return _params;
+            }
+        }
+
+        public virtual void InitializeParams()
+        {
+            _params = new ICommandParam[0];
+        }
 
         private IEnumerable<string> GetParamsStrings() =>
             Params.Select(p => "{0} - {1}".SFormat(p.Name, p.Description));
@@ -22,7 +37,7 @@ namespace RegionExtension.Commands
         {
             var enumerator = parameters.GetEnumerator();
             var usedCommandName = args.Message.Split(' ')[0].Remove(0, 1);
-            var usedSubCommandName = args.Parameters[0];
+            var usedSubCommandName = args.Parameters.Count > 0 ? args.Parameters[0] : Names[0];
             for (int i = 0; i < Params.Length; i++)
                 if (enumerator.MoveNext())
                 {

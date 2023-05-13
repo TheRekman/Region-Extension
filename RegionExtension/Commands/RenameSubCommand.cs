@@ -16,12 +16,14 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "rename", "rn" };
         public override string Description => "rename region with given name.";
 
-        public override ICommandParam[] Params =>
-            new ICommandParam[]
+        public override void InitializeParams()
+        {
+            _params = new ICommandParam[]
             {
                 new StringParam("newname", "new name for region."),
                 new RegionParam("region", "which region must be renamed.")
             };
+        }
 
         public RenameSubCommand(bool checkRegionOwn = false)
         {

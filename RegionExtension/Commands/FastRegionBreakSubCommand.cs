@@ -9,8 +9,6 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "fastregionbreak", "frb" };
         public override string Description => "breaks fast region request.";
 
-        public override ICommandParam[] Params => new ICommandParam[] { };
-
         public override void Execute(CommandArgsExtension args)
         {
             var id = args.Plugin.FindFastRegionByUser(args.Player.Account);

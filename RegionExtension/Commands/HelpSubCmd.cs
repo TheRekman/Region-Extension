@@ -17,10 +17,13 @@ namespace RegionExtension.Commands
 
         public override string Description => "Returns all info about this sub-command.";
 
-        public override ICommandParam[] Params => new ICommandParam[]
+        public override void InitializeParams()
         {
-            new StringParam("subcommand", "which sub-command params will be given."),
-        };
+            _params = new ICommandParam[]
+            {
+                new StringParam("subcommand", "which sub-command params will be given."),
+            };
+        }
 
         public override void Execute(CommandArgsExtension args)
         {

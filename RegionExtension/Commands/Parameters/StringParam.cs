@@ -17,7 +17,6 @@ namespace RegionExtension.Commands.Parameters
 
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
         {
-            _defined = true;
             _value = str;
             return true;
         }

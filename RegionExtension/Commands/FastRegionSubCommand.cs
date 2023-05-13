@@ -11,13 +11,16 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "fastregion", "fr" };
         public override string Description => "create new region with two given point and params.";
 
-        public override ICommandParam[] Params => new ICommandParam[]
+        public override void InitializeParams()
         {
-            new StringParam("regionname", "name of new region."),
-            new UserAccountParam("username", "owner of new region. default: your user account.", true),
-            new IntParam("z", "region priority. default: 0", true, 0),
-            new BoolParam("protect", "region protect. default: true", true, true)
-        };
+            _params = new ICommandParam[]
+            {
+                new StringParam("regionname", "name of new region."),
+                new UserAccountParam("username", "owner of new region. default: your user account.", true),
+                new IntParam("z", "region priority. default: 0", true, 0),
+                new BoolParam("protect", "region protect. default: true", true, true)
+            };
+        }
 
         public override void Execute(CommandArgsExtension args)
         {
@@ -28,8 +31,8 @@ namespace RegionExtension.Commands
                 return;
             }
             var username = (UserAccount)Params[1].Value;
-            var z = (int)Params[2].Value;
-            var protect = (bool)Params[3].Value;
+            var z = ((IntParam)Params[2]).TValue;
+            var protect = ((BoolParam)Params[3]).TValue;
             CreateFastRegionRequest(args, regionname, username, z, protect);
         }
 

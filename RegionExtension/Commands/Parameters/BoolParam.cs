@@ -18,7 +18,6 @@ namespace RegionExtension.Commands.Parameters
                 return false;
             }
             _value = value;
-            _defined = true;
             return true;
         }
     }

@@ -16,10 +16,13 @@ namespace RegionExtension.Commands
         public override string[] Names => new[] { "clearmembers", "cm" };
         public override string Description => "remove all members from region.";
 
-        public override ICommandParam[] Params => new ICommandParam[]
+        public override void InitializeParams()
         {
-            new RegionParam("regionname", "region in which members will be cleared. default: your location region", true)
-        };
+            _params = new ICommandParam[]
+            {
+                new RegionParam("regionname", "region in which members will be cleared. default: your location region", true)
+            };
+        }
 
         public ClearMembersSubCommand(bool checkRegionOwn = false)
         {

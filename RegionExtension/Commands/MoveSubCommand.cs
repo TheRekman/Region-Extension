@@ -15,14 +15,15 @@ namespace RegionExtension.Commands
 
         public override string[] Names => new[] { "move", "mv" };
         public override string Description => "move region with given name.";
-
-        public override ICommandParam[] Params =>
-            new ICommandParam[]
+        public override void InitializeParams()
+        {
+            _params = new ICommandParam[]
             {
                 new RegionParam("region", "which region must be moved."),
                 new IntParam("amount", "amount on which region must be moved."),
                 new DirectionParam("direction", "direction of move. u/d/r/l")
             };
+        }
 
         public MoveSubCommand(bool checkRegionOwn = false)
         {
@@ -32,7 +33,7 @@ namespace RegionExtension.Commands
         public override void Execute(CommandArgsExtension args)
         {
             var region = (Region)Params[0].Value;
-            var amount = (int)Params[1].Value;
+            var amount = ((IntParam)Params[1]).TValue;
             var direction = (Direction)Params[2].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
                 return;
