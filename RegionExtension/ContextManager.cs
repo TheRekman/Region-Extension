@@ -68,9 +68,9 @@ namespace RegionExtension
         public void InitializeContext(int param, PlayerCommandEventArgs args)
         {
             for (int i = 0; i < Contexts.Count; i++)
-                if (Contexts[i].Names.Contains(args.Parameters[i].Remove(0, 1)))
+                if (Contexts[i].Names.Contains(args.Parameters[param].Remove(0, 1)))
                 {
-                    Contexts[i].Action(args, i);
+                    Contexts[i].Action(args, param);
                     return;
                 }    
             args.Player.SendErrorMessage("Context: Invalid context command!");

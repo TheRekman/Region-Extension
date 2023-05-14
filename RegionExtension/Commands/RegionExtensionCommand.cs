@@ -8,13 +8,7 @@ namespace RegionExtension.Commands
 {
     public class RegionExtensionCommand : CommandExtension
     {
-        public RegionExtensionCommand()
-        {
-
-        }
-
         public override string[] Names => new[] { "/regionext", "/re"};
-
         public override string[] Permissions => new[] { TShockAPI.Permissions.manageregion };
         public override string HelpText => "Provides more commands for region managment";
 
