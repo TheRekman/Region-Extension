@@ -36,7 +36,7 @@ namespace RegionExtension.Commands.Parameters
             var players = TShock.Players.Where(p => p != null && p.Name.StartsWith(str) && p.IsLoggedIn);
             if(players.Count() == 0)
             {
-                args.Player.SendInfoMessage("Failed find player with \"{0}\" name start.");
+                args.Player.SendInfoMessage("Failed find player with \"{0}\" name start.".SFormat(str));
                 args.Player.SendInfoMessage("Make sure if this player was registered and logged.");
                 account = null;
                 return false;
