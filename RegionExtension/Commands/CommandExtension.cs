@@ -38,7 +38,7 @@ namespace RegionExtension.Commands
                 return;
             var subCommandsInfo = SubCommands.Select(cmd => string.Format("{0} {1} - {2}", string.Join(' ', cmd.Names),
                                                             FormCommandParameters(cmd), cmd.Description));
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(
                       args.Player, page, subCommandsInfo.ToList(),
                       new PaginationTools.Settings
