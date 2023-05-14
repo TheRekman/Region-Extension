@@ -56,7 +56,7 @@ namespace RegionExtension.Commands
 
         public void InitializeCommand(CommandArgsExtension args)
         {
-            if (TryImplementParams(args.Parameters.Skip(1), args))
+             if (TryImplementParams(args.Parameters.Skip(1), args))
                 Execute(args);
         }
 

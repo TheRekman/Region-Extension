@@ -19,7 +19,7 @@ namespace RegionExtension.Commands.Parameters
             var value = 0;
             if(!int.TryParse(str, out value))
             {
-                args?.Player.SendErrorMessage("Invalid number '{0}'!".SFormat(Name));
+                args?.Player.SendErrorMessage("Invalid number '{0}' for '{1}'!".SFormat(str, Name));
                 return false;
             }
             _value = value;

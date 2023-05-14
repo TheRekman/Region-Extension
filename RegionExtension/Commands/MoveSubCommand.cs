@@ -36,7 +36,10 @@ namespace RegionExtension.Commands
             var amount = ((IntParam)Params[1]).TValue;
             var direction = (Direction)Params[2].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
+            {
+                args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
+            }
             MoveRegion(args, region, amount, direction);
         }
 

@@ -29,9 +29,9 @@ namespace RegionExtension.Commands
 
         private void SendOwnerList(CommandArgsExtension args, int page)
         {
-            var regionNames = TShock.Regions.ListAllRegions(Main.worldID.ToString())
-                                            .Where(r => r.Owner == args.Player.Account.Name)
-                                            .Select(r => r.Name);
+            var regionNames = TShock.Regions.Regions.Where(r => r.Owner == args.Player.Account.Name && r.WorldID == Main.worldID.ToString())
+                                                    .Select(r => r.Name)
+                                                    .ToList();
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames),

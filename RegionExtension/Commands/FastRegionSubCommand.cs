@@ -51,7 +51,10 @@ namespace RegionExtension.Commands
             int num = 0;
             result = str;
             while(TShock.Regions.GetRegionByName(result) != null)
+            {
                 result = args.Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                num++;
+            }
             return true;
         }
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TShockAPI;
 using TShockAPI.DB;
 
 namespace RegionExtension.Commands
@@ -33,7 +34,10 @@ namespace RegionExtension.Commands
         {
             var region = (Region)Params[0].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
+            {
+                args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
+            }
             ClearMembersInRegion(args, region);
         }
 

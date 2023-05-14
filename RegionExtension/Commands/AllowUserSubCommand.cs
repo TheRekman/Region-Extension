@@ -32,7 +32,10 @@ namespace RegionExtension.Commands
             var userAccount = (UserAccount)Params[0].Value;
             var region = (Region)Params[1].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
+            {
+                args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
+            }
             AllowUser(args, userAccount, region);
         }
 

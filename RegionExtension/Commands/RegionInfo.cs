@@ -33,11 +33,14 @@ namespace RegionExtension.Commands
 
         public override void Execute(CommandArgsExtension args)
         {
-            var page = ((IntParam)Params[0]).TValue;
-            var region = (Region)Params[1].Value;
+            var region = (Region)Params[0].Value;
+            var page = ((IntParam)Params[1]).TValue;
 
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
+            {
+                args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
+            }
             SendRegionInfo(args, page, region);
         }
 
