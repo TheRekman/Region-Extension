@@ -23,7 +23,7 @@ namespace RegionExtension.Commands
         {
             var subCommandName = args.Parameters.Count > 0 ? args.Parameters[0] : "help";
             var subCommand = SubCommands.FirstOrDefault(cmd => cmd.Names.Contains(subCommandName));
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedName = args.Message.Split(' ')[0];
             if (subCommand == null)
                 args.Player.SendErrorMessage(string.Format("Invalid sub-command '{0}'! Use '{1}{2} help' for more information.",
                                                            subCommandName, TShockAPI.Commands.Specifier, usedName));

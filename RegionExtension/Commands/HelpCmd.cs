@@ -40,10 +40,10 @@ namespace RegionExtension.Commands
 
         private void SendHelpList(CommandArgsExtension args, int page)
         {
-            var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} {1} - {2}".SFormat(string.Join(' ', sc.Names),
+            var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} {1} - {2}".SFormat(string.Join('/', sc.Names),
                                                                                                string.Join(' ', sc.Params.Select(p => p.GetBracketName())),
                                                                                                sc.Description));
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),
                         new PaginationTools.Settings
                         {
