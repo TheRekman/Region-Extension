@@ -9,6 +9,7 @@ using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
 using TShockAPI.Hooks;
+using RegionExtension.Database;
 
 namespace RegionExtension
 {
