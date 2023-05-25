@@ -40,6 +40,7 @@ namespace RegionExtension
         {
             ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
             ServerApi.Hooks.NetGetData.Register(this, OnGetData);
+            RegionHooks.RegionCreated += OnRegionCreate;
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
         }
@@ -50,6 +51,7 @@ namespace RegionExtension
             {
                 ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
+                RegionHooks.RegionCreated -= OnRegionCreate;
                 PlayerHooks.PlayerLogout -= OnPlayerLogout;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
             }
@@ -67,6 +69,12 @@ namespace RegionExtension
         #endregion
 
         #region hooks & events
+
+        private void OnRegionCreate(RegionHooks.RegionCreatedEventArgs args)
+        {
+            ExtManager.RegisterRegionDefine(args);
+        }
+
         private void OnPlayerLogout(PlayerLogoutEventArgs e)
         {
             int id = FindFastRegionByUser(e.Player.Account);

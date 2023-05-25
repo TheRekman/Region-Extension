@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using TerrariaApi.Server;
 using RegionExtension.Commands;
+using TShockAPI.Hooks;
 
 namespace RegionExtension.Database
 {
@@ -21,6 +22,7 @@ namespace RegionExtension.Database
         public RegionExtManager(IDbConnection db)
         {
             _tshockDatabase = db;
+            InitializeDatabase();
         }
 
         public void InitializeDatabase()
@@ -57,6 +59,11 @@ namespace RegionExtension.Database
                 throw new Exception("Invalid storage type");
             }
             _regionInfoManager = new RegionInfoManager(database);
+        }
+
+        public void RegisterRegionDefine(RegionHooks.RegionCreatedEventArgs args)
+        {
+            _regionInfoManager.AddNewRegion(args.Region.ID, TShock.UserAccounts.GetUserAccountByName(args.Region.Owner).ID);
         }
 
         public bool Rename(string regionName, string newRegionName)

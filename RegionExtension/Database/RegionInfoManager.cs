@@ -26,6 +26,8 @@ namespace RegionExtension.Database
         public RegionInfoManager(IDbConnection db)
         {
             _database = db;
+            InitializeTable();
+            LoadRegions();
         }
 
         public void InitializeTable()
