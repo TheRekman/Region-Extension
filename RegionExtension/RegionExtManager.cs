@@ -15,11 +15,11 @@ namespace RegionExtension
         {
             database = db;
         }
+
         public bool Rename(string regionName, string newRegionName)
         {
             try
             {
-                
                 database.Query("UPDATE Regions SET RegionName=@0 WHERE RegionName=@1 AND WorldID=@2",
                     newRegionName, regionName, Main.worldID.ToString());
                 var region = TShock.Regions.GetRegionByName(regionName);
@@ -33,6 +33,7 @@ namespace RegionExtension
                 return false;
             }
         }
+
         public bool ClearAllowUsers(string regionName)
         {
             Region r = TShock.Regions.GetRegionByName(regionName);
