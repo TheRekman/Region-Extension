@@ -15,7 +15,6 @@ namespace RegionExtension.Commands
         public override ISubCommand[] SubCommands =>
             new ISubCommand[]
         {
-            new RenameSubCommand(),
             new MoveSubCommand(),
             new SetOwnerSubCommand(),
             new ClearMembersSubCommand(),
