@@ -83,7 +83,20 @@ namespace RegionExtension.Database
                 TShock.Log.Error(ex.Message);
                 return false;
             }
+        }
 
+        public bool RemoveRegion(int id)
+        {
+            try
+            {
+                _database.Query("DELETE FROM @0 WHERE Id=@1", _table.Name, id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                TShock.Log.Error(ex.Message);
+                return false;
+            }
         }
 
         public bool UpdateQuery(IDbConnection db, string table, string collumn, string value, int id)
@@ -179,7 +192,6 @@ namespace RegionExtension.Database
         private enum TableInfo
         {
             Id,
-            WorldId,
             DateCreation,
             LastUser,
             LastUpdate,

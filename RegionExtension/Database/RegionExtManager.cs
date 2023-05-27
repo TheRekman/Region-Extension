@@ -66,6 +66,11 @@ namespace RegionExtension.Database
             _regionInfoManager.AddNewRegion(args.Region.ID, TShock.UserAccounts.GetUserAccountByName(args.Region.Owner).ID);
         }
 
+        public void RegisterRegionDeletion(RegionHooks.RegionDeletedEventArgs args)
+        {
+            _regionInfoManager.RemoveRegion(args.Region.ID);
+        }
+
         public bool ClearAllowUsers(CommandArgsExtension args, string regionName)
         {
             RegisterCommand(args, TShock.Regions.GetRegionByName(regionName));
