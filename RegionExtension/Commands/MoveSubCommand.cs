@@ -48,8 +48,7 @@ namespace RegionExtension.Commands
 
         private void MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
-            var newPos = direction.GetNewPosition(region.Area.X, region.Area.Y, amount);
-            if (TShock.Regions.PositionRegion(region.Name, newPos.x, newPos.y, region.Area.Width, region.Area.Height))
+            if (args.Plugin.ExtManager.MoveRegion(args, region, amount, direction))
                 args.Player.SendSuccessMessage("Region moved.");
             else
                 args.Player.SendErrorMessage("Failed move region.");

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
 using MySql.Data.MySqlClient;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using System.Diagnostics;
-using System.IO;
 using TerrariaApi.Server;
-using RegionExtension.Commands;
 using TShockAPI.Hooks;
+using RegionExtension.Commands;
+using RegionExtension.Commands.Parameters;
+using RegionExtension.Database.Actions;
+using RegionExtension.Database.EventsArgs;
 
 namespace RegionExtension.Database
 {
@@ -18,6 +19,18 @@ namespace RegionExtension.Database
     {
         private IDbConnection _tshockDatabase;
         private RegionInfoManager _regionInfoManager;
+        private RegionHistoryManager _historyManager;
+
+        public event Action<AllowArgs> OnRegionAllow;
+        public event Action<RemoveArgs> OnRegionRemove;
+        public event Action<SetZArgs> OnRegionSetZ;
+        public event Action<ProtectArgs> OnRegionProtect;
+        public event Action<ResizeArgs> OnRegionResize;
+        public event Action<AllowGroupArgs> OnRegionAllowGroup;
+        public event Action<RemoveGroupArgs> OnRegionRemoveGroup;
+        public event Action<MoveArgs> OnRegionMove;
+        public event Action<RenameArgs> OnRegionRename;
+        public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
 
         public RegionExtManager(IDbConnection db)
         {
@@ -59,6 +72,30 @@ namespace RegionExtension.Database
                 throw new Exception("Invalid storage type");
             }
             _regionInfoManager = new RegionInfoManager(database);
+            _historyManager = new RegionHistoryManager(database);
+        }
+
+        public void EventHandler()
+        {
+            OnRegionMove += (args) =>
+            {
+                RegisterCommand(args.UserExecutor, args.Region);
+                _historyManager.SaveAction(new Move(args), args.Region, args.UserExecutor.Account);
+            };
+            OnRegionAllow += (args) =>
+            {
+                RegisterCommand(args.UserExecutor, args.Region);
+                _historyManager.SaveAction(new Allow(args), args.Region, args.User);
+            };
+            OnRegionRemove += (args) =>
+            {
+                RegisterCommand(args.UserExecutor, args.Region);
+                _historyManager.SaveAction(new Remove(args), args.Region, args.User);
+            };
+            OnRegionChangeOwner += (args) =>
+            {
+                RegisterCommand(args.U)
+            };
         }
 
         public void RegisterRegionDefine(RegionHooks.RegionCreatedEventArgs args)
@@ -71,10 +108,17 @@ namespace RegionExtension.Database
             _regionInfoManager.RemoveRegion(args.Region.ID);
         }
 
-        public bool ClearAllowUsers(CommandArgsExtension args, string regionName)
+        public bool MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
-            RegisterCommand(args, TShock.Regions.GetRegionByName(regionName));
-            return ClearAllowUsers(regionName);
+            var newPos = direction.GetNewPosition(region.Area.X, region.Area.Y, amount);
+            OnRegionMove(new MoveArgs(args.Player, region, amount, direction));
+            return TShock.Regions.PositionRegion(region.Name, newPos.x, newPos.y, region.Area.Width, region.Area.Height);
+        }
+
+        public bool AllowUser(CommandArgsExtension args, Region region, UserAccount account)
+        {
+            OnRegionAllow(new AllowArgs(args.Player, region, account));
+            return TShock.Regions.AddNewUser(region.Name, account.Name);
         }
 
         public bool ClearAllowUsers(string regionName)
@@ -90,10 +134,10 @@ namespace RegionExtension.Database
             return false;
         }
 
-        public void RegisterCommand(CommandArgsExtension args, Region region)
+        public void RegisterCommand(TSPlayer executor, Region region)
         {
             _regionInfoManager.UpdateLastUpdate(region, DateTime.Now);
-            _regionInfoManager.UpdateLastUser(region, args.Player.Account);
+            _regionInfoManager.UpdateLastUser(region, executor.Account);
         }
     }
 }
