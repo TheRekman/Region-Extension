@@ -1,9 +1,4 @@
 ﻿using RegionExtension.Database.EventsArgs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -14,7 +9,7 @@ namespace RegionExtension.Database.Actions
         private int _amount;
         private int _direction;
 
-        public string Name => "Resize";
+        public string Name => ActionFactory.ResizeName;
 
         public object[] Params
         {

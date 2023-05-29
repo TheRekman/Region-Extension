@@ -14,7 +14,7 @@ namespace RegionExtension.Database.Actions
         private string _regionName;
         private string _userName;
 
-        public string Name => "Allow";
+        public string Name => ActionFactory.AllowName;
 
         public object[] Params
         {
