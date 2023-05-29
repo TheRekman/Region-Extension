@@ -86,6 +86,8 @@ namespace RegionExtension.Database
             OnRegionRemoveGroup += (args) => RegisterAction(new RemoveGroup(args), args);
             OnRegionRename += (args) => RegisterAction(new Rename(args), args);
             OnRegionResize += (args) => RegisterAction(new Resize(args), args);
+            OnRegionSetZ += (args) => RegisterAction(new SetZ(args), args);
+            OnRegionProtect += (args) => RegisterAction(new Protect(args), args);
         }
 
         public void RegisterAction(IAction action, BaseRegionArgs args)
@@ -115,6 +117,48 @@ namespace RegionExtension.Database
         {
             OnRegionAllow(new AllowArgs(args.Player, region, account));
             return TShock.Regions.AddNewUser(region.Name, account.Name);
+        }
+
+        public bool RemoveUser(CommandArgsExtension args, Region region, UserAccount account)
+        {
+            OnRegionRemove(new RemoveArgs(args.Player, region, account));
+            return TShock.Regions.RemoveUser(region.Name, account.Name);
+        }
+
+        public bool AllowGroup(CommandArgsExtension args, Region region, Group group)
+        {
+            OnRegionAllowGroup(new AllowGroupArgs(args.Player, region, group));
+            return TShock.Regions.AllowGroup(region.Name, group.Name);
+        }
+
+        public bool RemoveGroup(CommandArgsExtension args, Region region, Group group)
+        {
+            OnRegionRemoveGroup(new RemoveGroupArgs(args.Player, region, group));
+            return TShock.Regions.RemoveGroup(region.Name, group.Name);
+        }
+
+        public bool SetZ(CommandArgsExtension args, Region region, int amount)
+        {
+            OnRegionSetZ(new SetZArgs(args.Player, region, amount));
+            return TShock.Regions.SetZ(region.Name, amount);
+        }
+
+        public bool Protect(CommandArgsExtension args, Region region, bool protect)
+        {
+            OnRegionProtect(new ProtectArgs(args.Player, region, protect));
+            return TShock.Regions.SetRegionState(region.Name, protect);
+        }
+
+        public bool Resize(CommandArgsExtension args, Region region, int amount, int direction)
+        {
+            OnRegionResize(new ResizeArgs(args.Player, region, amount, direction));
+            return TShock.Regions.ResizeRegion(region.Name, amount, direction);
+        }
+
+        public bool ChangeOwner(CommandArgsExtension args, Region region, UserAccount account)
+        {
+            OnRegionChangeOwner(new ChangeOwnerArgs(args.Player, region, account));
+            return TShock.Regions.ChangeOwner(region.Name, account.Name);
         }
 
         public bool ClearAllowUsers(string regionName)

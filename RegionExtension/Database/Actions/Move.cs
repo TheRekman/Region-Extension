@@ -38,7 +38,7 @@ namespace RegionExtension.Database.Actions
         {
             _regionName = args.Region.Name;
             _amount = args.Amount;
-            _direction = args.Direction.;
+            _direction = args.Direction;
         }
 
         public Move(string fromArgs)
