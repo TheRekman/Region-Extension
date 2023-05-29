@@ -11,6 +11,7 @@
         public const string MoveName = "Move";
         public const string ResizeName = "Resize";
         public const string ProtectName = "Protect";
+        public const string RenameName = "Rename"
 
         public static IAction GetActionByName(string name, string args)
         {
@@ -18,25 +19,25 @@
             IAction action = null;
             switch(name)
             {
-                case (AllowName):
+                case AllowName:
                     action = new Allow(args);
                     break;
-                case (RemoveName):
+                case RemoveName:
                     action = new Remove(args);
                     break;
-                case (SetZName):
+                case SetZName:
                     action = new SetZ(args);
                     break;
-                case (AllowGroupName):
+                case AllowGroupName:
                     action = new AllowGroup(args);
                     break;
-                case (RemoveGroupName):
+                case RemoveGroupName:
                     action = new RemoveGroup(args);
                     break;
-                case (ChangeOwnerName):
+                case ChangeOwnerName:
                     action = new ChangeOwner(args);
                     break;
-                case (MoveName):
+                case MoveName:
                     action = new Move(args);
                     break;
                 case ResizeName:

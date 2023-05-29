@@ -11,7 +11,7 @@ namespace RegionExtension.Database.Actions
         private int _amount;
         private DirectionType _direction;
 
-        public string Name => "Move";
+        public string Name => ActionFactory.MoveName;
 
         public object[] Params
         {
