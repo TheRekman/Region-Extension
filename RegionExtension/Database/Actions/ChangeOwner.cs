@@ -52,10 +52,9 @@ namespace RegionExtension.Database.Actions
             string.Join(' ', Params);
 
         public IAction GetUndoAction(string undoString) =>
-            new Remove(undoString);
+            new ChangeOwner(undoString);
 
         public string GetUndoArgsString() =>
-            GetArgsString();
+            string.Join(' ', _regionName, TShock.Regions.GetRegionByName(_regionName).Owner);
     }
-}
 }

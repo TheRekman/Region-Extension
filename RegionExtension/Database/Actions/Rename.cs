@@ -8,12 +8,12 @@ using TShockAPI;
 
 namespace RegionExtension.Database.Actions
 {
-    public class SetZ : IAction
+    public class Rename : IAction
     {
         private string _regionName;
-        private int _z;
+        private string _newName;
 
-        public string Name => "SetZ";
+        public string Name => "Changeowner";
 
         public object[] Params
         {
@@ -21,43 +21,40 @@ namespace RegionExtension.Database.Actions
             {
                 return new object[]
                 {
-                    _regionName, _z
+                    _regionName, _newName
                 };
             }
         }
 
-        public SetZ(string regionName, int z)
+        public Rename(string regionName, string userName)
         {
             _regionName = regionName;
-            _z = z;
+            _newName = userName;
         }
 
-        public SetZ(SetZArgs args)
+        public Rename(RenameArgs args)
         {
             _regionName = args.Region.Name;
-            _z = args.Amount;
+            _newName = args.NewName;
         }
 
-        public SetZ(string fromArgs)
+        public Rename(string fromArgs)
         {
             var args = fromArgs.Split(' ');
             _regionName = args[0];
-            _z = int.Parse(args[1]);
+            _newName = args[1];
         }
 
         public void Do() =>
-            TShock.Regions.SetZ(_regionName, _z);
+            TShock.Regions.RenameRegion(_regionName, _newName);
 
         public string GetArgsString() =>
             string.Join(' ', Params);
 
         public IAction GetUndoAction(string undoString) =>
-            new SetZ(undoString);
+            new Rename(undoString);
 
-        public string GetUndoArgsString()
-        {
-            int z = TShock.Regions.GetRegionByName(_regionName).Z;
-            return string.Join(' ', _regionName, z);
-        }
+        public string GetUndoArgsString() =>
+            string.Join(' ', _newName, _regionName);
     }
 }

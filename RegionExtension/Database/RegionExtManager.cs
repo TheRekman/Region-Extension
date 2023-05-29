@@ -12,6 +12,7 @@ using RegionExtension.Commands;
 using RegionExtension.Commands.Parameters;
 using RegionExtension.Database.Actions;
 using RegionExtension.Database.EventsArgs;
+using IL.SteelSeries.GameSense;
 
 namespace RegionExtension.Database
 {
@@ -77,25 +78,20 @@ namespace RegionExtension.Database
 
         public void EventHandler()
         {
-            OnRegionMove += (args) =>
-            {
-                RegisterCommand(args.UserExecutor, args.Region);
-                _historyManager.SaveAction(new Move(args), args.Region, args.UserExecutor.Account);
-            };
-            OnRegionAllow += (args) =>
-            {
-                RegisterCommand(args.UserExecutor, args.Region);
-                _historyManager.SaveAction(new Allow(args), args.Region, args.User);
-            };
-            OnRegionRemove += (args) =>
-            {
-                RegisterCommand(args.UserExecutor, args.Region);
-                _historyManager.SaveAction(new Remove(args), args.Region, args.User);
-            };
-            OnRegionChangeOwner += (args) =>
-            {
-                RegisterCommand(args.U)
-            };
+            OnRegionMove += (args) => RegisterAction(new Move(args), args);
+            OnRegionAllow += (args) => RegisterAction(new Allow(args), args);
+            OnRegionRemove += (args) => RegisterAction(new Remove(args), args);
+            OnRegionChangeOwner += (args) => RegisterAction(new ChangeOwner(args), args);
+            OnRegionAllowGroup += (args) => RegisterAction(new AllowGroup(args), args);
+            OnRegionRemoveGroup += (args) => RegisterAction(new RemoveGroup(args), args);
+            OnRegionRename += (args) => RegisterAction(new Rename(args), args);
+            OnRegionResize += (args) => RegisterAction(new Resize(args), args);
+        }
+
+        public void RegisterAction(IAction action, BaseRegionArgs args)
+        {
+            RegisterCommand(args.UserExecutor, args.Region);
+            _historyManager.SaveAction(action, args.Region, args.UserExecutor.Account);
         }
 
         public void RegisterRegionDefine(RegionHooks.RegionCreatedEventArgs args)

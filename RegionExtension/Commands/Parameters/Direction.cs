@@ -11,6 +11,7 @@ namespace RegionExtension.Commands.Parameters
         private DirectionType _type;
 
         private DirectionType Type { get => _type; }
+
         public Direction(DirectionType type)
         {
             _type = type;

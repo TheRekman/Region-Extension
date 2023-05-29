@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RegionExtension.Database.EventsArgs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,12 @@ namespace RegionExtension.Database.Actions
         {
             _regionName = regionName;
             _groupName = groupName;
+        }
+
+        public AllowGroup(AllowGroupArgs args)
+        {
+            _regionName = args.Region.Name;
+            _groupName = args.Group.Name;
         }
 
         public AllowGroup(string fromArgs)

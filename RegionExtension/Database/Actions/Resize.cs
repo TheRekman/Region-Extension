@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RegionExtension.Database.EventsArgs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,13 @@ namespace RegionExtension.Database.Actions
             _regionName = regionName;
             _amount = amount;
             _direction = direction;
+        }
+
+        public Resize(ResizeArgs args)
+        {
+            _regionName = args.Region.Name;
+            _amount = args.Amount;
+            _direction = args.Amount;
         }
 
         public Resize(string fromArgs)
