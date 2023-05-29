@@ -13,7 +13,7 @@ namespace RegionExtension.Database.Actions
         private string _regionName;
         private string _userName;
 
-        public string Name => typeof(Remove).Name;
+        public string Name => ActionFactory.RemoveName;
 
         public object[] Params
         {

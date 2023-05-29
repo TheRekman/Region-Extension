@@ -1,18 +1,15 @@
-﻿using RegionExtension.Database.EventsArgs;
+﻿using RegionExtension.Commands.Parameters;
+using RegionExtension.Database.EventsArgs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
 {
-    internal class Move : IAction
+    public class Move : IAction
     {
         private string _regionName;
         private int _amount;
-        private int _direction;
+        private DirectionType _direction;
 
         public string Name => "Move";
 
@@ -27,7 +24,7 @@ namespace RegionExtension.Database.Actions
             }
         }
 
-        public Move(string regionName, int amount, int direction)
+        public Move(string regionName, int amount, DirectionType direction)
         {
             _regionName = regionName;
             _amount = amount;
@@ -38,7 +35,7 @@ namespace RegionExtension.Database.Actions
         {
             _regionName = args.Region.Name;
             _amount = args.Amount;
-            _direction = args.Direction;
+            _direction = args.Direction.Type;
         }
 
         public Move(string fromArgs)
@@ -46,22 +43,27 @@ namespace RegionExtension.Database.Actions
             var args = fromArgs.Split(' ');
             _regionName = args[0];
             _amount = int.Parse(args[1]);
-            _direction = int.Parse(args[2]);
+            _direction = Enum.Parse<DirectionType>(args[2]);
         }
 
-        public void Do() =>
-            TShock.Regions.ResizeRegion(_regionName, _amount, _direction);
+        public void Do()
+        {
+            Direction direction = new Direction(_direction);
+            var region = TShock.Regions.GetRegionByName(_regionName);
+            var newPos = direction.GetNewPosition(region.Area.X, region.Area.Y, _amount);
+            TShock.Regions.PositionRegion(_regionName, newPos.x, newPos.y, region.Area.Width, region.Area.Height);
+        }
 
         public string GetArgsString() =>
             string.Join(' ', Params);
 
         public IAction GetUndoAction(string undoString) =>
-            new Resize(undoString);
+            new Move(undoString);
 
         public string GetUndoArgsString()
         {
             int amount = _amount;
-            int direction = _direction;
+            DirectionType direction = (DirectionType)((int)(_direction + 2) % 4);
             return string.Join(' ', _regionName, amount, direction);
         }
     }

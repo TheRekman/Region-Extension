@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RegionExtension.Commands.Parameters
+﻿namespace RegionExtension.Commands.Parameters
 {
     public class Direction
     {
         private DirectionType _type;
 
-        private DirectionType Type { get => _type; }
+        public DirectionType Type { get => _type; }
 
         public Direction(DirectionType type)
         {

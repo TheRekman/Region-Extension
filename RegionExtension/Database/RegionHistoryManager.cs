@@ -89,6 +89,7 @@ namespace RegionExtension.Database
                         var undoAction = action.GetUndoAction(undoArgs);
                         if (!_redoActions.ContainsKey(regionId))
                             _redoActions.Add(regionId, new Stack<ActionInfo>(10));
+                        var stack = new Stack<int>(10);
                         _redoActions[regionId].Push(new ActionInfo(action, regionId, userId));
                         undoAction.Do();
                     }

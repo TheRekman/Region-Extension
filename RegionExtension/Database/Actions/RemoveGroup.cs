@@ -13,7 +13,7 @@ namespace RegionExtension.Database.Actions
         private string _regionName;
         private string _groupName;
 
-        public string Name => "RemoveG";
+        public string Name => ActionFactory.RemoveGroupName;
 
         public object[] Params
         {
