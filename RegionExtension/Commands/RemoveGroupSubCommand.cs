@@ -9,46 +9,45 @@ using TShockAPI.DB;
 
 namespace RegionExtension.Commands
 {
-    public class SetOwnerSubCommand : SubCommand
+    internal class RemoveGroupSubCommand : SubCommand
     {
         private bool _checkRegionOwn;
 
-        public override string[] Names => new[] { "setowner", "so" };
-        public override string Description => "Set region owner";
+        public override string[] Names => new[] { "removegroup", "rg" };
+        public override string Description => "Remove group from the region";
 
         public override void InitializeParams()
         {
             _params = new ICommandParam[]
             {
-                new UserAccountParam("useraccount", "which player be defined as owner. default: your user account", true),
-                new RegionParam("region", "which region owner be rewriten. default: region in your location", true)
+                new GroupParam("group", "which group will be removed."),
+                new RegionParam("region", "in which region removed. default: region in your location", true),
             };
         }
 
-
-        public SetOwnerSubCommand(bool checkRegionOwn = false)
+        public RemoveGroupSubCommand(bool checkRegionOwn = false)
         {
             _checkRegionOwn = checkRegionOwn;
         }
 
         public override void Execute(CommandArgsExtension args)
         {
-            var userAccount = (UserAccount)Params[0].Value;
+            var userAccount = (Group)Params[0].Value;
             var region = (Region)Params[1].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
             {
                 args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
             }
-            SetRegionOwn(args, userAccount, region);
+            AllowGroup(args, userAccount, region);
         }
 
-        private void SetRegionOwn(CommandArgsExtension args, UserAccount userAccount, Region region)
+        private void AllowGroup(CommandArgsExtension args, Group group, Region region)
         {
-            if (args.Plugin.ExtManager.ChangeOwner(args, region, userAccount))
-                args.Player.SendSuccessMessage("Region changeowner success!");
+            if (args.Plugin.ExtManager.AllowGroup(args, region, group))
+                args.Player.SendSuccessMessage("Group '{0}' removed from the region '{1}'".SFormat(group.Name, region.Name));
             else
-                args.Player.SendErrorMessage("Region changeowner failed!");
+                args.Player.SendErrorMessage("Failed remove group '{0}' from the region '{1}'!".SFormat(group.Name, region.Name));
         }
 
         public bool CheckRegionOwn(CommandArgsExtension args, Region region)
