@@ -14,7 +14,7 @@ namespace RegionExtension.Database
     public class RegionHistoryManager
     {
         private IDbConnection _database;
-        private Dictionary<int, Stack<IAction>> _actions;
+        private Dictionary<int, Stack<ActionInfo>> _redoActions;
 
         //ITS KOSTILI TIME
         private int _skipHistoryAdding = 0;
@@ -87,9 +87,9 @@ namespace RegionExtension.Database
                         var dateTime = reader.Get<DateTime>(_table.Columns[5].Name);
                         var action = ActionFactory.GetActionByName(actionName, args);
                         var undoAction = action.GetUndoAction(undoArgs);
-                        if (!_actions.ContainsKey(regionId))
-                            _actions.Add(regionId, new Stack<IAction>(10));
-                        _actions[regionId].Push(action);
+                        if (!_redoActions.ContainsKey(regionId))
+                            _redoActions.Add(regionId, new Stack<ActionInfo>(10));
+                        _redoActions[regionId].Push(new ActionInfo(action, regionId, userId));
                         undoAction.Do();
                     }
                 }
@@ -97,6 +97,21 @@ namespace RegionExtension.Database
             catch (Exception e)
             {
                 TShock.Log.Error(e.Message);
+            }
+        }
+
+        public void Redo(int count, int regionId)
+        {
+            if(_redoActions.ContainsKey(regionId))
+            {
+                while(count > 0 && _redoActions[regionId].Count > 0)
+                {
+                    count--;
+                    var actionInfo = _redoActions[regionId].Pop();
+                    var undoAction = actionInfo.Action.GetUndoAction(actionInfo.Action.GetUndoArgsString());
+                    SaveAction(undoAction, TShock.Regions.GetRegionByID(regionId), TShock.UserAccounts.GetUserAccountByID(actionInfo.UserId));
+                    actionInfo.Action.Do();
+                }
             }
         }
 
@@ -119,5 +134,19 @@ namespace RegionExtension.Database
         public string Args { get; set; }
         public string UndoArgs { get; set; }
         public DateTime DateTime { get; set; }
+    }
+
+    public class ActionInfo 
+    {
+        public ActionInfo(IAction action, int regionId, int userId)
+        {
+            Action = action;
+            RegionId = regionId;
+            UserId = userId;
+        }
+
+        public IAction Action { get; }
+        public int RegionId { get; }
+        public int UserId { get; }
     }
 }
