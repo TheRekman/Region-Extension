@@ -9,7 +9,7 @@ namespace RegionExtension.Database
 {
     public class RegionExtended
     {
-        Region Region { get; set; }
-        RegionExtensionInfo ExtensionInfo { get; set; }
+        public Region Region { get; set; }
+        public RegionExtensionInfo ExtensionInfo { get; set; }
     }
 }

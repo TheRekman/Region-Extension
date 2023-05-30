@@ -37,6 +37,7 @@ namespace RegionExtension.Database
         public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
 
         public event Action<BaseRegionArgs> OnRegionDelete;
+        public event Action<BaseRegionArgs> OnRegionDefine;
 
         public RegionExtManager(IDbConnection db)
         {
@@ -96,8 +97,13 @@ namespace RegionExtension.Database
             OnRegionProtect += (args) => RegisterAction(new Protect(args), args);
 
             OnRegionDelete += (args) =>
-            _deletedRegionsDB.RegisterDeletedRegion(args.Region, args.UserExecutor.Account,
+            {
+                _deletedRegionsDB.RegisterDeletedRegion(args.Region, args.UserExecutor.Account,
                                                     _regionInfoManager.RegionsInfo.First(reg => reg.Id == args.Region.ID));
+                _regionInfoManager.RemoveRegion(args.Region.ID);
+            };
+            OnRegionDefine += (args) =>
+                _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
         }
 
         public void RegisterAction(IAction action, BaseRegionArgs args)
@@ -175,6 +181,17 @@ namespace RegionExtension.Database
         {
             OnRegionDelete(new BaseRegionArgs(args.Player, region));
             return TShock.Regions.DeleteRegion(region.Name);
+        }
+
+        public bool RegionDefine(CommandArgsExtension args, Region region)
+        {
+            var res = TShock.Regions.AddRegion(region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Name, region.Owner, region.WorldID, region.Z);
+            if (res)
+            {
+                region = TShock.Regions.GetRegionByName(region.Name);
+                OnRegionDefine(new BaseRegionArgs(args.Player, region));
+            }
+            return res;
         }
 
         public bool ClearAllowUsers(string regionName)
