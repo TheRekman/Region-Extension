@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TShockAPI.DB;
 using TShockAPI;
 using Microsoft.Xna.Framework;
+using RegionExtension.Commands.SubCommands;
 
 namespace RegionExtension.Commands
 {

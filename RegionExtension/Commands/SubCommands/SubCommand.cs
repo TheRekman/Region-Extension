@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     public abstract class SubCommand : ISubCommand
     {
@@ -19,7 +19,7 @@ namespace RegionExtension.Commands
         {
             get
             {
-                if(_params == null)
+                if (_params == null)
                     InitializeParams();
                 return _params;
             }
@@ -56,7 +56,7 @@ namespace RegionExtension.Commands
 
         public void InitializeCommand(CommandArgsExtension args)
         {
-             if (TryImplementParams(args.Parameters.Skip(1), args))
+            if (TryImplementParams(args.Parameters.Skip(1), args))
                 Execute(args);
         }
 

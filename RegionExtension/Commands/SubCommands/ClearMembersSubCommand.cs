@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     public class ClearMembersSubCommand : SubCommand
     {
@@ -43,7 +43,7 @@ namespace RegionExtension.Commands
 
         private void ClearMembersInRegion(CommandArgsExtension args, Region region)
         {
-            if(args.Plugin.ExtManager.ClearAllowUsers(args, region.Name))
+            if (args.Plugin.ExtManager.ClearAllowUsers(args, region.Name))
                 args.Player.SendSuccessMessage("All users cleared from region.");
             else
                 args.Player.SendErrorMessage("Failed clear users.");

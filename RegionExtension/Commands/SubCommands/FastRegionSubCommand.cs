@@ -4,7 +4,7 @@ using Terraria.GameContent.UI.States;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     public class FastRegionSubCommand : SubCommand
     {
@@ -25,7 +25,7 @@ namespace RegionExtension.Commands
         public override void Execute(CommandArgsExtension args)
         {
             var regionname = (string)Params[0].Value;
-            if(!TryAutoComplete((string)Params[0].Value, args, out regionname))
+            if (!TryAutoComplete((string)Params[0].Value, args, out regionname))
             {
                 args.Player.SendErrorMessage("Region '{0}' alreadt exist!".SFormat(regionname));
                 return;
@@ -43,14 +43,14 @@ namespace RegionExtension.Commands
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
         {
-            if(!args.Plugin.Config.AutoCompleteSameName)
+            if (!args.Plugin.Config.AutoCompleteSameName)
             {
                 result = str;
                 return TShock.Regions.GetRegionByName(str) != null;
             }
             int num = 0;
             result = str;
-            while(TShock.Regions.GetRegionByName(result) != null)
+            while (TShock.Regions.GetRegionByName(result) != null)
             {
                 result = args.Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
                 num++;

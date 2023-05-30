@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RegionExtension.Commands.Parameters;
 using TShockAPI;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     public interface ISubCommand
     {

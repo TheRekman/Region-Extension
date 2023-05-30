@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.Localization;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
-    public class SetCommand : SubCommand
+    public class SetSubCommand : SubCommand
     {
         public override string[] Names => new string[] { "Set" };
 
@@ -31,7 +31,7 @@ namespace RegionExtension.Commands
             {
                 args.Player.SendErrorMessage("Invalid point number! 1/2 only");
                 return;
-            }    
+            }
             SetPoint(args, point);
         }
 

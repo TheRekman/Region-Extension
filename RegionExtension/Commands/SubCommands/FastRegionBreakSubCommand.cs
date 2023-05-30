@@ -2,7 +2,7 @@
 using TShockAPI.DB;
 using TShockAPI;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     internal class FastRegionBreakSubCommand : SubCommand
     {

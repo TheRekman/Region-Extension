@@ -1,11 +1,11 @@
-﻿    using RegionExtension.Commands.Parameters;
+﻿using RegionExtension.Commands.Parameters;
 using TShockAPI.DB;
 using TShockAPI;
 using Terraria;
 using System.Linq;
 using System;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     internal class SelfOwnerList : SubCommand
     {

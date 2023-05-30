@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     public class DeleteRegionSubCommand : SubCommand
     {

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 using OTAPI;
 using Terraria;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     internal class DefineSubCommand : SubCommand
     {
@@ -28,7 +28,7 @@ namespace RegionExtension.Commands
         public override void Execute(CommandArgsExtension args)
         {
             var regionname = (string)Params[0].Value;
-            if(args.Player.TempPoints.Any(p => p == Point.Zero))
+            if (args.Player.TempPoints.Any(p => p == Point.Zero))
             {
                 args.Player.SendErrorMessage("Set points before define region!");
                 return;

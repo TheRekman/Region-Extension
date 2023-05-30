@@ -5,7 +5,7 @@ using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
     internal class OwnerList : SubCommand
     {
