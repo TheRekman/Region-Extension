@@ -13,6 +13,8 @@ using RegionExtension.Commands.Parameters;
 using RegionExtension.Database.Actions;
 using RegionExtension.Database.EventsArgs;
 using IL.SteelSeries.GameSense;
+using System.Linq;
+using Steamworks;
 
 namespace RegionExtension.Database
 {
@@ -21,6 +23,7 @@ namespace RegionExtension.Database
         private IDbConnection _tshockDatabase;
         private RegionInfoManager _regionInfoManager;
         private RegionHistoryManager _historyManager;
+        private DeletedRegionsDB _deletedRegionsDB;
 
         public event Action<AllowArgs> OnRegionAllow;
         public event Action<RemoveArgs> OnRegionRemove;
@@ -32,6 +35,8 @@ namespace RegionExtension.Database
         public event Action<MoveArgs> OnRegionMove;
         public event Action<RenameArgs> OnRegionRename;
         public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
+
+        public event Action<BaseRegionArgs> OnRegionDelete;
 
         public RegionExtManager(IDbConnection db)
         {
@@ -74,6 +79,7 @@ namespace RegionExtension.Database
             }
             _regionInfoManager = new RegionInfoManager(database);
             _historyManager = new RegionHistoryManager(database);
+            _deletedRegionsDB = new DeletedRegionsDB(database);
         }
 
         public void EventHandler()
@@ -88,6 +94,10 @@ namespace RegionExtension.Database
             OnRegionResize += (args) => RegisterAction(new Resize(args), args);
             OnRegionSetZ += (args) => RegisterAction(new SetZ(args), args);
             OnRegionProtect += (args) => RegisterAction(new Protect(args), args);
+
+            OnRegionDelete += (args) =>
+            _deletedRegionsDB.RegisterDeletedRegion(args.Region, args.UserExecutor.Account,
+                                                    _regionInfoManager.RegionsInfo.First(reg => reg.Id == args.Region.ID));
         }
 
         public void RegisterAction(IAction action, BaseRegionArgs args)
@@ -159,6 +169,11 @@ namespace RegionExtension.Database
         {
             OnRegionChangeOwner(new ChangeOwnerArgs(args.Player, region, account));
             return TShock.Regions.ChangeOwner(region.Name, account.Name);
+        }
+
+        public bool RegionRemove(CommandArgsExtension args, Region region)
+        {
+
         }
 
         public bool ClearAllowUsers(string regionName)

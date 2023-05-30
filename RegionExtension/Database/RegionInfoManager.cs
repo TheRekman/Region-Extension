@@ -115,7 +115,7 @@ namespace RegionExtension.Database
 
         public bool UpdateLastUser(int id, int userId)
         {
-            RegionsInfo.First(r => r.Id == id).LastUser = userId;
+            RegionsInfo.First(r => r.Id == id).LastUserId = userId;
             return UpdateQuery(_database, _table.Name, TableInfo.LastUser.ToString(), userId.ToString(), id);
             
         }
@@ -182,7 +182,7 @@ namespace RegionExtension.Database
                 lines.Add("Region is not shared with any groups.");
             }
             var extInfo = RegionsInfo.First(ri => ri.Id == id);
-            lines.Add(string.Concat("Last user: ", extInfo.LastUser));
+            lines.Add(string.Concat("Last user: ", extInfo.LastUserId));
             lines.Add(string.Concat("Last update: ", extInfo.LastUpdate.ToString()));
             lines.Add(string.Concat("Last activity: ", extInfo.LastActivity.ToString()));
             lines.Add(string.Concat("Date creation: ", extInfo.DateCreation.ToString()));
@@ -197,6 +197,7 @@ namespace RegionExtension.Database
             LastUpdate,
             LastActivity
         }
+
     }
 
     public class RegionExtensionInfo
@@ -205,20 +206,20 @@ namespace RegionExtension.Database
             this(id, lastUser, DateTime.Now, DateTime.Now, DateTime.Now)
         {
             Id = id;
-            LastUser = lastUser;
+            LastUserId = lastUser;
         }
 
-        public RegionExtensionInfo(int id, int lastUser, DateTime dateCreation, DateTime lastUpdate, DateTime lastActivity)
+        public RegionExtensionInfo(int id, int lastUserId, DateTime dateCreation, DateTime lastUpdate, DateTime lastActivity)
         {
             Id = id;
             DateCreation = dateCreation;
-            LastUser = lastUser;
+            LastUserId = lastUserId;
             LastUpdate = lastUpdate;
             LastActivity = lastActivity;
         }
 
         public int Id { get; set; }
-        public int LastUser { get; set; }
+        public int LastUserId { get; set; }
         public DateTime DateCreation { get; set; } = DateTime.Now;
         public DateTime LastUpdate { get; set; } = DateTime.Now;
         public DateTime LastActivity { get; set; } = DateTime.Now;

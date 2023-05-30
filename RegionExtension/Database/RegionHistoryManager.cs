@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TShockAPI.DB;
 using TShockAPI;
 using RegionExtension.Database.Actions;
+using TShockAPI.Hooks;
 
 namespace RegionExtension.Database
 {
@@ -19,14 +20,14 @@ namespace RegionExtension.Database
         //ITS KOSTILI TIME
         private int _skipHistoryAdding = 0;
 
-        private SqlTable _table =
+        private SqlTable _regionActionsTable =
             new SqlTable("RegionHistory",
-                         new SqlColumn(TableInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
-                         new SqlColumn(TableInfo.UserId.ToString(), MySqlDbType.Int32) { NotNull = true },
-                         new SqlColumn(TableInfo.ActionName.ToString(), MySqlDbType.Text),
-                         new SqlColumn(TableInfo.Args.ToString(), MySqlDbType.Text),
-                         new SqlColumn(TableInfo.UndoArgs.ToString(), MySqlDbType.Text),
-                         new SqlColumn(TableInfo.DateTime.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true }
+                         new SqlColumn(TableHistoryInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
+                         new SqlColumn(TableHistoryInfo.UserId.ToString(), MySqlDbType.Int32) { NotNull = true },
+                         new SqlColumn(TableHistoryInfo.ActionName.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableHistoryInfo.Args.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableHistoryInfo.UndoArgs.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableHistoryInfo.DateTime.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true }
                          );
 
         public List<RegionExtensionInfo> RegionsInfo { get; private set; }
@@ -42,7 +43,7 @@ namespace RegionExtension.Database
             IQueryBuilder queryCreator = _database.GetSqlType() == SqlType.Sqlite ?
                                             new SqliteQueryCreator() : new MysqlQueryCreator();
             var creator = new SqlTableCreator(_database, queryCreator);
-            creator.EnsureTableStructure(_table);
+            creator.EnsureTableStructure(_regionActionsTable);
         }
 
         public void SaveAction(IAction action, Region region, UserAccount user)
@@ -60,10 +61,10 @@ namespace RegionExtension.Database
             var dateTime = DateTime.Now;
             try
             {
-                var variablesString = string.Join(' ', _table.Columns.Select(c => c.Name));
+                var variablesString = string.Join(' ', _regionActionsTable.Columns.Select(c => c.Name));
                 var values = "{0} {1} {2} {3} {4} {5}".SFormat(
                              regionId, userId, name, args, undoArgs, dateTime);
-                _database.Query("INSERT INTO @0 (@1) VALUES (@2);", _table.Name, variablesString, values);
+                _database.Query("INSERT INTO @0 (@1) VALUES (@2);", _regionActionsTable.Name, variablesString, values);
             }
             catch (Exception ex)
             {
@@ -75,16 +76,16 @@ namespace RegionExtension.Database
         {
             try
             {
-                using (var reader = _database.QueryReader("SELECT @0 FROM @1 WHERE RegionId=@2", count, _table.Name, regionId))
+                using (var reader = _database.QueryReader("SELECT @0 FROM @1 WHERE RegionId=@2", count, _regionActionsTable.Name, regionId))
                 {
                     while (reader.Read())
                     {
-                        regionId = reader.Get<int>(_table.Columns[0].Name);
-                        var userId = reader.Get<int>(_table.Columns[1].Name);
-                        var actionName = reader.Get<string>(_table.Columns[2].Name);
-                        var args = reader.Get<string>(_table.Columns[3].Name);
-                        var undoArgs = reader.Get<string>(_table.Columns[4].Name);
-                        var dateTime = reader.Get<DateTime>(_table.Columns[5].Name);
+                        regionId = reader.Get<int>(_regionActionsTable.Columns[0].Name);
+                        var userId = reader.Get<int>(_regionActionsTable.Columns[1].Name);
+                        var actionName = reader.Get<string>(_regionActionsTable.Columns[2].Name);
+                        var args = reader.Get<string>(_regionActionsTable.Columns[3].Name);
+                        var undoArgs = reader.Get<string>(_regionActionsTable.Columns[4].Name);
+                        var dateTime = reader.Get<DateTime>(_regionActionsTable.Columns[5].Name);
                         var action = ActionFactory.GetActionByName(actionName, args);
                         var undoAction = action.GetUndoAction(undoArgs);
                         if (!_redoActions.ContainsKey(regionId))
@@ -115,7 +116,7 @@ namespace RegionExtension.Database
             }
         }
 
-        private enum TableInfo
+        private enum TableHistoryInfo
         {
             RegionId,
             UserId,
@@ -126,7 +127,7 @@ namespace RegionExtension.Database
         }
     }
 
-    public class HistoryUnit
+    public class ActionDBInfo
     {
         public int RegionId { get; set; }
         public int UserId { get; set; }
