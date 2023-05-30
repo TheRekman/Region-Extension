@@ -171,9 +171,10 @@ namespace RegionExtension.Database
             return TShock.Regions.ChangeOwner(region.Name, account.Name);
         }
 
-        public bool RegionRemove(CommandArgsExtension args, Region region)
+        public bool DeleteRegion(CommandArgsExtension args, Region region)
         {
-
+            OnRegionDelete(new BaseRegionArgs(args.Player, region));
+            return TShock.Regions.DeleteRegion(region.Name);
         }
 
         public bool ClearAllowUsers(string regionName)
