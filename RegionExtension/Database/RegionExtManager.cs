@@ -112,16 +112,6 @@ namespace RegionExtension.Database
             _historyManager.SaveAction(action, args.Region, args.UserExecutor.Account);
         }
 
-        public void RegisterRegionDefine(RegionHooks.RegionCreatedEventArgs args)
-        {
-            _regionInfoManager.AddNewRegion(args.Region.ID, TShock.UserAccounts.GetUserAccountByName(args.Region.Owner).ID);
-        }
-
-        public void RegisterRegionDeletion(RegionHooks.RegionDeletedEventArgs args)
-        {
-            _regionInfoManager.RemoveRegion(args.Region.ID);
-        }
-
         public bool MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
             var newPos = direction.GetNewPosition(region.Area.X, region.Area.Y, amount);
@@ -183,7 +173,7 @@ namespace RegionExtension.Database
             return TShock.Regions.DeleteRegion(region.Name);
         }
 
-        public bool RegionDefine(CommandArgsExtension args, Region region)
+        public bool DefineRegion(CommandArgsExtension args, Region region)
         {
             var res = TShock.Regions.AddRegion(region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Name, region.Owner, region.WorldID, region.Z);
             if (res)
