@@ -63,7 +63,7 @@ namespace RegionExtension
             ExtManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
-    }
+        }
         #endregion
 
         #region hooks & events
