@@ -1,6 +1,7 @@
 ﻿using RegionExtension.Commands.Parameters;
 using RegionExtension.Database.EventsArgs;
 using System;
+using System.Collections.Generic;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -66,5 +67,13 @@ namespace RegionExtension.Database.Actions
             DirectionType direction = (DirectionType)((int)(_direction + 2) % 4);
             return string.Join(' ', _regionName, amount, direction);
         }
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _amount.ToString(),
+                _direction.ToString()
+            };
     }
 }

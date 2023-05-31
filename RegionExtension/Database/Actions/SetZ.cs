@@ -1,4 +1,6 @@
-﻿using RegionExtension.Database.EventsArgs;
+﻿using RegionExtension.Commands.Parameters;
+using RegionExtension.Database.EventsArgs;
+using System.Collections.Generic;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -54,5 +56,13 @@ namespace RegionExtension.Database.Actions
             int z = TShock.Regions.GetRegionByName(_regionName).Z;
             return string.Join(' ', _regionName, z);
         }
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _regionName,
+                _z.ToString()
+            };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RegionExtension.Database.EventsArgs;
+using System.Collections.Generic;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -51,5 +52,13 @@ namespace RegionExtension.Database.Actions
 
         public string GetUndoArgsString() =>
             string.Join(' ', _regionName, TShock.Regions.GetRegionByName(_regionName).Owner);
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _regionName,
+                _userName
+            };
     }
 }

@@ -14,5 +14,6 @@ namespace RegionExtension.Database.Actions
         string GetArgsString();
         string GetUndoArgsString();
         IAction GetUndoAction(string undoString);
+        IEnumerable<string> GetInfoString();
     }
 }

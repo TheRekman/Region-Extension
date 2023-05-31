@@ -15,6 +15,13 @@
             }
         }
 
+        public static DirectionType GetFromTshockDirection(int direction)
+        {
+            if (direction % 2 == 0)
+                return (DirectionType)((direction + 2) % 4);
+            return (DirectionType)direction;
+        }
+
         public Direction(DirectionType type)
         {
             _type = type;

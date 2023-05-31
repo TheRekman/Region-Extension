@@ -11,7 +11,7 @@
         public const string MoveName = "Move";
         public const string ResizeName = "Resize";
         public const string ProtectName = "Protect";
-        public const string RenameName = "Rename"
+        public const string RenameName = "Rename";
 
         public static IAction GetActionByName(string name, string args)
         {

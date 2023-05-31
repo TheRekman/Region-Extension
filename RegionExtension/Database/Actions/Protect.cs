@@ -1,4 +1,5 @@
 ﻿using RegionExtension.Database.EventsArgs;
+using System.Collections.Generic;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -8,7 +9,7 @@ namespace RegionExtension.Database.Actions
         private string _regionName;
         private bool _protect;
 
-        public string Name => ActionFactory.pr;
+        public string Name => ActionFactory.ProtectName;
 
         public object[] Params
         {
@@ -54,5 +55,13 @@ namespace RegionExtension.Database.Actions
             bool protect = TShock.Regions.GetRegionByName(_regionName).DisableBuild;
             return string.Join(' ', _regionName, protect);
         }
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _regionName,
+                _protect.ToString()
+            };
     }
 }

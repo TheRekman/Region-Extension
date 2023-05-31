@@ -101,6 +101,37 @@ namespace RegionExtension.Database
             }
         }
 
+        public List<string> GetActionsInfo(int count, int regionId)
+        {
+            try
+            {
+                using (var reader = _database.QueryReader("SELECT @0 FROM @1 WHERE RegionId=@2", count, _regionActionsTable.Name, regionId))
+                {
+                    var info = new List<string>();
+                    while (reader.Read())
+                    {
+                        regionId = reader.Get<int>(_regionActionsTable.Columns[0].Name);
+                        var userId = reader.Get<int>(_regionActionsTable.Columns[1].Name);
+                        var actionName = reader.Get<string>(_regionActionsTable.Columns[2].Name);
+                        var args = reader.Get<string>(_regionActionsTable.Columns[3].Name);
+                        var undoArgs = reader.Get<string>(_regionActionsTable.Columns[4].Name);
+                        var dateTime = reader.Get<DateTime>(_regionActionsTable.Columns[5].Name);
+                        var action = ActionFactory.GetActionByName(actionName, args);
+                        info.Add(string.Join(' ',
+                            TShock.UserAccounts.GetUserAccountByID(userId).Name,
+                            dateTime.ToString(),
+                            action.GetInfoString()));
+                    }
+                    return info;
+                }
+            }
+            catch (Exception e)
+            {
+                TShock.Log.Error(e.Message);
+                return null;
+            }
+        }
+
         public void Redo(int count, int regionId)
         {
             if(_redoActions.ContainsKey(regionId))

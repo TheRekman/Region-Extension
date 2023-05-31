@@ -194,6 +194,9 @@ namespace RegionExtension.Database
         public List<string> GetRegionInfo(Region region) =>
             _regionInfoManager.GetRegionInfo(region.ID);
 
+        public List<string> GetRegionHistory(int count, Region region) =>
+            _historyManager.GetActionsInfo(count, region.ID);
+
         public bool ClearAllowUsers(string regionName)
         {
             Region r = TShock.Regions.GetRegionByName(regionName);

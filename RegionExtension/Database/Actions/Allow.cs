@@ -57,5 +57,13 @@ namespace RegionExtension.Database.Actions
 
         public string GetUndoArgsString() =>
             GetArgsString();
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _regionName,
+                _userName
+            };
     }
 }

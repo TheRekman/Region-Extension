@@ -1,4 +1,6 @@
-﻿using RegionExtension.Database.EventsArgs;
+﻿using RegionExtension.Commands.Parameters;
+using RegionExtension.Database.EventsArgs;
+using System.Collections.Generic;
 using TShockAPI;
 
 namespace RegionExtension.Database.Actions
@@ -59,5 +61,14 @@ namespace RegionExtension.Database.Actions
             int direction = _direction;
             return string.Join(' ', _regionName, amount, direction);
         }
+
+        public IEnumerable<string> GetInfoString() =>
+            new string[]
+            {
+                Name + ": ",
+                _regionName,
+                _amount.ToString(),
+                Direction.GetFromTshockDirection(_direction).ToString()
+            };
     }
 }
