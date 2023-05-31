@@ -28,15 +28,7 @@ namespace RegionExtension
 
         public static void InitializeCommands(this Plugin plugin, params CommandExtension[] commands)
         {
-            foreach (var command in commands)
-            {
-                TShockAPI.Commands.ChatCommands.Add(
-                    new Command(
-                    command.Permissions.ToList(),
-                    args => command.InitializeCommand(new CommandArgsExtension(args, plugin)),
-                    command.Names)
-                    { HelpText = command.HelpText });
-            }
+            CommandsInitializer.InitializeCommands(plugin, commands);
         }
     }
 }

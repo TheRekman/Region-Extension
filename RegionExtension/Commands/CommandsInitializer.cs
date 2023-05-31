@@ -10,10 +10,12 @@ namespace RegionExtension.Commands
 {
     public class CommandsInitializer
     {
-        public void InitializeCommands(Plugin plugin, params CommandExtension[] commands)
+        public static void InitializeCommands(Plugin plugin, params CommandExtension[] commands)
         {
             foreach (var command in commands)
             {
+                foreach(var name in command.Names) 
+                    TShockAPI.Commands.ChatCommands.RemoveAll(c => c.Names.Contains(name) || c.Name == name);
                 TShockAPI.Commands.ChatCommands.Add(
                     new Command(
                     command.Permissions.ToList(),
