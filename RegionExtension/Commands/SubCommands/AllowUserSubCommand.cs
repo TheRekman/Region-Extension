@@ -41,7 +41,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void AllowUser(CommandArgsExtension args, UserAccount userAccount, Region region)
         {
-            if (args.Plugin.ExtManager.AllowUser(args, region, userAccount))
+            if (args.Plugin.RegionExtensionManager.AllowUser(args, region, userAccount))
                 args.Player.SendSuccessMessage("User '{0}' allowed to the region '{1}'".SFormat(userAccount.Name, region.Name));
             else
                 args.Player.SendErrorMessage("Failed allow user '{0}' to the region '{1}'".SFormat(userAccount.Name, region.Name));

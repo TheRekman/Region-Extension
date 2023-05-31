@@ -18,14 +18,15 @@ namespace RegionExtension.Commands.Parameters
         {
             var types = Enum.GetValues<DirectionType>()
                             .Select(d => (str: d.ToString().Substring(0, 1).ToLower(), dir: d))
-                            .Where(el => el.str == str);
-            if (types.Count() == 0)
+                            .Where(el => el.str == str || el.dir.ToString().ToLower() == str);
+            var detectedType = types.Where(el => el.str == str || el.dir.ToString().ToLower() == str);
+            if (detectedType.Count() == 0)
             {
                 args?.Player.SendErrorMessage("Invalid direction '{0}'! Use {1}"
-                                              .SFormat(Name, string.Join('/', types.Select(el => el.str))));
+                                              .SFormat(Name, string.Join('/', types.Select(el => el.str), types.Select(el => el.dir.ToString().ToLower()))));
                 return false;
             }
-            _value = new Direction(types.First().dir);
+            _value = new Direction(detectedType.First().dir);
             return true;
         }
     }

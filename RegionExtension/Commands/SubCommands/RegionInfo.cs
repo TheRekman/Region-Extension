@@ -46,48 +46,13 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendRegionInfo(CommandArgsExtension args, int page, Region region)
         {
-            var lines = new List<string>
-                        {
-                            string.Format("X: {0}; Y: {1}; W: {2}; H: {3}, Z: {4}", region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Z),
-                            string.Concat("Owner: ", region.Owner),
-                            string.Concat("Protected: ", region.DisableBuild.ToString()),
-                        };
-
-            if (region.AllowedIDs.Count > 0)
-            {
-                IEnumerable<string> sharedUsersSelector = region.AllowedIDs.Select(userId =>
-                {
-                    UserAccount user = TShock.UserAccounts.GetUserAccountByID(userId);
-                    if (user != null)
-                        return user.Name;
-
-                    return string.Concat("{ID: ", userId, "}");
-                });
-                List<string> extraLines = PaginationTools.BuildLinesFromTerms(sharedUsersSelector.Distinct());
-                extraLines[0] = "Shared with: " + extraLines[0];
-                lines.AddRange(extraLines);
-            }
-            else
-            {
-                lines.Add("Region is not shared with any users.");
-            }
-
-            if (region.AllowedGroups.Count > 0)
-            {
-                List<string> extraLines = PaginationTools.BuildLinesFromTerms(region.AllowedGroups.Distinct());
-                extraLines[0] = "Shared with groups: " + extraLines[0];
-                lines.AddRange(extraLines);
-            }
-            else
-            {
-                lines.Add("Region is not shared with any groups.");
-            }
+            var lines = args.Plugin.RegionExtensionManager.GetRegionInfo(region);
             var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(
                 args.Player, page, lines, new PaginationTools.Settings
                 {
                     HeaderFormat = string.Format("Information About Region \"{0}\" ({{0}}/{{1}}):", region.Name),
-                    FooterFormat = string.Format("Type {0}/ro info {1} {{0}} for more information.", TShockAPI.Commands.Specifier, region.Name)
+                    FooterFormat = string.Format("Type {0}{1} info {1} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, region.Name)
                 }
             );
         }

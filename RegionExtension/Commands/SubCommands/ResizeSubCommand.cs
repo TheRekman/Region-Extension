@@ -9,23 +9,23 @@ using TShockAPI.DB;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    public class MoveSubCommand : SubCommand
+    internal class ResizeSubCommand : SubCommand
     {
         public bool _checkRegionOwn;
 
-        public override string[] Names => new[] { "move", "mv" };
-        public override string Description => "move region with given name.";
+        public override string[] Names => new[] { "resize", "rs", "expand", "exp"};
+        public override string Description => "resize region border.";
         public override void InitializeParams()
         {
             _params = new ICommandParam[]
             {
-                new RegionParam("region", "which region must be moved."),
-                new IntParam("amount", "amount on which region must be moved."),
+                new RegionParam("region", "which region must be resized."),
+                new IntParam("amount", "amount on which region must be resized."),
                 new DirectionParam("direction", "direction of move. u/d/r/l")
             };
         }
 
-        public MoveSubCommand(bool checkRegionOwn = false)
+        public ResizeSubCommand(bool checkRegionOwn = false)
         {
             _checkRegionOwn = checkRegionOwn;
         }
@@ -33,7 +33,7 @@ namespace RegionExtension.Commands.SubCommands
         public override void Execute(CommandArgsExtension args)
         {
             var region = (Region)Params[0].Value;
-            var amount = ((IntParam)Params[1]).TValue;
+            var amount = (int)Params[1].Value;
             var direction = (Direction)Params[2].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
             {
@@ -48,10 +48,10 @@ namespace RegionExtension.Commands.SubCommands
 
         private void MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
-            if (args.Plugin.RegionExtensionManager.MoveRegion(args, region, amount, direction))
-                args.Player.SendSuccessMessage("Region moved.");
+            if (args.Plugin.RegionExtensionManager.Resize(args, region, amount, direction.TshockDirection))
+                args.Player.SendSuccessMessage("Region resized.");
             else
-                args.Player.SendErrorMessage("Failed move region.");
+                args.Player.SendErrorMessage("Failed resize region.");
         }
     }
 }

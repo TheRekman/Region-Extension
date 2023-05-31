@@ -45,7 +45,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void AllowGroup(CommandArgsExtension args, Group group, Region region)
         {
-            if (args.Plugin.ExtManager.AllowGroup(args, region, group))
+            if (args.Plugin.RegionExtensionManager.AllowGroup(args, region, group))
                 args.Player.SendSuccessMessage("Group '{0}' allowed to the region '{1}'".SFormat(group.Name, region.Name));
             else
                 args.Player.SendErrorMessage("Failed allow group '{0}' to the region '{1}'!".SFormat(group.Name, region.Name));

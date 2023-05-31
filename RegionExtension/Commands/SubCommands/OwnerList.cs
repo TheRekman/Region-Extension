@@ -7,7 +7,7 @@ using TShockAPI.DB;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    internal class OwnerList : SubCommand
+    public class OwnerList : SubCommand
     {
         public override string[] Names => new string[] { "ownerlist", "ol" };
 

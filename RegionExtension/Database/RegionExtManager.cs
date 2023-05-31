@@ -15,6 +15,7 @@ using RegionExtension.Database.EventsArgs;
 using IL.SteelSeries.GameSense;
 using System.Linq;
 using Steamworks;
+using TShockAPI.Configuration;
 
 namespace RegionExtension.Database
 {
@@ -112,6 +113,12 @@ namespace RegionExtension.Database
             _historyManager.SaveAction(action, args.Region, args.UserExecutor.Account);
         }
 
+        public bool RenameRegion(CommandArgsExtension args, Region region, string newName)
+        {
+            OnRegionRename(new RenameArgs(args.Player, region, newName));
+            return TShock.Regions.RenameRegion(region.Name, newName);
+        }
+
         public bool MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
             var newPos = direction.GetNewPosition(region.Area.X, region.Area.Y, amount);
@@ -183,6 +190,9 @@ namespace RegionExtension.Database
             }
             return res;
         }
+
+        public List<string> GetRegionInfo(Region region) =>
+            _regionInfoManager.GetRegionInfo(region.ID);
 
         public bool ClearAllowUsers(string regionName)
         {

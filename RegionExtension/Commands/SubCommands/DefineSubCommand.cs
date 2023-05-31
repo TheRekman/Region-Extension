@@ -55,7 +55,7 @@ namespace RegionExtension.Commands.SubCommands
                 Owner = args.Player.Account.Name,
                 WorldID = Main.worldID.ToString()
             };
-            args.Plugin.ExtManager.DefineRegion(args, region);
+            args.Plugin.RegionExtensionManager.DefineRegion(args, region);
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)

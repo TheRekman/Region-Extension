@@ -6,6 +6,15 @@
 
         public DirectionType Type { get => _type; }
 
+        public int TshockDirection {
+            get 
+            {
+                if ((int)_type % 2 == 0)
+                    return ((int)_type + 2) % 4;
+                return (int)_type;
+            }
+        }
+
         public Direction(DirectionType type)
         {
             _type = type;
@@ -27,6 +36,5 @@
         Right,
         Up,
         Left
-        
     }
 }

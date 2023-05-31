@@ -27,7 +27,7 @@ namespace RegionExtension
         public ContextManager Contexts;
         public List<FastRegion> FastRegions;
         public ConfigFile Config;
-        public RegionExtManager ExtManager;
+        public RegionExtManager RegionExtensionManager;
         #endregion
 
         #region initialize
@@ -60,7 +60,7 @@ namespace RegionExtension
             Contexts = new ContextManager();
             Contexts.Initialize();
             PluginCommands.Initialize(this);
-            ExtManager = new RegionExtManager(TShock.DB);
+            RegionExtensionManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
         }
