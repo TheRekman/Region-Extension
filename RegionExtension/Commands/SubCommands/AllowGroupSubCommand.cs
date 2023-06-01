@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         private bool _checkRegionOwn;
 
-        public override string[] Names => new[] { "allowgroup", "ag" };
+        public override string[] Names => new[] { "allowg", "ag" };
         public override string Description => "Allow group to the region";
 
         public override void InitializeParams()

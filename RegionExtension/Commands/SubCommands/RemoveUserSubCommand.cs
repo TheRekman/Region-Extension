@@ -41,7 +41,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void RemoveUser(CommandArgsExtension args, UserAccount userAccount, Region region)
         {
-            if (args.Plugin.RegionExtensionManager.ChangeOwner(args, region, userAccount))
+            if (args.Plugin.RegionExtensionManager.RemoveUser(args, region, userAccount))
                 args.Player.SendSuccessMessage("User '{0}' removed from the region '{1}'".SFormat(userAccount.Name, region.Name));
             else
                 args.Player.SendErrorMessage("Failed remove user '{0}' from the region '{1}'".SFormat(userAccount.Name, region.Name));

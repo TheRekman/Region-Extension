@@ -13,8 +13,8 @@ namespace RegionExtension.Commands.SubCommands
     {
         protected ICommandParam[] _params;
 
-        public virtual string[] Names => new[] { "name" };
-        public virtual string Description => "descrition";
+        public virtual string[] Names => new[] { "NOT_DEFINED" };
+        public virtual string Description => "NOT_DEFINED";
         public ICommandParam[] Params
         {
             get
@@ -29,9 +29,6 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[0];
         }
-
-        private IEnumerable<string> GetParamsStrings() =>
-            Params.Select(p => "{0} - {1}".SFormat(p.Name, p.Description));
 
         private bool TryImplementParams(IEnumerable<string> parameters, CommandArgsExtension args)
         {

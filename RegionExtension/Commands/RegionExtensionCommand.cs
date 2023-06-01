@@ -23,20 +23,21 @@ namespace RegionExtension.Commands
             new GetRegionNameSubCommand(),
             new RenameSubCommand(),
             new RegionListSubCommand(),
+            new ResizeSubCommand(),
+            new AllowUserSubCommand(),
+            new RemoveUserSubCommand(),
+            new AllowGroupSubCommand(),
+            new RemoveGroupSubCommand(),
+            new RegionInfo(),
+            new SetProtectSubCommand(),
+            new SetZSubCommand(),
+            new TeleportToRegionSubCommand(),
             new MoveSubCommand(),
             new SetOwnerSubCommand(),
             new ClearMembersSubCommand(),
             new FastRegionSubCommand(),
             new FastRegionBreakSubCommand(),
-            new OwnerList(),
-            new AllowUserSubCommand(),
-            new RemoveUserSubCommand(),
-            new AllowGroupSubCommand(),
-            new RemoveGroupSubCommand(),
-            new SetZSubCommand(),
-            new ResizeSubCommand(),
-            new TeleportToRegionSubCommand(),
-            new RegionInfo()
+            new OwnerList()
         }.Concat(base.SubCommands).ToArray();
     }
 }

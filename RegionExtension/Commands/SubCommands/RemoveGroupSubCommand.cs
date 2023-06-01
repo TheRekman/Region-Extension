@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         private bool _checkRegionOwn;
 
-        public override string[] Names => new[] { "removegroup", "rg" };
+        public override string[] Names => new[] { "removeg", "rg" };
         public override string Description => "Remove group from the region";
 
         public override void InitializeParams()

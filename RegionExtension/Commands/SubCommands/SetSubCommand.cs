@@ -11,7 +11,7 @@ namespace RegionExtension.Commands.SubCommands
 {
     public class SetSubCommand : SubCommand
     {
-        public override string[] Names => new string[] { "Set" };
+        public override string[] Names => new string[] { "set" };
 
         public override string Description => "Define point.";
 
