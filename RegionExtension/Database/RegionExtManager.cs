@@ -42,6 +42,7 @@ namespace RegionExtension.Database
 
         public RegionHistoryManager HistoryManager { get { return _historyManager; } }
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
+        public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
 
         public RegionExtManager(IDbConnection db)
         {

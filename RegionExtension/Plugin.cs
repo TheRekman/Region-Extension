@@ -30,6 +30,8 @@ namespace RegionExtension
         public RegionExtManager RegionExtensionManager;
         #endregion
 
+        bool _checkingHasBuild = false;
+
         #region initialize
         public Plugin(Main game) : base(game)
         {
@@ -42,6 +44,21 @@ namespace RegionExtension
             ServerApi.Hooks.NetGetData.Register(this, OnGetData);
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
+            PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
+        }
+
+        private void OnHasPlayerPermission(PlayerHasBuildPermissionEventArgs e)
+        {
+            if (_checkingHasBuild)
+            {
+                e.Result = PermissionHookResult.Unhandled;
+                return;
+            }
+            _checkingHasBuild = true;
+            if(TShock.Regions.InArea(e.X, e.Y) && e.Player.HasBuildPermission(e.X, e.Y, true))
+                foreach(var id in TShock.Regions.InAreaRegionID(e.X, e.Y))
+                    RegionExtensionManager.InfoManager.UpdateLastActivity(id, DateTime.Now);
+            _checkingHasBuild = false;
         }
 
         protected override void Dispose(bool disposing)
@@ -111,6 +128,8 @@ namespace RegionExtension
             }
         }
 
+
+
         public int FindFastRegionByUser(UserAccount user)
         {
             for (int i = 0; i < FastRegions.Count; i++)
@@ -128,7 +147,8 @@ namespace RegionExtension
                 case "/ro":
                 case "/regionown":
                 case "region":
-                    for(int i = 1; i < args.Parameters.Count; i++)
+                case "re":
+                    for (int i = 1; i < args.Parameters.Count; i++)
                         if (args.Parameters[i].StartsWith(Config.ContextSpecifier))
                             Contexts.InitializeContext(i, args);
                     if (Config.AutoCompleteSameName && args.Parameters.Count > 1 && "define" == args.Parameters[0])
