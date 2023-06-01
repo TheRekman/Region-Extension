@@ -59,25 +59,5 @@ namespace RegionExtension.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] OTAPI {
-            get {
-                object obj = ResourceManager.GetObject("OTAPI", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] TShockAPI {
-            get {
-                object obj = ResourceManager.GetObject("TShockAPI", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
