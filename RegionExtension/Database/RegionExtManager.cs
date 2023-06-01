@@ -186,11 +186,17 @@ namespace RegionExtension.Database
 
         public bool DefineRegion(CommandArgsExtension args, Region region)
         {
-            var res = TShock.Regions.AddRegion(region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Name, region.Owner, region.WorldID, region.Z);
+            return DefineRegion(args.Player, region);
+        }
+
+        public bool DefineRegion(TSPlayer user, Region region)
+        {
+            var res = TShock.Regions.AddRegion(region.Area.X, region.Area.Y, region.Area.Width, region.Area.Height, region.Name, region.Owner, region.WorldID, region.Z) &&
+                      TShock.Regions.SetRegionState(region.Name, region.DisableBuild);
             if (res)
             {
                 region = TShock.Regions.GetRegionByName(region.Name);
-                OnRegionDefine(new BaseRegionArgs(args.Player, region));
+                OnRegionDefine(new BaseRegionArgs(user, region));
             }
             return res;
         }

@@ -21,7 +21,7 @@ namespace RegionExtension.Database
                          new SqlColumn(TableInfo.LastActivity.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true }
                          );
 
-        public List<RegionExtensionInfo> RegionsInfo { get; private set; }
+        public List<RegionExtensionInfo> RegionsInfo { get; private set; } = new List<RegionExtensionInfo>();
 
         public RegionInfoManager(IDbConnection db)
         {

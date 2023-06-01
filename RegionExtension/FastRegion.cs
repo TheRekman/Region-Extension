@@ -1,6 +1,7 @@
 ﻿using System;
 using TShockAPI;
 using TShockAPI.DB;
+using Microsoft.Xna.Framework;
 
 namespace RegionExtension
 {
@@ -14,10 +15,13 @@ namespace RegionExtension
         private readonly string _ownerName;
         private readonly int _z;
         private readonly bool _protect;
+        private readonly Plugin _plugin;
+
         public UserAccount User { get { return _player.Account; } }
 
-        public FastRegion(TSPlayer player, string regionName, string ownerName, int z = 0, bool protect = true)
+        public FastRegion(Plugin plugin, TSPlayer player, string regionName, string ownerName, int z = 0, bool protect = true)
         {
+            _plugin = plugin;
             _player = player;
             _regionName = regionName;
             _ownerName = ownerName;
@@ -64,9 +68,17 @@ namespace RegionExtension
             var y = Math.Min(Y1, Y2);
             var width = Math.Abs(X1 - X2);
             var height = Math.Abs(Y1 - Y2);
+            var region = new Region()
+            {
+                Area = new Rectangle(x, y, width, height),
+                Name = _regionName,
+                Owner = _ownerName,
+                WorldID = Terraria.Main.worldID.ToString(),
+                Z = _z,
+                DisableBuild = _protect
+            };
 
-            if(TShock.Regions.AddRegion(x, y, width, height, _regionName, _ownerName, Terraria.Main.worldID.ToString(), _z) &&
-            TShock.Regions.SetRegionState(_regionName, _protect))
+            if(_plugin.RegionExtensionManager.DefineRegion(_player, region))
             {
                 _player.SendSuccessMessage("Set region " + _regionName);
             }

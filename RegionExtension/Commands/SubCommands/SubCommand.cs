@@ -36,7 +36,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool TryImplementParams(IEnumerable<string> parameters, CommandArgsExtension args)
         {
             var enumerator = parameters.GetEnumerator();
-            var usedCommandName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedCommandName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters.Count > 0 ? args.Parameters[0] : Names[0];
             for (int i = 0; i < Params.Length; i++)
                 if (enumerator.MoveNext())

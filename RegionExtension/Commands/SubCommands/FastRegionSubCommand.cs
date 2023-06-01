@@ -38,7 +38,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void CreateFastRegionRequest(CommandArgsExtension args, string regionName, UserAccount username, int z, bool protect)
         {
-            args.Plugin.FastRegions.Add(new FastRegion(args.Player, regionName, username.Name, z, protect));
+            args.Plugin.FastRegions.Add(new FastRegion(args.Plugin, args.Player, regionName, username.Name, z, protect));
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)

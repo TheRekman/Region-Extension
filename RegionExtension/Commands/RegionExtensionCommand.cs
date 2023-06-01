@@ -16,6 +16,13 @@ namespace RegionExtension.Commands
         public override ISubCommand[] SubCommands =>
             new ISubCommand[]
         {
+            new SetSubCommand(),
+            new ClearPointsSubCommand(),
+            new DefineSubCommand(),
+            new DeleteRegionSubCommand(),
+            new GetRegionNameSubCommand(),
+            new RenameSubCommand(),
+            new RegionListSubCommand(),
             new MoveSubCommand(),
             new SetOwnerSubCommand(),
             new ClearMembersSubCommand(),
@@ -26,16 +33,10 @@ namespace RegionExtension.Commands
             new RemoveUserSubCommand(),
             new AllowGroupSubCommand(),
             new RemoveGroupSubCommand(),
-            new DefineSubCommand(),
-            new DeleteRegionSubCommand(),
             new SetZSubCommand(),
             new ResizeSubCommand(),
-            new RenameSubCommand(),
             new TeleportToRegionSubCommand(),
-            new RegionInfo(),
-            new ClearPointsSubCommand(),
-            new GetRegionNameSubCommand(),
-            new RegionListSubCommand()
+            new RegionInfo()
         }.Concat(base.SubCommands).ToArray();
     }
 }

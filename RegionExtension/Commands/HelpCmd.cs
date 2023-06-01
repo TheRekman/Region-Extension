@@ -43,7 +43,7 @@ namespace RegionExtension.Commands
         {
             var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} - {2}".SFormat(string.Join(' ', string.Join('/', string.Concat("[c/b3c9ff:", sc.Names, "]"),
                                                                                                        sc.Params.Select(p => p.GetBracketName())),
-                                                                                                       sc.Description));
+                                                                                                       sc.Description)));
             var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),
                         new PaginationTools.Settings
