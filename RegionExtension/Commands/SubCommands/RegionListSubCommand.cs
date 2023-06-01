@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
 {
     internal class RegionListSubCommand : SubCommand
     {
-        public override string[] Names => new string[] { "ist", "l" };
+        public override string[] Names => new string[] { "list", "l" };
 
         public override string Description => "get list of regions.";
 

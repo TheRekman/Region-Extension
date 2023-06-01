@@ -28,7 +28,7 @@ namespace RegionExtension.Commands.Parameters
         }
 
         public string GetBracketName() =>
-            Optional ? $"[{Name}]" : $"<{Name}>";
+            Optional ? $"[[c/9afcd3:{Name}]]" : $"<[c/e88484:{Name}]>";
 
         public virtual bool TrySetValue(string str, CommandArgsExtension args = null)
         {

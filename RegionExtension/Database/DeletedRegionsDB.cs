@@ -32,8 +32,8 @@ namespace RegionExtension.Database
                  new SqlColumn(TableInfo.Groups.ToString(), MySqlDbType.Text),
                  new SqlColumn(TableInfo.Owner.ToString(), MySqlDbType.Text),
                  new SqlColumn(TableInfo.Z.ToString(), MySqlDbType.Int32),
-                 new SqlColumn(TableInfo.CreationDate.ToString(), MySqlDbType.Date),
-                 new SqlColumn(TableInfo.DeletionDate.ToString(), MySqlDbType.Date)
+                 new SqlColumn(TableInfo.CreationDate.ToString(), MySqlDbType.DateTime),
+                 new SqlColumn(TableInfo.DeletionDate.ToString(), MySqlDbType.DateTime)
                  );
 
         public DeletedRegionsDB(IDbConnection db)

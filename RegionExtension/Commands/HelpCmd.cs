@@ -41,9 +41,9 @@ namespace RegionExtension.Commands
 
         private void SendHelpList(CommandArgsExtension args, int page)
         {
-            var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} {1} - {2}".SFormat(string.Join('/', sc.Names),
-                                                                                               string.Join(' ', sc.Params.Select(p => p.GetBracketName())),
-                                                                                               sc.Description));
+            var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} - {2}".SFormat(string.Join(' ', string.Join('/', string.Concat("[c/b3c9ff:", sc.Names, "]"),
+                                                                                                       sc.Params.Select(p => p.GetBracketName())),
+                                                                                                       sc.Description));
             var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),
                         new PaginationTools.Settings
@@ -51,6 +51,7 @@ namespace RegionExtension.Commands
                             HeaderFormat = "Available '{0}' Sub-Commands ({{0}}/{{1}}):".SFormat(usedName),
                             FooterFormat = "Type {0}{1} help {{0}} for more sub-commands."
                                           .SFormat(TShockAPI.Commands.Specifier, usedName),
+                            LineTextColor = Color.White
                         });
             args.Player.SendInfoMessage("Additional names: " + string.Join(' ', _targetCommand.Names));
         }
