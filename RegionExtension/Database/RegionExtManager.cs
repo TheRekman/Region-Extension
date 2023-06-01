@@ -40,6 +40,9 @@ namespace RegionExtension.Database
         public event Action<BaseRegionArgs> OnRegionDelete;
         public event Action<BaseRegionArgs> OnRegionDefine;
 
+        public RegionHistoryManager HistoryManager { get { return _historyManager; } }
+        public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
+
         public RegionExtManager(IDbConnection db)
         {
             _tshockDatabase = db;

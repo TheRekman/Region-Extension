@@ -17,9 +17,6 @@ namespace RegionExtension.Database
         private IDbConnection _database;
         private Dictionary<int, Stack<ActionInfo>> _redoActions;
 
-        //ITS KOSTILI TIME
-        private int _skipHistoryAdding = 0;
-
         private SqlTable _regionActionsTable =
             new SqlTable("RegionHistory",
                          new SqlColumn(TableHistoryInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
@@ -48,11 +45,6 @@ namespace RegionExtension.Database
 
         public void SaveAction(IAction action, Region region, UserAccount user)
         {
-            if(_skipHistoryAdding > 0)
-            {
-                _skipHistoryAdding--;
-                return;
-            }
             var name = action.Name;
             var args = action.GetArgsString();
             var undoArgs = action.GetUndoArgsString();

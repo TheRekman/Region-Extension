@@ -12,7 +12,7 @@ using TShockAPI.Hooks;
 
 namespace RegionExtension.Database
 {
-    internal class DeletedRegionsDB
+    public class DeletedRegionsDB
     {
         private IDbConnection _database;
         private int _maxCount = 20;
@@ -115,7 +115,7 @@ namespace RegionExtension.Database
             }
         }
 
-        public RegionExtended GetRegionByName(int regionName)
+        public RegionExtended GetRegionByName(string regionName)
         {
             try
             {
