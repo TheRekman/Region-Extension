@@ -109,7 +109,7 @@ namespace RegionExtension.Database
                         res.Add("\"" + string.Join("\" \"",
                                 reader.Get<string>(TableInfo.RegionName.ToString()),
                                 username,
-                                reader.Get<DateTime>(TableInfo.DeletionDate.ToString())) + "\"");
+                                reader.Get<DateTime>(TableInfo.DeletionDate.ToString()).ToString(Utils.DateFormat)) + "\"");
                     }
                 }
                 return res;

@@ -116,7 +116,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                db.Query($"UPDATE {table} SET Id=@0 WHERE @1=@2", collumn, value, id);
+                db.Query($"UPDATE {table} SET {collumn}={value} WHERE Id={id}");
                 return true;
             }
             catch (Exception ex)
@@ -139,7 +139,7 @@ namespace RegionExtension.Database
         public bool UpdateLastUpdate(int id, DateTime time)
         {
             RegionsInfo.First(r => r.Id == id).LastUpdate = time;
-            return UpdateQuery(_database, _table.Name, TableInfo.LastUpdate.ToString(), time.ToString(), id);
+            return UpdateQuery(_database, _table.Name, TableInfo.LastUpdate.ToString(), new SqlDateTime(time).ToSqlString().Value, id);
         }
 
         public bool UpdateLastUpdate(Region region, DateTime time) =>
@@ -148,7 +148,7 @@ namespace RegionExtension.Database
         public bool UpdateLastActivity(int id, DateTime time)
         {
             RegionsInfo.First(r => r.Id == id).LastActivity = time;
-            return UpdateQuery(_database, _table.Name, TableInfo.LastActivity.ToString(), time.ToString(), id);
+            return UpdateQuery(_database, _table.Name, TableInfo.LastActivity.ToString(), new SqlDateTime(time).ToSqlString().Value, id);
         }
 
         public bool UpdateLastActivity(Region region, DateTime time) =>
@@ -197,9 +197,9 @@ namespace RegionExtension.Database
             var extInfo = RegionsInfo.First(ri => ri.Id == id);
             var userName = extInfo.LastUserId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(extInfo.LastUserId).Name;
             lines.Add(string.Concat("Last user: ", userName));
-            lines.Add(string.Concat("Last update: ", extInfo.LastUpdate.ToString()));
-            lines.Add(string.Concat("Last activity: ", extInfo.LastActivity.ToString()));
-            lines.Add(string.Concat("Date creation: ", extInfo.DateCreation.ToString()));
+            lines.Add(string.Concat("Last update: ", extInfo.LastUpdate.ToString(Utils.DateFormat)));
+            lines.Add(string.Concat("Last activity: ", extInfo.LastActivity.ToString(Utils.DateFormat)));
+            lines.Add(string.Concat("Date creation: ", extInfo.DateCreation.ToString(Utils.DateFormat)));
             return lines;
         }
 

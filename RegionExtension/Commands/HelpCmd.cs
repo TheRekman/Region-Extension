@@ -20,7 +20,7 @@ namespace RegionExtension.Commands
             _targetCommand = cmd;
         }
 
-        public override string[] Names => new string[] { "help", "h" };
+        public override string[] Names => new string[] { "help", "he" };
 
         public override string Description => "Returns all info about this command.";
 

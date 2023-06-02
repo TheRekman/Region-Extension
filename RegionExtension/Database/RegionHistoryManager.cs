@@ -127,7 +127,7 @@ namespace RegionExtension.Database
                         var dateTime = reader.Get<DateTime>(_table.Columns[6].Name);
                         var action = ActionFactory.GetActionByName(actionName, args);
                         info.Add(string.Join(' ',
-                            dateTime.ToString(),
+                            dateTime.ToString(Utils.DateFormat),
                             userId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(userId).Name,
                             string.Join(' ', action.GetInfoString())));
                     }
