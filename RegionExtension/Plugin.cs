@@ -10,6 +10,7 @@ using TShockAPI;
 using TShockAPI.DB;
 using TShockAPI.Hooks;
 using RegionExtension.Database;
+using System.Reflection;
 
 namespace RegionExtension
 {
@@ -20,7 +21,7 @@ namespace RegionExtension
         public override string Author => "Rekman";
         public override string Description => "More region command & functionality";
         public override string Name => "Region Extension";
-        public override Version Version => new Version(1, 1, 0, 0);
+        public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
         #endregion
 
         #region fields
