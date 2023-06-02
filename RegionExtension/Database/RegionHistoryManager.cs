@@ -60,7 +60,7 @@ namespace RegionExtension.Database
                 
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name).Where(s => s != TableHistoryInfo.Id.ToString()));
                 var values = "'" + string.Join("', '",
-                             regionId, userId, name, args, undoArgs, new SqlDateTime(dateTime).ToSqlString().Value) + "'";
+                             regionId, userId, name, args, undoArgs, dateTime) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
             }
             catch (Exception ex)

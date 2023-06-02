@@ -86,7 +86,7 @@ namespace RegionExtension.Database
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 var sqlDateTime = new SqlDateTime(DateTime.UtcNow).ToSqlString();
                 var values = "'" + string.Join("', '",
-                             id.ToString(), Main.worldID, sqlDateTime.Value, userId.ToString(), sqlDateTime.Value, sqlDateTime.Value) + "'";
+                             id.ToString(), Main.worldID, DateTime.UtcNow.ToString(), userId.ToString(), DateTime.UtcNow.ToString(), DateTime.UtcNow.ToString()) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
                 RegionsInfo.Add(new RegionExtensionInfo(id, userId));
                 return true;
@@ -139,7 +139,7 @@ namespace RegionExtension.Database
         public bool UpdateLastUpdate(int id, DateTime time)
         {
             RegionsInfo.First(r => r.Id == id).LastUpdate = time;
-            return UpdateQuery(_database, _table.Name, TableInfo.LastUpdate.ToString(), new SqlDateTime(time).ToSqlString().Value, id);
+            return UpdateQuery(_database, _table.Name, TableInfo.LastUpdate.ToString(), time.ToString(), id);
         }
 
         public bool UpdateLastUpdate(Region region, DateTime time) =>
@@ -148,7 +148,7 @@ namespace RegionExtension.Database
         public bool UpdateLastActivity(int id, DateTime time)
         {
             RegionsInfo.First(r => r.Id == id).LastActivity = time;
-            return UpdateQuery(_database, _table.Name, TableInfo.LastActivity.ToString(), new SqlDateTime(time).ToSqlString().Value, id);
+            return UpdateQuery(_database, _table.Name, TableInfo.LastActivity.ToString(), time.ToString(), id);
         }
 
         public bool UpdateLastActivity(Region region, DateTime time) =>

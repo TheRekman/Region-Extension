@@ -80,8 +80,8 @@ namespace RegionExtension.Database
                             string.Join(' ', region.AllowedGroups),
                             region.Owner,
                             region.Z.ToString(),
-                            new SqlDateTime(info.DateCreation).ToSqlString().Value,
-                            new SqlDateTime(DateTime.UtcNow).ToSqlString().Value);
+                            info.DateCreation,
+                            DateTime.UtcNow);
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
                 if (_database.Query($"SELECT * FROM {_table.Name}") > _maxCount)
                     _database.Query($"DELETE FROM TABLE {_table.Name} JOIN (SELECT MIN(@0) AS max_id FROM TABLE) temp WHERE {_table.Name}.Id = temp.max_Id",
