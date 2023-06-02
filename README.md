@@ -1,6 +1,12 @@
 # Region Extension
 ## EN
 Plugin add more commands for better region management & add context parameters.
+IDK
+New commands from 1.2
+//re fully transfer in /region or /re
+/ro now start wthout slash
+/rh - history
+user help for see all commands
 ### Commands
 #### RegionExt (//re, //regionext)
 - `//re rename <oldname> <newname>` - Set the newname of the region with given oldname.
