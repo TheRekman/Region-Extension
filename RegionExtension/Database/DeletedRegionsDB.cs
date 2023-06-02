@@ -54,6 +54,7 @@ namespace RegionExtension.Database
         public bool RegisterDeletedRegion(Region region, UserAccount userDeleter, RegionExtensionInfo info)
         {
             try
+            
             {
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 int i = 0;
@@ -150,7 +151,7 @@ namespace RegionExtension.Database
                         ExtensionInfo = new RegionExtensionInfo(
                             reader.Get<int>(TableInfo.RegionId.ToString()),
                             TShock.UserAccounts.GetUserAccountByName(reader.Get<string>(TableInfo.Owner.ToString())).ID,
-                            reader.Get<DateTime>(TableInfo.CreationDate.ToString()),
+                            DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
                             DateTime.UtcNow,
                             DateTime.UtcNow
                             )

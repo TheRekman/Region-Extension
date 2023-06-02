@@ -29,5 +29,6 @@ namespace RegionExtension
             string.Format("[c/{0}:{1}]", "b3c9ff", str);
 
         public static string DateFormat { get { return "dd.MM.yyyy HH:mm:ss UTC+0"; } }
+        public static string ShortDateFormat { get { return "dd.MM"; } }
     }
 }

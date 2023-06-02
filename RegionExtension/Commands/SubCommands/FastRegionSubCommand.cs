@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new StringParam("regionname", "name of new region."),
+                new StringParam("region", "name of new region."),
                 new UserAccountParam("username", "owner of new region. default: your user account.", true),
                 new IntParam("z", "region priority. default: 0", true, 0),
                 new BoolParam("protect", "region protect. default: true", true, true)

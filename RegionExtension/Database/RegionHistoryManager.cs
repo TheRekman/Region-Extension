@@ -45,22 +45,22 @@ namespace RegionExtension.Database
             creator.EnsureTableStructure(_table);
         }
 
-        public void SaveAction(IAction action, Region region, UserAccount user, DateTime dateTime)
+        public void SaveAction(IAction action, Region region, UserAccount user, DateTime dateTime, bool clearRedo = true)
         {
             
             var name = action.Name;
             var args = action.GetArgsString();
             var undoArgs = action.GetUndoArgsString();
             var regionId = region.ID;
-            var userId = user.ID;
-            if (_redoActions.ContainsKey(regionId))
+            var userId = user == null ? 0 : user.ID;
+            if (_redoActions.ContainsKey(regionId) && clearRedo)
                 _redoActions.Remove(regionId);
             try
             {
                 
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name).Where(s => s != TableHistoryInfo.Id.ToString()));
                 var values = "'" + string.Join("', '",
-                             regionId, userId, name, args, undoArgs, dateTime) + "'";
+                             regionId, userId, name, args, undoArgs, dateTime.ToString()) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace RegionExtension.Database
                         var actionName = reader.Get<string>(_table.Columns[3].Name);
                         var args = reader.Get<string>(_table.Columns[4].Name);
                         var undoArgs = reader.Get<string>(_table.Columns[5].Name);
-                        var dateTime = reader.Get<DateTime>(_table.Columns[6].Name);
+                        var dateTime = DateTime.Parse(reader.Get<string>(_table.Columns[6].Name));
                         var action = ActionFactory.GetActionByName(actionName, args);
                         var undoAction = action.GetUndoAction(undoArgs);
                         if (!_redoActions.ContainsKey(regionId))
@@ -124,7 +124,7 @@ namespace RegionExtension.Database
                         var actionName = reader.Get<string>(_table.Columns[3].Name);
                         var args = reader.Get<string>(_table.Columns[4].Name);
                         var undoArgs = reader.Get<string>(_table.Columns[5].Name);
-                        var dateTime = reader.Get<DateTime>(_table.Columns[6].Name);
+                        var dateTime = DateTime.Parse(reader.Get<string>(_table.Columns[6].Name));
                         var action = ActionFactory.GetActionByName(actionName, args);
                         info.Add(string.Join(' ',
                             dateTime.ToString(Utils.DateFormat),
@@ -149,8 +149,7 @@ namespace RegionExtension.Database
                 {
                     count--;
                     var actionInfo = _redoActions[regionId].Pop();
-                    var undoAction = actionInfo.Action.GetUndoAction(actionInfo.Action.GetUndoArgsString());
-                    SaveAction(undoAction, TShock.Regions.GetRegionByID(regionId), TShock.UserAccounts.GetUserAccountByID(actionInfo.UserId), actionInfo.Date);
+                    SaveAction(actionInfo.Action, TShock.Regions.GetRegionByID(regionId), TShock.UserAccounts.GetUserAccountByID(actionInfo.UserId), actionInfo.Date, false);
                     actionInfo.Action.Do();
                 }
             }

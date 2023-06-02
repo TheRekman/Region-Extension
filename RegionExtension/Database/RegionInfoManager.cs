@@ -56,9 +56,9 @@ namespace RegionExtension.Database
                         RegionsInfo.Add(new RegionExtensionInfo(
                                             reader.Get<int>(TableInfo.Id.ToString()),
                                             reader.Get<int>(TableInfo.LastUser.ToString()),
-                                            reader.Get<DateTime>(TableInfo.DateCreation.ToString()),
-                                            reader.Get<DateTime>(TableInfo.LastUpdate.ToString()),
-                                            reader.Get<DateTime>(TableInfo.LastActivity.ToString())));
+                                            DateTime.Parse(reader.Get<string>(TableInfo.DateCreation.ToString())),
+                                            DateTime.Parse(reader.Get<string>(TableInfo.LastUpdate.ToString())),
+                                            DateTime.Parse(reader.Get<string>(TableInfo.LastActivity.ToString()))));
                     }
                 }
                 foreach(var region in TShock.Regions.Regions)
@@ -116,7 +116,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                db.Query($"UPDATE {table} SET {collumn}={value} WHERE Id={id}");
+                db.Query($"UPDATE {table} SET {collumn}='{value}' WHERE Id={id}");
                 return true;
             }
             catch (Exception ex)

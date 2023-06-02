@@ -9,7 +9,7 @@ using TShockAPI.DB;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    public class GetStorySubCommand : SubCommand
+    public class GetHistorySubCommand : SubCommand
     {
         private bool _checkRegionOwn;
 
@@ -21,12 +21,12 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new IntParam("page", "page of history"),
+                new IntParam("page", "page of history. default: 1", true, 1),
                 new RegionParam("region", "region. default: region in your location.", true)
             };
         }
 
-        public GetStorySubCommand(bool checkRegionOwn = false)
+        public GetHistorySubCommand(bool checkRegionOwn = false)
         {
             _checkRegionOwn = checkRegionOwn;
         }
@@ -54,7 +54,7 @@ namespace RegionExtension.Commands.SubCommands
                 {
                     HeaderFormat = string.Format("History About Region \"{0}\" ({{0}}/{{1}}):", region.Name),
                     FooterFormat = string.Format("Type {0}{1} {2} {3} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, usedSubCommandName, region.Name),
-                    NothingToDisplayString = "There is nothig to see."
+                    NothingToDisplayString = "There is nothing to see."
                 }
             );
         }
