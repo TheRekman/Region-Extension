@@ -29,4 +29,7 @@
     </PackageReference>
     <PackageReference Include="TShock" Version="5.2.0" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(TargetPath)&quot; D:\Work\WorkDir\git\TShock-5.2-for-Terraria-1.4.4.9-win-x64-Release\ServerPlugins" />
+  </Target>
 </Project>

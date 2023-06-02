@@ -48,6 +48,7 @@ namespace RegionExtension.Database
         {
             _tshockDatabase = db;
             InitializeDatabase();
+            EventHandler();
         }
 
         public void InitializeDatabase()
@@ -86,6 +87,11 @@ namespace RegionExtension.Database
             _regionInfoManager = new RegionInfoManager(database);
             _historyManager = new RegionHistoryManager(database);
             _deletedRegionsDB = new DeletedRegionsDB(database);
+        }
+
+        public void PostInitialize()
+        {
+            _regionInfoManager.PostInitialize();
         }
 
         public void EventHandler()
@@ -222,8 +228,8 @@ namespace RegionExtension.Database
 
         public void RegisterCommand(TSPlayer executor, Region region)
         {
-            _regionInfoManager.UpdateLastUpdate(region, DateTime.Now);
-            _regionInfoManager.UpdateLastUser(region, executor.Account);
+            _regionInfoManager.UpdateLastUpdate(region.ID, DateTime.Now);
+            _regionInfoManager.UpdateLastUser(region.ID, executor.Account.ID);
         }
     }
 }

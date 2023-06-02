@@ -61,7 +61,7 @@ namespace RegionExtension.Database.Actions
         public IEnumerable<string> GetInfoString() =>
             new string[]
             {
-                Name + ": ",
+                Name + ":",
                 _regionName,
                 _userName
             };

@@ -3,6 +3,7 @@ using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,14 +57,14 @@ namespace RegionExtension.Database
             {
                 var variablesString = string.Join(' ', _table.Columns.Select(c => c.Name));
                 int i = 0;
-                string format = string.Join(' ', _table.Columns.Select(c =>
+                string format = string.Join(", ", _table.Columns.Select(c =>
                 { 
-                    string res = "{" + i + "}"; 
+                    string res = "'{" + i + "}'"; 
                     i++; 
                     return res;
                 }));
 
-                while (_database.Query("SELECT * FROM @0 WHERE Id=@1", _table.Name, region.ID) > 0)
+                while (_database.Query($"SELECT * FROM {_table.Name} WHERE Id=@0", region.ID) > 0)
                     region.ID++;
                 var values = format.SFormat(
                             region.ID,
@@ -76,12 +77,12 @@ namespace RegionExtension.Database
                             region.Area.Height,
                             region.Owner,
                             region.Z,
-                            info.DateCreation,
-                            DateTime.Now);
-                _database.Query("INSERT INTO @0 (@1) VALUES (@2);", _table.Name, variablesString, values);
-                if (_database.Query("SELECT * FROM @0", _table.Name) > _maxCount)
-                    _database.Query("DELETE FROM TABLE @0 JOIN (SELECT MIN(@1) AS max_id FROM TABLE) temp WHERE @0.Id = temp.max_Id",
-                                    _table.Name, TableInfo.DeletionDate.ToString());
+                            new SqlDateTime(info.DateCreation).ToSqlString().Value,
+                            new SqlDateTime(DateTime.Now).ToSqlString().Value);
+                _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
+                if (_database.Query($"SELECT * FROM {_table.Name}") > _maxCount)
+                    _database.Query($"DELETE FROM TABLE {_table.Name} JOIN (SELECT MIN(@0) AS max_id FROM TABLE) temp WHERE {_table.Name}.Id = temp.max_Id",
+                                    TableInfo.DeletionDate.ToString());
                 return true;
             }
             catch (Exception ex)
@@ -96,7 +97,7 @@ namespace RegionExtension.Database
             try
             {
                 var res = new List<string>();
-                using(var reader = _database.QueryReader("SELECT @1 FROM @0", _table.Name, count))
+                using(var reader = _database.QueryReader($"SELECT @0 FROM {_table.Name}", count))
                 {
                     while (reader.Read())
                     {
@@ -120,7 +121,7 @@ namespace RegionExtension.Database
             try
             {
                 var res = new List<string>();
-                using (var reader = _database.QueryReader("SELECT 1 FROM @0 WHERE @1=@2", _table.Name, TableInfo.RegionName.ToString(), regionName))
+                using (var reader = _database.QueryReader($"SELECT 1 FROM {_table.Name} WHERE @0=@1", TableInfo.RegionName.ToString(), regionName))
                 {
                     return new RegionExtended()
                     {

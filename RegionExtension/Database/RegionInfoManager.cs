@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Terraria;
 using MySql.Data.MySqlClient;
 using TShockAPI;
 using TShockAPI.DB;
+using System.Data.SqlTypes;
 
 namespace RegionExtension.Database
 {
@@ -15,6 +17,7 @@ namespace RegionExtension.Database
         private SqlTable _table =
             new SqlTable("ExtendedRegions",
                          new SqlColumn(TableInfo.Id.ToString(), MySqlDbType.Int32) { Unique = true, NotNull = true },
+                         new SqlColumn(TableInfo.WorldId.ToString(), MySqlDbType.Int32),
                          new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true },
                          new SqlColumn(TableInfo.LastUser.ToString(), MySqlDbType.Int32),
                          new SqlColumn(TableInfo.LastUpdate.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true },
@@ -27,7 +30,6 @@ namespace RegionExtension.Database
         {
             _database = db;
             InitializeTable();
-            LoadRegions();
         }
 
         public void InitializeTable()
@@ -38,24 +40,33 @@ namespace RegionExtension.Database
             creator.EnsureTableStructure(_table);
         }
 
+        public void PostInitialize()
+        {
+            LoadRegions();
+        }
+
         private void LoadRegions()
         {
             try
             {
+                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE WorldId=@0", Main.worldID.ToString()))
+                {
+                    while(reader.Read())
+                    {
+                        RegionsInfo.Add(new RegionExtensionInfo(
+                                            reader.Get<int>(TableInfo.Id.ToString()),
+                                            reader.Get<int>(TableInfo.LastUser.ToString()),
+                                            reader.Get<DateTime>(TableInfo.DateCreation.ToString()),
+                                            reader.Get<DateTime>(TableInfo.LastUpdate.ToString()),
+                                            reader.Get<DateTime>(TableInfo.LastActivity.ToString())));
+                    }
+                }
                 foreach(var region in TShock.Regions.Regions)
                 {
-                    var reader = _database.QueryReader("SELECT 1 FROM @0 WHERE Id=@1", _table.Name, region.ID);
-                    if(!reader.Read())
+                    if(!RegionsInfo.Any(r => r.Id == region.ID))
                     {
-                        AddNewRegion(region.ID, TShock.UserAccounts.GetUserAccountID(region.Owner));
-                        continue;
+                        AddNewRegion(region.ID, TShock.UserAccounts.GetUserAccountByName(region.Owner).ID);
                     }
-                    RegionsInfo.Add(new RegionExtensionInfo(
-                                        reader.Get<int>(TableInfo.Id.ToString()),
-                                        reader.Get<int>(TableInfo.LastUser.ToString()),
-                                        reader.Get<DateTime>(TableInfo.DateCreation.ToString()),
-                                        reader.Get<DateTime>(TableInfo.LastUpdate.ToString()),
-                                        reader.Get<DateTime>(TableInfo.LastActivity.ToString())));
                 }
             }
             catch (Exception ex)
@@ -68,13 +79,15 @@ namespace RegionExtension.Database
         {
             try
             {
-                var reader = _database.QueryReader("SELECT 1 FROM @0 WHERE Id=@1", _table.Name, id);
+                var reader = _database.QueryReader($"SELECT 1 FROM {_table.Name} WHERE Id=@0", id);
                 if (reader.Read() == true)
                     return true;
-                var variablesString = string.Join(' ', _table.Columns.Select(c => c.Name));
-                var values = "{0} {1} {2} {3} {4}".SFormat(
-                             id, DateTime.Now, userId, DateTime.Now, DateTime.Now);
-                _database.Query("INSERT INTO @0 (@1) VALUES (@2);", _table.Name, variablesString, values);
+                
+                var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
+                var sqlDateTime = new SqlDateTime(DateTime.UtcNow).ToSqlString();
+                var values = "'" + string.Join("', '",
+                             id.ToString(), Main.worldID, sqlDateTime.Value, userId.ToString(), sqlDateTime.Value, sqlDateTime.Value) + "'";
+                _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
                 RegionsInfo.Add(new RegionExtensionInfo(id, userId));
                 return true;
             }
@@ -89,7 +102,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                _database.Query("DELETE FROM @0 WHERE Id=@1", _table.Name, id);
+                _database.Query($"DELETE FROM {_table.Name} WHERE Id=@1", id);
                 return true;
             }
             catch (Exception ex)
@@ -103,7 +116,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                db.Query("UPDATE @0 SET Id=@1 WHERE @2=@3", table, collumn, value, id);
+                db.Query($"UPDATE {table} SET Id=@0 WHERE @1=@2", collumn, value, id);
                 return true;
             }
             catch (Exception ex)
@@ -182,7 +195,8 @@ namespace RegionExtension.Database
                 lines.Add("Region is not shared with any groups.");
             }
             var extInfo = RegionsInfo.First(ri => ri.Id == id);
-            lines.Add(string.Concat("Last user: ", extInfo.LastUserId));
+            var userName = extInfo.LastUserId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(extInfo.LastUserId).Name;
+            lines.Add(string.Concat("Last user: ", userName));
             lines.Add(string.Concat("Last update: ", extInfo.LastUpdate.ToString()));
             lines.Add(string.Concat("Last activity: ", extInfo.LastActivity.ToString()));
             lines.Add(string.Concat("Date creation: ", extInfo.DateCreation.ToString()));
@@ -192,6 +206,7 @@ namespace RegionExtension.Database
         private enum TableInfo
         {
             Id,
+            WorldId,
             DateCreation,
             LastUser,
             LastUpdate,

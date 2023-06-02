@@ -22,7 +22,8 @@ namespace RegionExtension
 
             InitializeCommands(plugin,
                 new RegionExtensionCommand(),
-                new RegionOwnCommand()
+                new RegionOwnCommand(),
+                new RegionHistoryCommand()
                 );
         }
 

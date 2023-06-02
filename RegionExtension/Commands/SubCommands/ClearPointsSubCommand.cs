@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     public class ClearPointsSubCommand : SubCommand
     {
         public override string[] Names => new[] { "clear" };
-        public override string Description => "clear temporary points.";
+        public override string Description => "Clears the temporary region points.";
 
         public override void Execute(CommandArgsExtension args)
         {

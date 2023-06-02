@@ -42,9 +42,15 @@ namespace RegionExtension
         {
             ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
             ServerApi.Hooks.NetGetData.Register(this, OnGetData);
+            ServerApi.Hooks.GamePostInitialize.Register(this, OnPostInitialize, int.MinValue);
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
+        }
+
+        private void OnPostInitialize(EventArgs args)
+        {
+            RegionExtensionManager.PostInitialize();
         }
 
         private void OnHasPlayerPermission(PlayerHasBuildPermissionEventArgs e)
@@ -67,6 +73,7 @@ namespace RegionExtension
             {
                 ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
+                ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
                 PlayerHooks.PlayerLogout -= OnPlayerLogout;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
             }

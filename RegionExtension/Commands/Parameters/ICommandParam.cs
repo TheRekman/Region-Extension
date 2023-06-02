@@ -10,6 +10,7 @@ namespace RegionExtension.Commands.Parameters
         object Value { get; }
         bool Optional { get; }
         public string GetBracketName();
+        public string GetColoredBracketName();
         bool TrySetValue(string str, CommandArgsExtension args = null);
         bool TrySetDefaultValue(CommandArgs args = null);
     }

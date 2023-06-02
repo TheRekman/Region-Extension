@@ -27,8 +27,11 @@ namespace RegionExtension.Commands.Parameters
             _defaultValue = defaultValue;
         }
 
-        public string GetBracketName() =>
+        public string GetColoredBracketName() =>
             Optional ? $"[[c/9afcd3:{Name}]]" : $"<[c/e88484:{Name}]>";
+
+        public string GetBracketName() =>
+            Optional ? $"[{Name}]" : $"<{Name}>";
 
         public virtual bool TrySetValue(string str, CommandArgsExtension args = null)
         {

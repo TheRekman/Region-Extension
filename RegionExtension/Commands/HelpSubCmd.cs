@@ -14,7 +14,7 @@ namespace RegionExtension.Commands
             _targetCommand = cmd;
         }
 
-        public override string[] Names => new string[] { "helpsc" };
+        public override string[] Names => new string[] { "helpsc", "hs"};
 
         public override string Description => "Returns all info about this sub-command.";
 
@@ -40,7 +40,7 @@ namespace RegionExtension.Commands
                 args.Player.SendErrorMessage("Invalid sub-command '{0}'!".SFormat(subCommandName));
                 return;
             }
-            var paramsInfo = subCmd.Params.Select(p => "{0} - {1}".SFormat(p.GetBracketName(), p.Description));
+            var paramsInfo = subCmd.Params.Select(p => "{0} - {1}".SFormat(p.GetColoredBracketName(), p.Description));
             PaginationTools.SendPage(
                       args.Player, 1, paramsInfo.ToList(),
                         new PaginationTools.Settings

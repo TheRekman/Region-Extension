@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IL.Terraria.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,8 @@ namespace RegionExtension
 
         public static float CountDistance(float x1, float y1, float x2, float y2) =>
             (float)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
+
+        public static string ColorCommand(string str) =>
+            string.Format("[c/{0}:{1}]", "b3c9ff", str);
     }
 }

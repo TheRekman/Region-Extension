@@ -15,13 +15,13 @@ namespace RegionExtension.Commands.SubCommands
     internal class DefineSubCommand : SubCommand
     {
         public override string[] Names => new[] { "define", "d" };
-        public override string Description => "defines region with given 'set' points.";
+        public override string Description => "Defines the region with the given name.";
 
         public override void InitializeParams()
         {
             _params = new ICommandParam[]
             {
-                new StringParam("regionname", "name of new region."),
+                new StringParam("name", "name of new region."),
             };
         }
 

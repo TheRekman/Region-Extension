@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "set" };
 
-        public override string Description => "Define point.";
+        public override string Description => "Sets the temporary region points.";
 
         public override void InitializeParams()
         {
@@ -27,7 +27,7 @@ namespace RegionExtension.Commands.SubCommands
         public override void Execute(CommandArgsExtension args)
         {
             var point = (int)Params[0].Value;
-            if (point != 1 || point != 2)
+            if (point != 1 && point != 2)
             {
                 args.Player.SendErrorMessage("Invalid point number! 1/2 only");
                 return;
