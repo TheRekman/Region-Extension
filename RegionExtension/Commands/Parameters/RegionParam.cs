@@ -28,6 +28,7 @@ namespace RegionExtension.Commands.Parameters
                     args.Player.SendInfoMessage(string.Join(", ", foundedRegions));
                     return false;
                 }
+                region = foundedRegions.FirstOrDefault();
             }
             if (region == null)
             {

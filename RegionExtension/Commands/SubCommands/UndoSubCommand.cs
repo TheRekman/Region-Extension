@@ -45,8 +45,10 @@ namespace RegionExtension.Commands.SubCommands
 
         private void UndoActions(CommandArgsExtension args, int count, Region region)
         {
-            args.Plugin.RegionExtensionManager.HistoryManager.Undo(count, region.ID);
-            args.Player.SendSuccessMessage("Undo success.");
+            if (args.Plugin.RegionExtensionManager.HistoryManager.Undo(count, region.ID))
+                args.Player.SendSuccessMessage("Undo success.");
+            else
+                args.Player.SendErrorMessage("Undo failed.");
         }
 
         public bool CheckRegionOwn(CommandArgsExtension args, Region region)

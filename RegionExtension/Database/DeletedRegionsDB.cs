@@ -55,7 +55,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                var variablesString = string.Join(' ', _table.Columns.Select(c => c.Name));
+                var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 int i = 0;
                 string format = string.Join(", ", _table.Columns.Select(c =>
                 { 
@@ -64,21 +64,24 @@ namespace RegionExtension.Database
                     return res;
                 }));
 
-                while (_database.Query($"SELECT * FROM {_table.Name} WHERE Id=@0", region.ID) > 0)
+                while (_database.Query($"SELECT * FROM {_table.Name} WHERE RegionId=@0", region.ID) > 0)
                     region.ID++;
                 var values = format.SFormat(
-                            region.ID,
-                            userDeleter.ID,
+                            region.ID.ToString(),
+                            userDeleter.ID.ToString(),
                             region.WorldID,
                             region.Name,
-                            region.Area.X,
-                            region.Area.Y,
-                            region.Area.Width,
-                            region.Area.Height,
+                            region.Area.X.ToString(),
+                            region.Area.Y.ToString(),
+                            region.Area.Width.ToString(),
+                            region.Area.Height.ToString(),
+                            string.Join(' ', region.AllowedIDs),
+                            region.DisableBuild.ToString(),
+                            string.Join(' ', region.AllowedGroups),
                             region.Owner,
-                            region.Z,
+                            region.Z.ToString(),
                             new SqlDateTime(info.DateCreation).ToSqlString().Value,
-                            new SqlDateTime(DateTime.Now).ToSqlString().Value);
+                            new SqlDateTime(DateTime.UtcNow).ToSqlString().Value);
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
                 if (_database.Query($"SELECT * FROM {_table.Name}") > _maxCount)
                     _database.Query($"DELETE FROM TABLE {_table.Name} JOIN (SELECT MIN(@0) AS max_id FROM TABLE) temp WHERE {_table.Name}.Id = temp.max_Id",
@@ -92,19 +95,21 @@ namespace RegionExtension.Database
             }
         }
 
-        public List<string> GetRegionsInfo(int count)
+        public List<string> GetRegionsInfo()
         {
             try
             {
                 var res = new List<string>();
-                using(var reader = _database.QueryReader($"SELECT @0 FROM {_table.Name}", count))
+                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} ORDER BY DeletionDate DESC"))
                 {
                     while (reader.Read())
                     {
-                        res.Add(string.Join(' ',
-                                "Name:", reader.Get<string>(TableInfo.RegionName.ToString()),
-                                "User:", reader.Get<string>(TableInfo.DeleterId.ToString()),
-                                "Date:", reader.Get<DateTime>(TableInfo.DeletionDate.ToString())));
+                        var userid = reader.Get<int>(TableInfo.DeleterId.ToString());
+                        var username = userid == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(userid).Name;
+                        res.Add("\"" + string.Join("\" \"",
+                                reader.Get<string>(TableInfo.RegionName.ToString()),
+                                username,
+                                reader.Get<DateTime>(TableInfo.DeletionDate.ToString())) + "\"");
                     }
                 }
                 return res;
@@ -146,8 +151,8 @@ namespace RegionExtension.Database
                             reader.Get<int>(TableInfo.RegionId.ToString()),
                             TShock.UserAccounts.GetUserAccountByName(reader.Get<string>(TableInfo.Owner.ToString())).ID,
                             reader.Get<DateTime>(TableInfo.CreationDate.ToString()),
-                            DateTime.Now,
-                            DateTime.Now
+                            DateTime.UtcNow,
+                            DateTime.UtcNow
                             )
                     };
                 }

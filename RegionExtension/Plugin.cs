@@ -63,7 +63,7 @@ namespace RegionExtension
             _checkingHasBuild = true;
             if(TShock.Regions.InArea(e.X, e.Y) && e.Player.HasBuildPermission(e.X, e.Y, true))
                 foreach(var id in TShock.Regions.InAreaRegionID(e.X, e.Y))
-                    RegionExtensionManager.InfoManager.UpdateLastActivity(id, DateTime.Now);
+                    RegionExtensionManager.InfoManager.UpdateLastActivity(id, DateTime.UtcNow);
             _checkingHasBuild = false;
         }
 

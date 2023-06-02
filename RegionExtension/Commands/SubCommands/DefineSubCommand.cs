@@ -55,7 +55,10 @@ namespace RegionExtension.Commands.SubCommands
                 Owner = args.Player.Account.Name,
                 WorldID = Main.worldID.ToString()
             };
-            args.Plugin.RegionExtensionManager.DefineRegion(args, region);
+            if (args.Plugin.RegionExtensionManager.DefineRegion(args, region))
+                args.Player.SendSuccessMessage("Region '{0}' defined!".SFormat(region.Name));
+            else
+                args.Player.SendErrorMessage("Failed define region '{0}'!".SFormat(region.Name));
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)

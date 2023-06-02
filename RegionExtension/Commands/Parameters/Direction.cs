@@ -29,8 +29,9 @@
 
         public (int x, int y) GetNewPosition(int x, int y, int amount)
         {
+            
             int type = (int)_type;
-            int sign = type > 2 ? -1 : 1;
+            int sign = type >= 2 ? -1 : 1;
             x += type % 2 * amount * sign;
             y += (type + 1) % 2 * amount * sign;
             return new(x, y);

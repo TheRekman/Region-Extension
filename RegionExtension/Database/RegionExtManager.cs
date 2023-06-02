@@ -228,7 +228,7 @@ namespace RegionExtension.Database
 
         public void RegisterCommand(TSPlayer executor, Region region)
         {
-            _regionInfoManager.UpdateLastUpdate(region.ID, DateTime.Now);
+            _regionInfoManager.UpdateLastUpdate(region.ID, DateTime.UtcNow);
             _regionInfoManager.UpdateLastUser(region.ID, executor.Account.ID);
         }
     }

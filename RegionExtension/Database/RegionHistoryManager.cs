@@ -20,6 +20,7 @@ namespace RegionExtension.Database
 
         private SqlTable _table =
             new SqlTable("RegionHistory",
+                         new SqlColumn(TableHistoryInfo.Id.ToString(), MySqlDbType.Int32) {Unique = true, Primary = true, AutoIncrement = true },
                          new SqlColumn(TableHistoryInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
                          new SqlColumn(TableHistoryInfo.UserId.ToString(), MySqlDbType.Int32) { NotNull = true },
                          new SqlColumn(TableHistoryInfo.ActionName.ToString(), MySqlDbType.Text),
@@ -46,6 +47,7 @@ namespace RegionExtension.Database
 
         public void SaveAction(IAction action, Region region, UserAccount user, DateTime dateTime)
         {
+            
             var name = action.Name;
             var args = action.GetArgsString();
             var undoArgs = action.GetUndoArgsString();
@@ -55,7 +57,8 @@ namespace RegionExtension.Database
                 _redoActions.Remove(regionId);
             try
             {
-                var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
+                
+                var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name).Where(s => s != TableHistoryInfo.Id.ToString()));
                 var values = "'" + string.Join("', '",
                              regionId, userId, name, args, undoArgs, new SqlDateTime(dateTime).ToSqlString().Value) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
@@ -71,50 +74,57 @@ namespace RegionExtension.Database
             SaveAction(action, region, user, DateTime.UtcNow);
         }
 
-        public void Undo(int count, int regionId)
+        public bool Undo(int count, int regionId)
         {
             try
             {
-                using (var reader = _database.QueryReader($"SELECT @0 FROM {_table.Name} WHERE RegionId=@1", count, regionId))
+                var ids = new List<int>();
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0 ORDER BY DateTime DESC", regionId))
                 {
-                    while (reader.Read())
+                    while (reader.Read() && count > 0)
                     {
-                        regionId = reader.Get<int>(_table.Columns[0].Name);
-                        var userId = reader.Get<int>(_table.Columns[1].Name);
-                        var actionName = reader.Get<string>(_table.Columns[2].Name);
-                        var args = reader.Get<string>(_table.Columns[3].Name);
-                        var undoArgs = reader.Get<string>(_table.Columns[4].Name);
-                        var dateTime = reader.Get<DateTime>(_table.Columns[5].Name);
+                        regionId = reader.Get<int>(_table.Columns[1].Name);
+                        var userId = reader.Get<int>(_table.Columns[2].Name);
+                        var actionName = reader.Get<string>(_table.Columns[3].Name);
+                        var args = reader.Get<string>(_table.Columns[4].Name);
+                        var undoArgs = reader.Get<string>(_table.Columns[5].Name);
+                        var dateTime = reader.Get<DateTime>(_table.Columns[6].Name);
                         var action = ActionFactory.GetActionByName(actionName, args);
                         var undoAction = action.GetUndoAction(undoArgs);
                         if (!_redoActions.ContainsKey(regionId))
                             _redoActions.Add(regionId, new Stack<ActionInfo>(10));
                         _redoActions[regionId].Push(new ActionInfo(action, regionId, userId, dateTime));
                         undoAction.Do();
+                        ids.Add(reader.Get<int>(_table.Columns[0].Name));
+                        count--;
                     }
                 }
+                foreach(var id in ids)
+                    _database.Query($"DELETE FROM {_table.Name} WHERE Id=@0", id);
             }
             catch (Exception e)
             {
                 TShock.Log.Error(e.Message);
+                return false;
             }
+            return true;
         }
 
         public List<string> GetActionsInfo(int count, int regionId)
         {
             try
             {
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0", regionId))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0 ORDER BY DateTime DESC", regionId))
                 {
                     var info = new List<string>();
                     while (reader.Read())
                     {
-                        regionId = reader.Get<int>(_table.Columns[0].Name);
-                        var userId = reader.Get<int>(_table.Columns[1].Name);
-                        var actionName = reader.Get<string>(_table.Columns[2].Name);
-                        var args = reader.Get<string>(_table.Columns[3].Name);
-                        var undoArgs = reader.Get<string>(_table.Columns[4].Name);
-                        var dateTime = reader.Get<DateTime>(_table.Columns[5].Name);
+                        regionId = reader.Get<int>(_table.Columns[1].Name);
+                        var userId = reader.Get<int>(_table.Columns[2].Name);
+                        var actionName = reader.Get<string>(_table.Columns[3].Name);
+                        var args = reader.Get<string>(_table.Columns[4].Name);
+                        var undoArgs = reader.Get<string>(_table.Columns[5].Name);
+                        var dateTime = reader.Get<DateTime>(_table.Columns[6].Name);
                         var action = ActionFactory.GetActionByName(actionName, args);
                         info.Add(string.Join(' ',
                             dateTime.ToString(),
@@ -148,6 +158,7 @@ namespace RegionExtension.Database
 
         private enum TableHistoryInfo
         {
+            Id,
             RegionId,
             UserId,
             ActionName,

@@ -102,7 +102,7 @@ namespace RegionExtension.Database
         {
             try
             {
-                _database.Query($"DELETE FROM {_table.Name} WHERE Id=@1", id);
+                _database.Query($"DELETE FROM {_table.Name} WHERE Id=@0", id);
                 return true;
             }
             catch (Exception ex)
@@ -218,7 +218,7 @@ namespace RegionExtension.Database
     public class RegionExtensionInfo
     {
         public RegionExtensionInfo(int id, int lastUser) :
-            this(id, lastUser, DateTime.Now, DateTime.Now, DateTime.Now)
+            this(id, lastUser, DateTime.UtcNow, DateTime.UtcNow, DateTime.UtcNow)
         {
             Id = id;
             LastUserId = lastUser;
@@ -235,8 +235,8 @@ namespace RegionExtension.Database
 
         public int Id { get; set; }
         public int LastUserId { get; set; }
-        public DateTime DateCreation { get; set; } = DateTime.Now;
-        public DateTime LastUpdate { get; set; } = DateTime.Now;
-        public DateTime LastActivity { get; set; } = DateTime.Now;
+        public DateTime DateCreation { get; set; } = DateTime.UtcNow;
+        public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
+        public DateTime LastActivity { get; set; } = DateTime.UtcNow;
     }
 }

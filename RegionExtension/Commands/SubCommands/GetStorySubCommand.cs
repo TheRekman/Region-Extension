@@ -41,18 +41,20 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
                 return;
             }
-            SendRegionInfo(args, page, region);
+            SendRegionHistory(args, page, region);
         }
 
-        private void SendRegionInfo(CommandArgsExtension args, int page, Region region)
+        private void SendRegionHistory(CommandArgsExtension args, int page, Region region)
         {
             var lines = args.Plugin.RegionExtensionManager.GetRegionHistory(50, region);
             var usedName = args.Message.Split(' ')[0];
+            var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(
                 args.Player, page, lines, new PaginationTools.Settings
                 {
-                    HeaderFormat = string.Format("Information About Region \"{0}\" ({{0}}/{{1}}):", region.Name),
-                    FooterFormat = string.Format("Type {0}{1} info {1} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, region.Name)
+                    HeaderFormat = string.Format("History About Region \"{0}\" ({{0}}/{{1}}):", region.Name),
+                    FooterFormat = string.Format("Type {0}{1} {2} {3} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, usedSubCommandName, region.Name),
+                    NothingToDisplayString = "There is nothig to see."
                 }
             );
         }

@@ -52,7 +52,7 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player, page, lines, new PaginationTools.Settings
                 {
                     HeaderFormat = string.Format("Information About Region \"{0}\" ({{0}}/{{1}}):", region.Name),
-                    FooterFormat = string.Format("Type {0}{1} info {1} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, region.Name)
+                    FooterFormat = string.Format("Type {0}{1} info {2} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, region.Name)
                 }
             );
         }
