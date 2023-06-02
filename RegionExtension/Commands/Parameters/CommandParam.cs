@@ -28,7 +28,7 @@ namespace RegionExtension.Commands.Parameters
         }
 
         public string GetColoredBracketName() =>
-            Optional ? $"[[c/9afcd3:{Name}]]" : $"<[c/e88484:{Name}]>";
+            Optional ? $"[[c/6ce0b0:{Name}]]" : $"<[c/e88484:{Name}]>";
 
         public string GetBracketName() =>
             Optional ? $"[{Name}]" : $"<{Name}>";

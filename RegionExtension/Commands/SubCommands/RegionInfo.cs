@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "info", "i" };
 
-        public override string Description => "returns info about region.";
+        public override string Description => "Displays several information about the given region.";
 
         public override void InitializeParams()
         {

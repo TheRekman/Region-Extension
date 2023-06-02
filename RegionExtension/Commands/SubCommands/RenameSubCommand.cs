@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         public bool _checkRegionOwn;
 
         public override string[] Names => new[] { "rename", "rn" };
-        public override string Description => "rename region with given name.";
+        public override string Description => "Renames the given region.";
 
         public override void InitializeParams()
         {

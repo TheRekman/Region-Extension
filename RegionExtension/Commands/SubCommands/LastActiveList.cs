@@ -1,4 +1,5 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Microsoft.Xna.Framework;
+using RegionExtension.Commands.Parameters;
 using System.Linq;
 using Terraria;
 using TShockAPI;
@@ -9,7 +10,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "listact", "la" };
 
-        public override string Description => "get list of regions.";
+        public override string Description => "Get list of last active regions.";
 
         public override void InitializeParams()
         {
@@ -31,16 +32,17 @@ namespace RegionExtension.Commands.SubCommands
                                                     .Select(r => (Region: r, ExtInfo: args.Plugin.RegionExtensionManager.InfoManager.RegionsInfo.First(ri => ri.Id == r.ID)))
                                                     .OrderBy(r => r.ExtInfo.LastActivity)
                                                     .Reverse()
-                                                    .Select(r => r.Region.Name + " " + r.ExtInfo.LastActivity.ToString(Utils.ShortDateFormat))
+                                                    .Select(r => Utils.ColorRegion(r.Region.Name) + " " + Utils.ColorDate(r.ExtInfo.LastActivity.ToString(Utils.ShortDateFormat)))
                                                     .ToList();
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
-            PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames),
+            PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames, null, ", ", 240),
                         new PaginationTools.Settings
                         {
-                            HeaderFormat = "Regions ({0}/{1}):",
+                            HeaderFormat = "Last active region ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
+                            LineTextColor = Color.White,
                             NothingToDisplayString = "There are currently no regions."
                         });
         }

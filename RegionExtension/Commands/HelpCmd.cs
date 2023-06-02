@@ -45,12 +45,13 @@ namespace RegionExtension.Commands
                                                                                                string.Join(' ', sc.Params.Select(p => p.GetColoredBracketName())),
                                                                                                sc.Description).Replace("  ", " "));
             var usedName = args.Message.Split(' ')[0];
+            var usedSubCommandName = args.Parameters.Count > 1 ? args.Parameters[0] : "help";
             PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),
                         new PaginationTools.Settings
                         {
                             HeaderFormat = "Available '{0}' Sub-Commands ({{0}}/{{1}}):".SFormat(usedName),
-                            FooterFormat = "Type {0}{1} help {{0}} for more sub-commands."
-                                          .SFormat(TShockAPI.Commands.Specifier, usedName),
+                            FooterFormat = "Type {0}{1} {2} {{0}} for more sub-commands."
+                                          .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
                             LineTextColor = Color.White
                         });
             args.Player.SendInfoMessage("Additional names: " + string.Join(' ', _targetCommand.Names));

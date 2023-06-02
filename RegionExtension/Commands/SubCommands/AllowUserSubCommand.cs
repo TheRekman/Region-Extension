@@ -9,7 +9,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "allow", "a" };
-        public override string Description => "Allow user to the region";
+        public override string Description => "Allows a user to a region.";
 
         public override void InitializeParams()
         {

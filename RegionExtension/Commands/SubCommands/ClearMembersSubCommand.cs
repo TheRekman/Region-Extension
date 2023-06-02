@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
         public bool _checkRegionOwn;
 
         public override string[] Names => new[] { "clearmembers", "cm" };
-        public override string Description => "remove all members from region.";
+        public override string Description => "Remove all members from region.";
 
         public override void InitializeParams()
         {

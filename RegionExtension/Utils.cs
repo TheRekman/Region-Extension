@@ -10,6 +10,8 @@ namespace RegionExtension
 {
     public static class Utils
     {
+        public const string ColorTagFormat = "[c/{0}:{1}]";
+
         public static string AutoCompleteSameName(string oldName, string format)
         {
             string newName = oldName;
@@ -25,10 +27,14 @@ namespace RegionExtension
         public static float CountDistance(float x1, float y1, float x2, float y2) =>
             (float)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
 
-        public static string ColorCommand(string str) =>
-            string.Format("[c/{0}:{1}]", "b3c9ff", str);
-
         public static string DateFormat { get { return "dd.MM.yyyy HH:mm:ss UTC+0"; } }
         public static string ShortDateFormat { get { return "dd.MM"; } }
+
+        public static string ColorCommand(string str) =>
+            ColorTagFormat.SFormat("b3c9ff", str);
+        public static string ColorRegion(string str) =>
+            ColorTagFormat.SFormat("d6d160", str);
+        public static string ColorDate(string str) =>
+            ColorTagFormat.SFormat("5cb5a3", str);
     }
 }

@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "tp" };
 
-        public override string Description => "teleport to center of given region.";
+        public override string Description => "Teleports you to the given region's center.";
 
         public override void InitializeParams()
         {

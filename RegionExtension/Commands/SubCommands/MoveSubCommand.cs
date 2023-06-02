@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         public bool _checkRegionOwn;
 
         public override string[] Names => new[] { "move", "mv" };
-        public override string Description => "move region with given name.";
+        public override string Description => "Move region with given name.";
         public override void InitializeParams()
         {
             _params = new ICommandParam[]

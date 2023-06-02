@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         public bool _checkRegionOwn;
 
         public override string[] Names => new[] { "resize", "rs", "expand", "exp"};
-        public override string Description => "resize region border.";
+        public override string Description => "Resizes a region.";
         public override void InitializeParams()
         {
             _params = new ICommandParam[]

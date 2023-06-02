@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     public class DeleteRegionSubCommand : SubCommand
     {
         public override string[] Names => new[] { "delete", "del" };
-        public override string Description => "delete region with given name.";
+        public override string Description => "Deletes the given region.";
 
         public override void InitializeParams()
         {
