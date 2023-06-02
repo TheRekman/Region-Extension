@@ -127,35 +127,58 @@ namespace RegionExtension.Database
             try
             {
                 var res = new List<string>();
-                using (var reader = _database.QueryReader($"SELECT 1 FROM {_table.Name} WHERE @0=@1", TableInfo.RegionName.ToString(), regionName))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.RegionName.ToString()}='{regionName}'"))
                 {
-                    return new RegionExtended()
+                    if (reader.Read())
                     {
-                        Region = new Region()
+                        int id = reader.Get<int>(TableInfo.RegionId.ToString());
+                        var worldId = reader.Get<string>(TableInfo.WorldId.ToString());
+                        var name = reader.Get<string>(TableInfo.RegionName.ToString());
+                        var area = new Microsoft.Xna.Framework.Rectangle(
+                                   reader.Get<int>(TableInfo.X.ToString()),
+                                   reader.Get<int>(TableInfo.Y.ToString()),
+                                   reader.Get<int>(TableInfo.Width.ToString()),
+                                   reader.Get<int>(TableInfo.Height.ToString())
+                                   );
+                        var allowIdString = reader.Get<string>(TableInfo.UserIds.ToString()).Split(',');
+                        var allowIds = new List<int>();
+                        foreach(var str in allowIdString)
                         {
-                            ID = reader.Get<int>(TableInfo.RegionId.ToString()),
-                            WorldID = reader.Get<string>(TableInfo.WorldId.ToString()),
-                            Name = reader.Get<string>(TableInfo.RegionName.ToString()),
-                            Area = new Microsoft.Xna.Framework.Rectangle(
-                                reader.Get<int>(TableInfo.X.ToString()),
-                                reader.Get<int>(TableInfo.Y.ToString()),
-                                reader.Get<int>(TableInfo.Width.ToString()),
-                                reader.Get<int>(TableInfo.Height.ToString())
-                                ),
-                            AllowedIDs = reader.Get<string>(TableInfo.UserIds.ToString()).Split(' ').Select(s => int.Parse(s)).ToList(),
-                            DisableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 0 ? false : true,
-                            AllowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList(),
-                            Owner = reader.Get<string>(TableInfo.Owner.ToString()),
-                            Z = reader.Get<int>(TableInfo.Z.ToString())
-                        },
-                        ExtensionInfo = new RegionExtensionInfo(
-                            reader.Get<int>(TableInfo.RegionId.ToString()),
-                            TShock.UserAccounts.GetUserAccountByName(reader.Get<string>(TableInfo.Owner.ToString())).ID,
-                            DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
-                            DateTime.UtcNow,
-                            DateTime.UtcNow
+                            int n = 0;
+                            if(int.TryParse(str, out n))
+                                allowIds.Add(n);
+                        }
+                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 0 ? false : true;
+                        var allowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList();
+                        var owner = reader.Get<string>(TableInfo.Owner.ToString());
+                        var z = reader.Get<int>(TableInfo.Z.ToString());
+                        return new RegionExtended()
+                        {
+                            Region = new Region()
+                            {
+                                ID = id,
+                                WorldID = worldId,
+                                Name = name,
+                                Area = area,
+                                AllowedIDs = allowIds,
+                                DisableBuild = disableBuild,
+                                AllowedGroups = allowedGroups,
+                                Owner = owner,
+                                Z = z
+                            },
+                            ExtensionInfo = new RegionExtensionInfo(
+                                id,
+                                TShock.UserAccounts.GetUserAccountByName(owner).ID,
+                                DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
+                                DateTime.UtcNow,
+                                DateTime.UtcNow
                             )
-                    };
+                        };
+                    }
+                       
+                    else
+                        return null;
+
                 }
             }
             catch (Exception ex)

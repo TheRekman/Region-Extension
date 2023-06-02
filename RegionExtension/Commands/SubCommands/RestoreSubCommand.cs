@@ -38,7 +38,10 @@ namespace RegionExtension.Commands.SubCommands
             var newName = "";
             TryAutoComplete(region, args, out newName);
             reg.Region.Name = newName;
-            args.Plugin.RegionExtensionManager.DefineRegion(args, reg.Region);
+            if(args.Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
+                args.Player.SendSuccessMessage("Region restored '{0}'!".SFormat(region));
+            else
+                args.Player.SendErrorMessage("Failed restore region!")
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
