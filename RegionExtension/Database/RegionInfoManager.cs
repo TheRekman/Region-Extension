@@ -18,10 +18,10 @@ namespace RegionExtension.Database
             new SqlTable("ExtendedRegions",
                          new SqlColumn(TableInfo.Id.ToString(), MySqlDbType.Int32) { Unique = true, NotNull = true },
                          new SqlColumn(TableInfo.WorldId.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true },
+                         new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.Text),
                          new SqlColumn(TableInfo.LastUser.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.LastUpdate.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true },
-                         new SqlColumn(TableInfo.LastActivity.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true }
+                         new SqlColumn(TableInfo.LastUpdate.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableInfo.LastActivity.ToString(), MySqlDbType.Text)
                          );
 
         public List<RegionExtensionInfo> RegionsInfo { get; private set; } = new List<RegionExtensionInfo>();
@@ -84,7 +84,6 @@ namespace RegionExtension.Database
                     return true;
                 
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
-                var sqlDateTime = new SqlDateTime(DateTime.UtcNow).ToSqlString();
                 var values = "'" + string.Join("', '",
                              id.ToString(), Main.worldID, DateTime.UtcNow.ToString(), userId.ToString(), DateTime.UtcNow.ToString(), DateTime.UtcNow.ToString()) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");

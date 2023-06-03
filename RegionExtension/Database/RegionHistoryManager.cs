@@ -10,6 +10,7 @@ using TShockAPI;
 using RegionExtension.Database.Actions;
 using TShockAPI.Hooks;
 using System.Data.SqlTypes;
+using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace RegionExtension.Database
 {
@@ -20,13 +21,13 @@ namespace RegionExtension.Database
 
         private SqlTable _table =
             new SqlTable("RegionHistory",
-                         new SqlColumn(TableHistoryInfo.Id.ToString(), MySqlDbType.Int32) {Unique = true, Primary = true, AutoIncrement = true },
-                         new SqlColumn(TableHistoryInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
-                         new SqlColumn(TableHistoryInfo.UserId.ToString(), MySqlDbType.Int32) { NotNull = true },
+                         new SqlColumn(TableHistoryInfo.Id.ToString(), MySqlDbType.Int32) { Primary = true, AutoIncrement = true },
+                         new SqlColumn(TableHistoryInfo.RegionId.ToString(), MySqlDbType.Int32),
+                         new SqlColumn(TableHistoryInfo.UserId.ToString(), MySqlDbType.Int32),
                          new SqlColumn(TableHistoryInfo.ActionName.ToString(), MySqlDbType.Text),
                          new SqlColumn(TableHistoryInfo.Args.ToString(), MySqlDbType.Text),
                          new SqlColumn(TableHistoryInfo.UndoArgs.ToString(), MySqlDbType.Text),
-                         new SqlColumn(TableHistoryInfo.DateTime.ToString(), MySqlDbType.DateTime) { DefaultCurrentTimestamp = true }
+                         new SqlColumn(TableHistoryInfo.DateTime.ToString(), MySqlDbType.Text)
                          );
 
         public List<RegionExtensionInfo> RegionsInfo { get; private set; }
@@ -76,13 +77,14 @@ namespace RegionExtension.Database
 
         public bool Undo(int count, int regionId)
         {
+            var actions = new List<ActionInfo>();
             try
             {
-                var ids = new List<int>();
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0 ORDER BY DateTime DESC", regionId))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0", regionId))
                 {
-                    while (reader.Read() && count > 0)
+                    while (reader.Read())
                     {
+                        var id = reader.Get<int>(_table.Columns[0].Name);
                         regionId = reader.Get<int>(_table.Columns[1].Name);
                         var userId = reader.Get<int>(_table.Columns[2].Name);
                         var actionName = reader.Get<string>(_table.Columns[3].Name);
@@ -90,35 +92,42 @@ namespace RegionExtension.Database
                         var undoArgs = reader.Get<string>(_table.Columns[5].Name);
                         var dateTime = DateTime.Parse(reader.Get<string>(_table.Columns[6].Name));
                         var action = ActionFactory.GetActionByName(actionName, args);
-                        var undoAction = action.GetUndoAction(undoArgs);
-                        if (!_redoActions.ContainsKey(regionId))
-                            _redoActions.Add(regionId, new Stack<ActionInfo>(10));
-                        _redoActions[regionId].Push(new ActionInfo(action, regionId, userId, dateTime));
-                        undoAction.Do();
-                        ids.Add(reader.Get<int>(_table.Columns[0].Name));
-                        count--;
+                        actions.Add(new ActionInfo(id, action, regionId, userId, dateTime, undoArgs));
                     }
                 }
-                foreach(var id in ids)
-                    _database.Query($"DELETE FROM {_table.Name} WHERE Id=@0", id);
             }
             catch (Exception e)
             {
                 TShock.Log.Error(e.Message);
                 return false;
             }
+            var sortedActions = actions.OrderBy(a => a.Date).Reverse();
+            foreach(var action in sortedActions)
+            {
+                var undoAction = action.Action.GetUndoAction(action.UndoStr);
+                if (!_redoActions.ContainsKey(action.RegionId))
+                    _redoActions.Add(action.RegionId, new Stack<ActionInfo>(10));
+                _redoActions[action.RegionId].Push(new ActionInfo(action.Id, action.Action, action.RegionId, action.UserId, action.Date, action.UndoStr));
+                undoAction.Do();
+                _database.Query($"DELETE FROM {_table.Name} WHERE Id=@0", action.Id);
+                count--;
+                if (count < 1)
+                    break;
+            }
             return true;
         }
 
         public List<string> GetActionsInfo(int count, int regionId)
         {
+            var actions = new List<ActionInfo>();
+            var info = new List<string>();
             try
             {
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0 ORDER BY DateTime DESC", regionId))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE RegionId=@0", regionId))
                 {
-                    var info = new List<string>();
                     while (reader.Read())
                     {
+                        var id = reader.Get<int>(_table.Columns[0].Name);
                         regionId = reader.Get<int>(_table.Columns[1].Name);
                         var userId = reader.Get<int>(_table.Columns[2].Name);
                         var actionName = reader.Get<string>(_table.Columns[3].Name);
@@ -126,12 +135,8 @@ namespace RegionExtension.Database
                         var undoArgs = reader.Get<string>(_table.Columns[5].Name);
                         var dateTime = DateTime.Parse(reader.Get<string>(_table.Columns[6].Name));
                         var action = ActionFactory.GetActionByName(actionName, args);
-                        info.Add(string.Join(' ',
-                            dateTime.ToString(Utils.DateFormat),
-                            userId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(userId).Name,
-                            string.Join(' ', action.GetInfoString())));
+                        actions.Add(new ActionInfo(id, action, regionId, userId, dateTime, undoArgs));
                     }
-                    return info;
                 }
             }
             catch (Exception e)
@@ -139,6 +144,14 @@ namespace RegionExtension.Database
                 TShock.Log.Error(e.Message);
                 return null;
             }
+            info = actions.OrderBy(a => a.Date)
+                          .Reverse()
+                          .Select(a => string.Join(' ',
+                                       a.Date.ToString(Utils.DateFormat),
+                                       a.UserId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(a.UserId).Name,
+                                       string.Join(' ', a.Action.GetInfoString())))
+                          .ToList();
+            return info;
         }
 
         public void Redo(int count, int regionId)
@@ -179,17 +192,21 @@ namespace RegionExtension.Database
 
     public class ActionInfo 
     {
-        public ActionInfo(IAction action, int regionId, int userId, DateTime date)
+        public ActionInfo(int id, IAction action, int regionId, int userId, DateTime date, string undoStr)
         {
+            Id = id;
             Action = action;
             RegionId = regionId;
             UserId = userId;
             Date = date;
+            UndoStr = undoStr;
         }
 
+        public int Id { get; }
         public IAction Action { get; }
         public int RegionId { get; }
         public int UserId { get; }
+        public string UndoStr { get; }
         public DateTime Date { get; }
     }
 }

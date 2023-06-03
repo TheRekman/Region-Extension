@@ -25,7 +25,7 @@ namespace RegionExtension.Commands.Parameters
                 if(foundedRegions.Count() > 1)
                 {
                     args.Player.SendInfoMessage("Founded regions: ");
-                    args.Player.SendInfoMessage(string.Join(", ", foundedRegions));
+                    args.Player.SendInfoMessage(string.Join(", ", foundedRegions.Select(r => r.Name)));
                     return false;
                 }
                 region = foundedRegions.FirstOrDefault();

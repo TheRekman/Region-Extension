@@ -35,7 +35,8 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Failed found region '{0}'!".SFormat(region));
                 return;
             }
-            var newName = "";
+            args.Plugin.RegionExtensionManager.DeletedRegions.DeleteRegion(reg.Region.ID);
+            string newName;
             TryAutoComplete(region, args, out newName);
             reg.Region.Name = newName;
             if (args.Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))

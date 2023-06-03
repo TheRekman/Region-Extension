@@ -18,7 +18,7 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new RegionParam("regionname", "name of region. Default: region in your location", true),
+                new RegionParam("region", "name of region. Default: region in your location", true),
             };
         }
 

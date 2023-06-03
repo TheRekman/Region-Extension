@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MonoMod;
+using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
@@ -33,8 +34,8 @@ namespace RegionExtension.Database
                  new SqlColumn(TableInfo.Groups.ToString(), MySqlDbType.Text),
                  new SqlColumn(TableInfo.Owner.ToString(), MySqlDbType.Text),
                  new SqlColumn(TableInfo.Z.ToString(), MySqlDbType.Int32),
-                 new SqlColumn(TableInfo.CreationDate.ToString(), MySqlDbType.DateTime),
-                 new SqlColumn(TableInfo.DeletionDate.ToString(), MySqlDbType.DateTime)
+                 new SqlColumn(TableInfo.CreationDate.ToString(), MySqlDbType.Text),
+                 new SqlColumn(TableInfo.DeletionDate.ToString(), MySqlDbType.Text)
                  );
 
         public DeletedRegionsDB(IDbConnection db)
@@ -54,7 +55,6 @@ namespace RegionExtension.Database
         public bool RegisterDeletedRegion(Region region, UserAccount userDeleter, RegionExtensionInfo info)
         {
             try
-            
             {
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 int i = 0;
@@ -77,16 +77,14 @@ namespace RegionExtension.Database
                             region.Area.Width.ToString(),
                             region.Area.Height.ToString(),
                             string.Join(' ', region.AllowedIDs),
-                            region.DisableBuild.ToString(),
+                            region.DisableBuild ? 1 : 0,
                             string.Join(' ', region.AllowedGroups),
                             region.Owner,
                             region.Z.ToString(),
                             info.DateCreation,
                             DateTime.UtcNow);
-                _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
-                if (_database.Query($"SELECT * FROM {_table.Name}") > _maxCount)
-                    _database.Query($"DELETE FROM TABLE {_table.Name} JOIN (SELECT MIN(@0) AS max_id FROM TABLE) temp WHERE {_table.Name}.Id = temp.max_Id",
-                                    TableInfo.DeletionDate.ToString());
+                string query = $"INSERT INTO {_table.Name} (RegionId, DeleterId, WorldId, RegionName, X, Y, Width, Height, UserIds, Protected, `Groups`, Owner, Z, CreationDate, DeletionDate) VALUES ({values});";
+                _database.Query(query);
                 return true;
             }
             catch (Exception ex)
@@ -98,27 +96,45 @@ namespace RegionExtension.Database
 
         public List<string> GetRegionsInfo()
         {
+            var res = new List<string>();
+            var regs = new List<DeletedInfo>();
             try
             {
-                var res = new List<string>();
-                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} ORDER BY DeletionDate DESC"))
+                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name}"))
                 {
                     while (reader.Read())
                     {
                         var userid = reader.Get<int>(TableInfo.DeleterId.ToString());
                         var username = userid == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(userid).Name;
-                        res.Add("\"" + string.Join("\" \"",
+                        regs.Add(new DeletedInfo(
                                 reader.Get<string>(TableInfo.RegionName.ToString()),
-                                username,
-                                reader.Get<DateTime>(TableInfo.DeletionDate.ToString()).ToString(Utils.DateFormat)) + "\"");
+                                DateTime.Parse(reader.Get<string>(TableInfo.DeletionDate.ToString())),
+                                username));
                     }
                 }
-                return res;
             }
             catch (Exception ex)
             {
                 TShock.Log.Error(ex.Message);
                 return null;
+            }
+            return regs.OrderBy(r => r.DeletionDate)
+                       .Reverse()
+                       .Select(r => string.Join(' ', r.DeletionDate.ToString(Utils.DateFormat), r.RegionName, r.DeleterUser))
+                       .ToList();
+        }
+
+        public bool DeleteRegion(int regionId)
+        {
+            try
+            {
+                _database.Query($"DELETE FROM {_table.Name} WHERE RegionId={regionId}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                TShock.Log.Error(ex.Message);
+                return false;
             }
         }
 
@@ -148,7 +164,7 @@ namespace RegionExtension.Database
                             if(int.TryParse(str, out n))
                                 allowIds.Add(n);
                         }
-                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 0 ? false : true;
+                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 1 ? true : false;
                         var allowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList();
                         var owner = reader.Get<string>(TableInfo.Owner.ToString());
                         var z = reader.Get<int>(TableInfo.Z.ToString());
@@ -206,5 +222,18 @@ namespace RegionExtension.Database
             CreationDate,
             DeletionDate
         }
+    }
+    public class DeletedInfo
+    {
+        public DeletedInfo(string regionName, DateTime deletionDate, string deleterUser)
+        {
+            RegionName = regionName;
+            DeletionDate = deletionDate;
+            DeleterUser = deleterUser;
+        }
+
+        public string RegionName { get; set; }
+        public DateTime DeletionDate { get; set; }
+        public string DeleterUser{ get; set; }
     }
 }

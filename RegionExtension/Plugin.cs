@@ -11,6 +11,7 @@ using TShockAPI.DB;
 using TShockAPI.Hooks;
 using RegionExtension.Database;
 using System.Reflection;
+using Org.BouncyCastle.Crypto.Engines;
 
 namespace RegionExtension
 {
@@ -51,6 +52,12 @@ namespace RegionExtension
 
         private void OnPostInitialize(EventArgs args)
         {
+            Contexts = new ContextManager();
+            Contexts.Initialize();
+            PluginCommands.Initialize(this);
+            RegionExtensionManager = new RegionExtManager(TShock.DB);
+            Config = ConfigFile.Read();
+            FastRegions = new List<FastRegion>();
             RegionExtensionManager.PostInitialize();
         }
 
@@ -77,17 +84,12 @@ namespace RegionExtension
                 ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
                 PlayerHooks.PlayerLogout -= OnPlayerLogout;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
+                PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
             }
         }
 
         private void OnInitialize(EventArgs args)
         {
-            Contexts = new ContextManager();
-            Contexts.Initialize();
-            PluginCommands.Initialize(this);
-            RegionExtensionManager = new RegionExtManager(TShock.DB);
-            Config = ConfigFile.Read();
-            FastRegions = new List<FastRegion>();
         }
         #endregion
 
@@ -140,8 +142,16 @@ namespace RegionExtension
 
         public int FindFastRegionByUser(UserAccount user)
         {
+            if(user == null)
+                return -1;
+            if (FastRegions == null)
+            {
+                FastRegions = new List<FastRegion>();
+                return -1;
+            }
             for (int i = 0; i < FastRegions.Count; i++)
-                if (FastRegions[i].User == user) return i;
+                if (FastRegions[i]?.User == user)
+                    return i;
                 return -1;
         }
 
