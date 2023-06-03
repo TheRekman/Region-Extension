@@ -35,7 +35,7 @@ namespace RegionExtension.Database.Actions
         {
             _regionName = args.Region.Name;
             _amount = args.Amount;
-            _direction = args.Amount;
+            _direction = args.Direction;
         }
 
         public Resize(string fromArgs)

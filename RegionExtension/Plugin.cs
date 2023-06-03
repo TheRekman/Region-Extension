@@ -103,13 +103,15 @@ namespace RegionExtension
 
         private void OnGetData(GetDataEventArgs args)
         {
-            int id = FindFastRegionByUser(TShock.Players[args.Msg.whoAmI].Account);
-            if (id == -1) return;
+            int id;
             switch (args.MsgID)
             {
                 case (PacketTypes.MassWireOperation):
+                    id = FindFastRegionByUser(TShock.Players[args.Msg.whoAmI]?.Account);
+                    if (id == -1) return;
                     using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
                     {
+
                         int startX = reader.ReadInt16();
                         int startY = reader.ReadInt16();
                         int endX = reader.ReadInt16();
@@ -123,6 +125,8 @@ namespace RegionExtension
                     args.Handled = true;
                     break;
                 case (PacketTypes.Tile):
+                    id = FindFastRegionByUser(TShock.Players[args.Msg.whoAmI]?.Account);
+                    if (id == -1) return;
                     using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
                     {
                         reader.ReadByte();
