@@ -20,8 +20,8 @@ namespace RegionExtension.Commands.SubCommands
             _params = new ICommandParam[]
             {
                 new RegionParam("region", "which region must be resized."),
-                new IntParam("amount", "amount on which region must be resized."),
-                new DirectionParam("direction", "direction of move. u/d/r/l")
+                new DirectionParam("direction", "direction of move. u/d/r/l"),
+                new IntParam("amount", "amount on which region must be resized.")
             };
         }
 
@@ -33,8 +33,8 @@ namespace RegionExtension.Commands.SubCommands
         public override void Execute(CommandArgsExtension args)
         {
             var region = (Region)Params[0].Value;
-            var amount = (int)Params[1].Value;
-            var direction = (Direction)Params[2].Value;
+            var direction = (Direction)Params[1].Value;
+            var amount = (int)Params[2].Value;
             if (_checkRegionOwn && !CheckRegionOwn(args, region))
             {
                 args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));

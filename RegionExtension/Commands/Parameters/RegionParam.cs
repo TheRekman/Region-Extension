@@ -21,7 +21,7 @@ namespace RegionExtension.Commands.Parameters
             if (region == null)
             {
                 args?.Player.SendInfoMessage("Failed found region '{0}'! Trying found with this start.".SFormat(str));
-                var foundedRegions = TShock.Regions.Regions.Where(r => r.Name.StartsWith(str));
+                var foundedRegions = TShock.Regions.Regions.Where(r => r.Name.ToLower().StartsWith(str.ToLower()));
                 if(foundedRegions.Count() > 1)
                 {
                     args.Player.SendInfoMessage("Founded regions: ");

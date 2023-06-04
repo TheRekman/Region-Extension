@@ -27,7 +27,7 @@ namespace RegionExtension.Commands.SubCommands
             var regionname = (string)Params[0].Value;
             if (!TryAutoComplete((string)Params[0].Value, args, out regionname))
             {
-                args.Player.SendErrorMessage("Region '{0}' alreadt exist!".SFormat(regionname));
+                args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(regionname));
                 return;
             }
             var username = (UserAccount)Params[1].Value;
