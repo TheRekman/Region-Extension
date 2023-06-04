@@ -48,6 +48,7 @@ namespace RegionExtension
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
+            RegionExtensionManager = new RegionExtManager(TShock.DB);
         }
 
         private void OnPostInitialize(EventArgs args)
@@ -55,7 +56,6 @@ namespace RegionExtension
             Contexts = new ContextManager();
             Contexts.Initialize();
             PluginCommands.Initialize(this);
-            RegionExtensionManager = new RegionExtManager(TShock.DB);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
             RegionExtensionManager.PostInitialize();
