@@ -29,7 +29,7 @@ namespace RegionExtension
         public ContextManager Contexts;
         public List<FastRegion> FastRegions;
         public ConfigFile Config;
-        public RegionExtManager RegionExtensionManager;
+        public static RegionExtManager RegionExtensionManager;
         #endregion
 
         bool _checkingHasBuild = false;

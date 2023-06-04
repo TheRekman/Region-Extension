@@ -44,7 +44,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void AllowGroup(CommandArgsExtension args, Group group, Region region)
         {
-            if (args.Plugin.RegionExtensionManager.AllowGroup(args, region, group))
+            if (Plugin.RegionExtensionManager.AllowGroup(args, region, group))
                 args.Player.SendSuccessMessage("Group '{0}' removed from the region '{1}'".SFormat(group.Name, region.Name));
             else
                 args.Player.SendErrorMessage("Failed remove group '{0}' from the region '{1}'!".SFormat(group.Name, region.Name));

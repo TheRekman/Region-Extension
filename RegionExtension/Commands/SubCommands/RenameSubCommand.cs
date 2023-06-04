@@ -47,7 +47,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void RenameRegion(CommandArgsExtension args, string newname, Region region)
         {
-            if (args.Plugin.RegionExtensionManager.RenameRegion(args, region, newname))
+            if (Plugin.RegionExtensionManager.RenameRegion(args, region, newname))
                 args.Player.SendSuccessMessage("Region renamed.");
             else
                 args.Player.SendErrorMessage("Failed rename region.");

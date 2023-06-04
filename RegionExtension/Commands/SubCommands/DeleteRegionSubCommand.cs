@@ -30,7 +30,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void DeleteRegion(CommandArgsExtension args, Region region)
         {
-            if (args.Plugin.RegionExtensionManager.DeleteRegion(args, region))
+            if (Plugin.RegionExtensionManager.DeleteRegion(args, region))
                 args.Player.SendInfoMessage("Deleted region \"{0}\".".SFormat(region.Name));
             else
                 args.Player.SendErrorMessage($"Could not find the region {region.Name}.");

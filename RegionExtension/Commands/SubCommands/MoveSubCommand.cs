@@ -48,7 +48,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void MoveRegion(CommandArgsExtension args, Region region, int amount, Direction direction)
         {
-            if (args.Plugin.RegionExtensionManager.MoveRegion(args, region, amount, direction))
+            if (Plugin.RegionExtensionManager.MoveRegion(args, region, amount, direction))
                 args.Player.SendSuccessMessage("Region moved.");
             else
                 args.Player.SendErrorMessage("Failed move region.");

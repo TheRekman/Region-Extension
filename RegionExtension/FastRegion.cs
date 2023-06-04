@@ -15,13 +15,11 @@ namespace RegionExtension
         private readonly string _ownerName;
         private readonly int _z;
         private readonly bool _protect;
-        private readonly Plugin _plugin;
 
         public UserAccount User { get { return _player.Account; } }
 
-        public FastRegion(Plugin plugin, TSPlayer player, string regionName, string ownerName, int z = 0, bool protect = true)
+        public FastRegion(TSPlayer player, string regionName, string ownerName, int z = 0, bool protect = true)
         {
-            _plugin = plugin;
             _player = player;
             _regionName = regionName;
             _ownerName = ownerName;
@@ -78,7 +76,7 @@ namespace RegionExtension
                 DisableBuild = _protect
             };
 
-            if(_plugin.RegionExtensionManager.DefineRegion(_player, region))
+            if(Plugin.RegionExtensionManager.DefineRegion(_player, region))
             {
                 _player.SendSuccessMessage("Set region " + _regionName);
             }

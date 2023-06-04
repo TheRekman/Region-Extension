@@ -46,7 +46,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendRegionInfo(CommandArgsExtension args, int page, Region region)
         {
-            var lines = args.Plugin.RegionExtensionManager.GetRegionInfo(region);
+            var lines = Plugin.RegionExtensionManager.GetRegionInfo(region);
             var usedName = args.Message.Split(' ')[0];
             PaginationTools.SendPage(
                 args.Player, page, lines, new PaginationTools.Settings

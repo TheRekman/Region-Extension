@@ -45,7 +45,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void UndoActions(CommandArgsExtension args, int count, Region region)
         {
-            if (args.Plugin.RegionExtensionManager.HistoryManager.Undo(count, region.ID))
+            if (Plugin.RegionExtensionManager.HistoryManager.Undo(count, region.ID))
                 args.Player.SendSuccessMessage("Undo success.");
             else
                 args.Player.SendErrorMessage("Undo failed.");

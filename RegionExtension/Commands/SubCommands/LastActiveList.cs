@@ -29,7 +29,7 @@ namespace RegionExtension.Commands.SubCommands
         private void SendRegionList(CommandArgsExtension args, int page)
         {
             var regionNames = TShock.Regions.Regions.Where(r => r.WorldID == Main.worldID.ToString())
-                                                    .Select(r => (Region: r, ExtInfo: args.Plugin.RegionExtensionManager.InfoManager.RegionsInfo.First(ri => ri.Id == r.ID)))
+                                                    .Select(r => (Region: r, ExtInfo: Plugin.RegionExtensionManager.InfoManager.RegionsInfo.First(ri => ri.Id == r.ID)))
                                                     .OrderBy(r => r.ExtInfo.LastActivity)
                                                     .Reverse()
                                                     .Select(r => Utils.ColorRegion(r.Region.Name) + " " + Utils.ColorDate(r.ExtInfo.LastActivity.ToString(Utils.ShortDateFormat)))

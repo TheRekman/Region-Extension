@@ -29,17 +29,17 @@ namespace RegionExtension.Commands.SubCommands
 
         private void RestoreRegion(CommandArgsExtension args, string region)
         {
-            var reg = args.Plugin.RegionExtensionManager.DeletedRegions.GetRegionByName(region);
+            var reg = Plugin.RegionExtensionManager.DeletedRegions.GetRegionByName(region);
             if(reg == null)
             {
                 args.Player.SendErrorMessage("Failed found region '{0}'!".SFormat(region));
                 return;
             }
-            args.Plugin.RegionExtensionManager.DeletedRegions.DeleteRegion(reg.Region.ID);
+            Plugin.RegionExtensionManager.DeletedRegions.DeleteRegion(reg.Region.ID);
             string newName;
             TryAutoComplete(region, args, out newName);
             reg.Region.Name = newName;
-            if (args.Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
+            if (Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
                 args.Player.SendSuccessMessage("Region restored '{0}'!".SFormat(region));
             else
                 args.Player.SendErrorMessage("Failed restore region!");

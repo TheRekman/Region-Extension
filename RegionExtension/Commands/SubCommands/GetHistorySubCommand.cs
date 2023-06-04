@@ -46,7 +46,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendRegionHistory(CommandArgsExtension args, int page, Region region)
         {
-            var lines = args.Plugin.RegionExtensionManager.GetRegionHistory(50, region);
+            var lines = Plugin.RegionExtensionManager.GetRegionHistory(50, region);
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(
