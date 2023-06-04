@@ -47,7 +47,6 @@ namespace RegionExtension.Database
         public RegionExtManager(IDbConnection db)
         {
             _tshockDatabase = db;
-            InitializeDatabase();
             EventHandler();
         }
 
@@ -91,6 +90,7 @@ namespace RegionExtension.Database
 
         public void PostInitialize()
         {
+            InitializeDatabase();
             _regionInfoManager.PostInitialize();
         }
 
