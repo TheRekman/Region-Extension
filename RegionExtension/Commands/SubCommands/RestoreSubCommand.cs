@@ -17,7 +17,7 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new StringParam("regionname", "name of region. Name must be exact same", true),
+                new StringParam("regionname", "name of region. Name must be exact same"),
             };
         }
 
