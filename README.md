@@ -1,12 +1,6 @@
 # Region Extension
 ## EN
 Plugin add more commands for better region management & add context parameters.
-IDK
-New commands from 1.2
-//re fully transfer in /region or /re
-/ro now start wthout slash
-/rh - history
-use help for see all commands
 ### Commands
 #### RegionExt (/re, /region)
 All commands integrated with /region cmd, also all default command replaced with plugin
@@ -54,13 +48,13 @@ Example: if region name "rname" already exist, define name automatically changes
 ### Команды
 #### RegionExt (/re, /region)
 Все команды интегрированны с /region, все станадртные команды также заменены со стороны плагина.
-- `/re rename <oldname> <newname>` - Устанавливает новое имя (newname) для указанного региона (oldname).
-- `/re move <regionname> <u/d/r/l> <amount>` - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
-- `/re fastregion/fr <regionname> [ownername] [z] [protect]` - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
-- `/re frbreak` - Отменяет активный запрос на быстрый регион (fastregion).
-- `/re clearm <regionname>` - Очищает список всех игроков, что могут строить в регионе (regionname).
-- `/re setowner <regionname> <username>` - Задает нового владельца региона (username) для указаного региона.
-- `/re contexts [page]` - Отображение всех доступных контекстных команд.
+- `rename <oldname> <newname>` - Устанавливает новое имя (newname) для указанного региона (oldname).
+- `move <regionname> <u/d/r/l> <amount>` - Перемещает координаты региона в указанном направлении. u - вверх, d - вниз, r - вправо, l - влево.
+- `fastregion/fr <regionname> [ownername] [z] [protect]` - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
+- `frbreak` - Отменяет активный запрос на быстрый регион (fastregion).
+- `clearm <regionname>` - Очищает список всех игроков, что могут строить в регионе (regionname).
+- `setowner <regionname> <username>` - Задает нового владельца региона (username) для указаного региона.
+- `contexts [page]` - Отображение всех доступных контекстных команд.
 #### RegionOwn (/ro, /regionown)
 Команды для владельцев регионов.
 - `list` - Список всех регионов, которыми владеет игрок.
@@ -80,6 +74,7 @@ Example: if region name "rname" already exist, define name automatically changes
 Контекст используется для быстрого ввода команд без поиска необходимых параметров. Также работает с /region
 - `$this` - берет имя региона в котором находится игрок.
 - `$myname` - берет имя аккаунта игрока.
+- `$near` - получает имя ближайшего игрока.
 
 Пример: /region info $this. Вернет информацию о регионе, в котором находится игрок.
 ### Конфиг
@@ -90,7 +85,6 @@ Example: if region name "rname" already exist, define name automatically changes
 Пример: Если регион с именем "rname", уже существует, новое имя автоматически будет заменено на "rname:1".
 - AutoCompleteSameNameFormat, default: "{0}:{1}" // Формат замены имени нового региона. {0} - имя региона, {1} - номер нового региона.
 ### Привилегии
-- `tshock.admin.region` - позволяет использовать команды //regionext. 
-- `regionext.own` - позволяет использовать команды //regionown.
-- `$near` - получает имя ближайшего игрока.
-
+- `tshock.admin.region` - позволяет использовать команды /regionext. 
+- `regionext.own` - позволяет использовать команды /regionown.
+- `regionext.history` - allow use /regionhistory commands.
