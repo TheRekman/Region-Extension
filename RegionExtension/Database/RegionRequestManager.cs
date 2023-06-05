@@ -13,7 +13,7 @@ using MySqlX.XDevAPI.Relational;
 
 namespace RegionExtension.Database
 {
-    internal class RegionRequestManager
+    public class RegionRequestManager
     {
         private IDbConnection _database;
 

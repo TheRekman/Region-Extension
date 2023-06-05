@@ -8,12 +8,21 @@ namespace RegionExtension
     public class ConfigFile
     {
         [JsonIgnore]
-        private static readonly string Path = System.IO.Path.Combine(TShock.SavePath, "RegionExtention.json");
+        private static readonly string Path = System.IO.Path.Combine(TShock.SavePath, "RegionExtension.json");
 
         public string ContextSpecifier = "$";
         public bool ContextAllow = true;
         public bool AutoCompleteSameName = true;
         public string AutoCompleteSameNameFormat = "{0}:{1}"; //{0} - region name, {1} - region number
+        public int MaxRequestCount = 3;
+        public string RequestTime = "3d";
+        public bool AutoConfirmRequest = false;
+        public int MaxRequestArea = 40000;
+        public int MaxRequestHeight = 200;
+        public int MaxRequestWidth = 200;
+        public bool ProtectRequestedRegion = true;
+        public bool SendNotificationsAboutRequests = true;
+        public string NotificationPeriod = "10m";
 
         public static ConfigFile Read()
         {

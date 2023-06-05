@@ -28,7 +28,7 @@ namespace RegionExtension
         #region fields
         public ContextManager Contexts;
         public List<FastRegion> FastRegions;
-        public ConfigFile Config;
+        public static ConfigFile Config;
         public static RegionExtManager RegionExtensionManager;
         #endregion
 

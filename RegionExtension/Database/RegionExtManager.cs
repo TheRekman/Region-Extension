@@ -25,6 +25,9 @@ namespace RegionExtension.Database
         private RegionInfoManager _regionInfoManager;
         private RegionHistoryManager _historyManager;
         private DeletedRegionsDB _deletedRegionsDB;
+        private RegionRequestManager _regionRequestManager;
+        private TemporaryRegionManager _temporaryRegionManager;
+        private DateTime lastUpdate = DateTime.UtcNow;
 
         public event Action<AllowArgs> OnRegionAllow;
         public event Action<RemoveArgs> OnRegionRemove;
@@ -40,9 +43,13 @@ namespace RegionExtension.Database
         public event Action<BaseRegionArgs> OnRegionDelete;
         public event Action<BaseRegionArgs> OnRegionDefine;
 
+        public event Action OnPostInitialize;
+
         public RegionHistoryManager HistoryManager { get { return _historyManager; } }
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
         public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
+        public RegionRequestManager RegionRequestManager { get => _regionRequestManager; }
+        public TemporaryRegionManager TemporaryRegionManager { get => _temporaryRegionManager; }
 
         public RegionExtManager(IDbConnection db)
         {
@@ -86,6 +93,9 @@ namespace RegionExtension.Database
             _regionInfoManager = new RegionInfoManager(database);
             _historyManager = new RegionHistoryManager(database);
             _deletedRegionsDB = new DeletedRegionsDB(database);
+            _regionRequestManager = new RegionRequestManager(database);
+            _temporaryRegionManager = new TemporaryRegionManager(database);
+            OnPostInitialize();
         }
 
         public void PostInitialize()
@@ -205,6 +215,13 @@ namespace RegionExtension.Database
                 OnRegionDefine(new BaseRegionArgs(user, region));
             }
             return res;
+        }
+
+        public void Update()
+        {
+            if (DateTime.UtcNow > lastUpdate.AddMinutes(1))
+                return;
+            _regionRequestManager.Requests.Where(r => r.DateCreation.)
         }
 
         public List<string> GetRegionInfo(Region region) =>

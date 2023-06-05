@@ -43,7 +43,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
         {
-            if (!args.Plugin.Config.AutoCompleteSameName)
+            if (!Plugin.Config.AutoCompleteSameName)
             {
                 result = str;
                 return TShock.Regions.GetRegionByName(str) != null;
@@ -52,7 +52,7 @@ namespace RegionExtension.Commands.SubCommands
             result = str;
             while (TShock.Regions.GetRegionByName(result) != null)
             {
-                result = args.Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
                 num++;
             }
             return true;
