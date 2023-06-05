@@ -3,27 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TShockAPI;
+using System.Text;
+using System.Threading.Tasks;
 using TShockAPI.DB;
+using TShockAPI;
 using Terraria;
+using Google.Protobuf.WellKnownTypes;
+using MySqlX.XDevAPI.Relational;
 
 namespace RegionExtension.Database
 {
-    public class TemporaryRegionManager
+    internal class RegionRequestManager
     {
         private IDbConnection _database;
 
         private SqlTable _table =
             new SqlTable("ExtendedRegions",
                          new SqlColumn(TableInfo.RegionId.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.WorldID.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.DeletionDate.ToString(), MySqlDbType.Text)
+                         new SqlColumn(TableInfo.WorldID.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableInfo.UserID.ToString(), MySqlDbType.Int32),
+                         new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.Text),
+                         new SqlColumn(TableInfo.Denied.ToString(), MySqlDbType.Int32),
+                         new SqlColumn(TableInfo.Denier.ToString(), MySqlDbType.Int32)
                          );
 
-        private List<TemporaryRegion> _temporaryRegions = new List<TemporaryRegion>();
-        private List<TemporaryRegion> TemporaryRegions { get { return _temporaryRegions; } }
+        private List<Request> _requests = new List<Request>();
+        public List<Request> Requests { get { return _requests; } }
 
-        public TemporaryRegionManager(IDbConnection db)
+        public RegionRequestManager(IDbConnection db)
         {
             _database = db;
             InitializeTable();
@@ -37,15 +44,15 @@ namespace RegionExtension.Database
             creator.EnsureTableStructure(_table);
         }
 
-        public bool DefineTemporary(Region region, DateTime time)
+        public bool AddRequest(Region region, UserAccount user)
         {
             try
             {
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 var values = "'" + string.Join("', '",
-                            region.ID, Main.worldID, time.ToString()) + "'";
+                            region.ID, Main.worldID, user.ID, DateTime.UtcNow.ToString(), 0, 0) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
-                _temporaryRegions.Add(new TemporaryRegion(region, time));
+                Requests.Add(new Request(region, user, null, false, DateTime.UtcNow));
                 return true;
             }
             catch (Exception ex)
@@ -55,22 +62,16 @@ namespace RegionExtension.Database
             }
         }
 
-        public List<TemporaryRegion> GetRegionsAndRemove()
+        public bool DenyRequest(Region region, UserAccount user)
         {
-            var currentTime = DateTime.UtcNow;
-            var regionForDelete = _temporaryRegions.Where(r => r.dateTime < DateTime.UtcNow);
-            _temporaryRegions.RemoveAll(r => r.dateTime < DateTime.UtcNow);
-            foreach (var r in regionForDelete)
-                DeleteTemporary(r.Region);
-            return regionForDelete.ToList();
-        }
-
-        public bool UpdateTime(Region region, DateTime time)
-        {
-            var res = UpdateQuery(_database, _table.Name, TableInfo.DeletionDate.ToString(), time.ToString(), region.ID);
-            if(res)
-                _temporaryRegions.First(r => r.Region.ID == region.ID).dateTime = time;
-            return res;
+            var req = Requests.FirstOrDefault(r => r.Region.ID == region.ID);
+            if (req == null ||
+                !UpdateQuery(_database, _table.Name, TableInfo.Denier.ToString(), user.ID.ToString(), region.ID) ||
+                !UpdateQuery(_database, _table.Name, TableInfo.Denied.ToString(), "1", region.ID))
+                return false;
+            req.Denier = user;
+            req.Denied = true;
+            return true;
         }
 
         private bool UpdateQuery(IDbConnection db, string table, string column, string value, int RegionId)
@@ -96,10 +97,12 @@ namespace RegionExtension.Database
                     while (reader.Read())
                     {
                         Region region = TShock.Regions.GetRegionByID(reader.Get<int>(TableInfo.RegionId.ToString()));
-                        if (region == null)
+                        UserAccount user = TShock.UserAccounts.GetUserAccountByID(reader.Get<int>(TableInfo.UserID.ToString()));
+                        if (region == null || user == null)
                             continue;
-                        DateTime date = DateTime.Parse(reader.Get<string>(TableInfo.DeletionDate.ToString()));
-                        _temporaryRegions.Add(new TemporaryRegion(region, date));
+                        UserAccount Denier = TShock.UserAccounts.GetUserAccountByID(reader.Get<int>(TableInfo.UserID.ToString()));
+                        DateTime date = DateTime.Parse(reader.Get<string>(TableInfo.DateCreation.ToString()));
+                        _requests.Add(new Request(region, user, Denier, Denier != null, date));
                     }
                 }
             }
@@ -109,7 +112,7 @@ namespace RegionExtension.Database
             }
         }
 
-        public bool DeleteTemporary(Region region)
+        public bool DeleteRequest(Region region)
         {
             try
             {
@@ -127,19 +130,28 @@ namespace RegionExtension.Database
         {
             RegionId,
             WorldID,
-            DeletionDate
+            UserID,
+            DateCreation,
+            Denied,
+            Denier
         }
     }
 
-    public class TemporaryRegion
+    public class Request
     {
-        public TemporaryRegion(Region region, DateTime dateTime)
+        public Request(Region region, UserAccount user, UserAccount denier, bool denied, DateTime dateCreation)
         {
             Region = region;
-            this.dateTime = dateTime;
+            User = user;
+            Denier = denier;
+            Denied = denied;
+            DateCreation = dateCreation;
         }
 
         public Region Region { get; set; }
-        public DateTime dateTime { get; set; }
+        public UserAccount User { get; set; }
+        public UserAccount Denier { get; set; }
+        public bool Denied { get; set; }
+        public DateTime DateCreation { get; set; }
     }
 }
