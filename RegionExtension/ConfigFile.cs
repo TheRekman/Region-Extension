@@ -21,6 +21,7 @@ namespace RegionExtension
         public int MaxRequestHeight = 200;
         public int MaxRequestWidth = 200;
         public bool ProtectRequestedRegion = true;
+        public int DefaultRequestZ = 0;
         public bool SendNotificationsAboutRequests = true;
         public string NotificationPeriod = "10m";
 

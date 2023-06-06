@@ -219,9 +219,9 @@ namespace RegionExtension.Database
 
         public void Update()
         {
-            if (DateTime.UtcNow > lastUpdate.AddMinutes(1))
+            if (DateTime.UtcNow > lastUpdate.AddSeconds(30))
                 return;
-            _regionRequestManager.Requests.Where(r => r.DateCreation.)
+            _regionRequestManager.Requests.Where(r => r.DateCreation >)
         }
 
         public List<string> GetRegionInfo(Region region) =>
