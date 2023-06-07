@@ -10,7 +10,6 @@ using TShockAPI;
 using RegionExtension.Database.Actions;
 using TShockAPI.Hooks;
 using System.Data.SqlTypes;
-using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace RegionExtension.Database
 {

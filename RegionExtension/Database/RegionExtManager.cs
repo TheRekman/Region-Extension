@@ -269,7 +269,7 @@ namespace RegionExtension.Database
                                                             .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
                                                                                                      r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
                 foreach (var plr in players)
-                    PaginationTools.SendPage(plr, 0, PaginationTools.BuildLinesFromTerms(regions, null, ", ", 200), new PaginationTools.Settings()
+                    PaginationTools.SendPage(plr, 0, PaginationTools.BuildLinesFromTerms(regions,null, ", ", 200), new PaginationTools.Settings()
                     {
                         HeaderFormat = "Active requests:"
                     });

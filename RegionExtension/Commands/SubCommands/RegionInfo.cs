@@ -21,7 +21,7 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new RegionParam("regionname", "which region info. Default: region in your location", true),
+                new RegionParam("region", "which region info. Default: region in your location", true),
                 new IntParam("page", "page of the list. Default: 1", true, 1)
             };
         }
@@ -55,6 +55,12 @@ namespace RegionExtension.Commands.SubCommands
                     FooterFormat = string.Format("Type {0}{1} info {2} {{0}} for more information.", TShockAPI.Commands.Specifier, usedName, region.Name)
                 }
             );
+            var req = Plugin.RegionExtensionManager.RegionRequestManager.Requests.FirstOrDefault(r => r.Region.ID == region.ID);
+            if (req != null && !Plugin.Config.AutoApproveRequest)
+            {
+                args.Player.SendInfoMessage("This region requires request confirmation!");
+                args.Player.SendInfoMessage("Region will be deleted in '{0}'!".SFormat(req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
+            }
         }
 
         public bool CheckRegionOwn(CommandArgsExtension args, Region region)
