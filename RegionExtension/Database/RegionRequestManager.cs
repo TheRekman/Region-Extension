@@ -22,9 +22,7 @@ namespace RegionExtension.Database
                          new SqlColumn(TableInfo.RegionId.ToString(), MySqlDbType.Int32),
                          new SqlColumn(TableInfo.WorldID.ToString(), MySqlDbType.Text),
                          new SqlColumn(TableInfo.UserID.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.Text),
-                         new SqlColumn(TableInfo.Denied.ToString(), MySqlDbType.Int32),
-                         new SqlColumn(TableInfo.Denier.ToString(), MySqlDbType.Int32)
+                         new SqlColumn(TableInfo.DateCreation.ToString(), MySqlDbType.Text)
                          );
 
         private List<Request> _requests = new List<Request>();
@@ -50,9 +48,9 @@ namespace RegionExtension.Database
             {
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 var values = "'" + string.Join("', '",
-                            region.ID, Main.worldID, user.ID, DateTime.UtcNow.ToString(), 0, 0) + "'";
+                            region.ID, Main.worldID, user.ID, DateTime.UtcNow.ToString()) + "'";
                 _database.Query($"INSERT INTO {_table.Name} ({variablesString}) VALUES ({values});");
-                Requests.Add(new Request(region, user, null, false, DateTime.UtcNow));
+                Requests.Add(new Request(region, user, DateTime.UtcNow));
                 return true;
             }
             catch (Exception ex)
@@ -60,18 +58,6 @@ namespace RegionExtension.Database
                 TShock.Log.Error(ex.Message);
                 return false;
             }
-        }
-
-        public bool DenyRequest(Region region, UserAccount user)
-        {
-            var req = Requests.FirstOrDefault(r => r.Region.ID == region.ID);
-            if (req == null ||
-                !UpdateQuery(_database, _table.Name, TableInfo.Denier.ToString(), user.ID.ToString(), region.ID) ||
-                !UpdateQuery(_database, _table.Name, TableInfo.Denied.ToString(), "1", region.ID))
-                return false;
-            req.Denier = user;
-            req.Denied = true;
-            return true;
         }
 
         private bool UpdateQuery(IDbConnection db, string table, string column, string value, int RegionId)
@@ -100,9 +86,8 @@ namespace RegionExtension.Database
                         UserAccount user = TShock.UserAccounts.GetUserAccountByID(reader.Get<int>(TableInfo.UserID.ToString()));
                         if (region == null || user == null)
                             continue;
-                        UserAccount Denier = TShock.UserAccounts.GetUserAccountByID(reader.Get<int>(TableInfo.UserID.ToString()));
                         DateTime date = DateTime.Parse(reader.Get<string>(TableInfo.DateCreation.ToString()));
-                        _requests.Add(new Request(region, user, Denier, Denier != null, date));
+                        _requests.Add(new Request(region, user, date));
                     }
                 }
             }
@@ -139,19 +124,15 @@ namespace RegionExtension.Database
 
     public class Request
     {
-        public Request(Region region, UserAccount user, UserAccount denier, bool denied, DateTime dateCreation)
+        public Request(Region region, UserAccount user, DateTime dateCreation)
         {
             Region = region;
             User = user;
-            Denier = denier;
-            Denied = denied;
             DateCreation = dateCreation;
         }
 
         public Region Region { get; set; }
         public UserAccount User { get; set; }
-        public UserAccount Denier { get; set; }
-        public bool Denied { get; set; }
         public DateTime DateCreation { get; set; }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using IL.Terraria.DataStructures;
+using Microsoft.Xna.Framework;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using TShockAPI;
 
 namespace RegionExtension
@@ -36,5 +39,23 @@ namespace RegionExtension
             ColorTagFormat.SFormat("d6d160", str);
         public static string ColorDate(string str) =>
             ColorTagFormat.SFormat("5cb5a3", str);
+
+        public static string GetGradientByPos(string str, double pos)
+        {
+            var firstClr = Color.White;
+            var secondClr = Color.Red;
+            var r = firstClr.R + (secondClr.R - firstClr.R) * pos;
+            var g = firstClr.G + (secondClr.G - firstClr.G) * pos;
+            var b = firstClr.B + (secondClr.B - firstClr.B) * pos;
+            var hex = firstClr.Hex3();
+            return $"[c/{hex}:{str}]";
+        }
+
+        public static string GetGradientByDateTime(string str, DateTime start, DateTime end)
+        {
+            var dateNow = DateTime.UtcNow;
+            var pos = (end - start).TotalSeconds / (dateNow - start).TotalSeconds;
+            return GetGradientByPos(str, pos);
+        }
     }
 }

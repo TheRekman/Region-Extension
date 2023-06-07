@@ -16,7 +16,7 @@ namespace RegionExtension
         public string AutoCompleteSameNameFormat = "{0}:{1}"; //{0} - region name, {1} - region number
         public int MaxRequestCount = 3;
         public string RequestTime = "3d";
-        public bool AutoConfirmRequest = false;
+        public bool AutoApproveRequest = false;
         public int MaxRequestArea = 40000;
         public int MaxRequestHeight = 200;
         public int MaxRequestWidth = 200;

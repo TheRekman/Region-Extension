@@ -12,7 +12,6 @@ using RegionExtension.Commands;
 using RegionExtension.Commands.Parameters;
 using RegionExtension.Database.Actions;
 using RegionExtension.Database.EventsArgs;
-using IL.SteelSeries.GameSense;
 using System.Linq;
 using Steamworks;
 using TShockAPI.Configuration;
@@ -27,7 +26,8 @@ namespace RegionExtension.Database
         private DeletedRegionsDB _deletedRegionsDB;
         private RegionRequestManager _regionRequestManager;
         private TemporaryRegionManager _temporaryRegionManager;
-        private DateTime lastUpdate = DateTime.UtcNow;
+        private DateTime _lastUpdate = DateTime.UtcNow;
+        private DateTime _lastNotify = DateTime.UtcNow;
 
         public event Action<AllowArgs> OnRegionAllow;
         public event Action<RemoveArgs> OnRegionRemove;
@@ -41,9 +41,12 @@ namespace RegionExtension.Database
         public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
 
         public event Action<BaseRegionArgs> OnRegionDelete;
-        public event Action<BaseRegionArgs> OnRegionDefine;
+        public event Action<BaseRegionArgs> OnRegionDefined;
 
         public event Action OnPostInitialize;
+
+        public event Action<RequestCreatedArgs> OnRequestCreated;
+        public event Action<RequestRemovedArgs> OnRequestRemoved;
 
         public RegionHistoryManager HistoryManager { get { return _historyManager; } }
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
@@ -123,7 +126,7 @@ namespace RegionExtension.Database
                                                     _regionInfoManager.RegionsInfo.First(reg => reg.Id == args.Region.ID));
                 _regionInfoManager.RemoveRegion(args.Region.ID);
             };
-            OnRegionDefine += (args) =>
+            OnRegionDefined += (args) =>
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
         }
 
@@ -194,16 +197,17 @@ namespace RegionExtension.Database
             return TShock.Regions.ChangeOwner(region.Name, account.Name);
         }
 
-        public bool DeleteRegion(CommandArgsExtension args, Region region)
+        public bool DeleteRegion(CommandArgsExtension args, Region region) =>
+            DeleteRegion(args.Player, region);
+
+        public bool DeleteRegion(TSPlayer user, Region region)
         {
-            OnRegionDelete(new BaseRegionArgs(args.Player, region));
+            OnRegionDelete(new BaseRegionArgs(user, region));
             return TShock.Regions.DeleteRegion(region.Name);
         }
 
-        public bool DefineRegion(CommandArgsExtension args, Region region)
-        {
-            return DefineRegion(args.Player, region);
-        }
+        public bool DefineRegion(CommandArgsExtension args, Region region) =>
+            DefineRegion(args.Player, region);
 
         public bool DefineRegion(TSPlayer user, Region region)
         {
@@ -212,16 +216,66 @@ namespace RegionExtension.Database
             if (res)
             {
                 region = TShock.Regions.GetRegionByName(region.Name);
-                OnRegionDefine(new BaseRegionArgs(user, region));
+                OnRegionDefined(new BaseRegionArgs(user, region));
+            }
+            return res;
+        }
+
+        public bool CreateRequest(Region region, TSPlayer user)
+        {
+            bool res = DefineRegion(user, region) &&
+                       _regionRequestManager.AddRequest(region, user.Account);
+            if (res)
+            {
+                region = TShock.Regions.GetRegionByName(region.Name);
+                var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
+                OnRequestCreated(new RequestCreatedArgs(req));
+            }
+            return res;
+        }
+
+        public bool RemoveRequest(Region region, TSPlayer user, bool approved)
+        {
+            bool res = _regionRequestManager.DeleteRequest(region);
+            if (!approved && res)
+            {
+                res = res && DeleteRegion(user, region);
+                if(res)
+                    DeletedRegions.DeleteRegion(region.ID);
+            }
+            if (res)
+            {
+                region = TShock.Regions.GetRegionByName(region.Name);
+                var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
+                OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
             }
             return res;
         }
 
         public void Update()
         {
-            if (DateTime.UtcNow > lastUpdate.AddSeconds(30))
+            if (DateTime.UtcNow > _lastUpdate.AddSeconds(30))
                 return;
-            _regionRequestManager.Requests.Where(r => r.DateCreation >)
+            DateTime date = DateTime.UtcNow - StringTime.FromString(Plugin.Config.RequestTime);
+            var requestsToRemove = _regionRequestManager.Requests.Where(r => r.DateCreation < date);
+            foreach(var req in requestsToRemove)
+            {
+                RemoveRequest(req.Region, TSPlayer.Server, Plugin.Config.AutoApproveRequest);
+            }
+            if(Plugin.Config.SendNotificationsAboutRequests && _lastNotify + StringTime.FromString(Plugin.Config.NotificationPeriod) < DateTime.UtcNow)
+            {
+                var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+                var regions = _regionRequestManager.Requests.OrderBy(r => r.DateCreation)
+                                                            .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
+                                                                                                     r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
+                foreach (var plr in players)
+                    PaginationTools.SendPage(plr, 0, PaginationTools.BuildLinesFromTerms(regions, null, ", ", 200), new PaginationTools.Settings()
+                    {
+                        HeaderFormat = "Active requests:"
+                    });
+                _lastNotify = DateTime.UtcNow;
+            }
+            _lastUpdate = DateTime.UtcNow;
         }
 
         public List<string> GetRegionInfo(Region region) =>
