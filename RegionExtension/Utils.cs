@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using TShockAPI;
+using TShockAPI.DB;
 
 namespace RegionExtension
 {
@@ -49,6 +50,21 @@ namespace RegionExtension
             var b = firstClr.B + (secondClr.B - firstClr.B) * pos;
             var hex = firstClr.Hex3();
             return $"[c/{hex}:{str}]";
+        }
+
+        public static (bool res, string msg) CheckConfigConditions(TSPlayer player, Region region)
+        {
+            var count = Plugin.RegionExtensionManager.RegionRequestManager.Requests.Count(r => r.User.ID == player.Account.ID);
+            var area = region.Area.Width * region.Area.Height;
+            if(count > Plugin.Config.MaxRequestCount)
+                return new (false, "You already have '{0}' requests!".SFormat(count));
+            if(area > Plugin.Config.MaxRequestArea)
+                return new (false, "Max region area is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestArea, area));
+            if (region.Area.Width > Plugin.Config.MaxRequestWidth)
+                return new(false, "Max region width is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestWidth, region.Area.Width));
+            if (region.Area.Height > Plugin.Config.MaxRequestHeight)
+                return new(false, "Max region height is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestWidth, region.Area.Height));
+            return (true, "All checks passed");
         }
 
         public static string GetGradientByDateTime(string str, DateTime start, DateTime end)
