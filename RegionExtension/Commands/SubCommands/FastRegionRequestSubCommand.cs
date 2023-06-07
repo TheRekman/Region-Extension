@@ -30,10 +30,7 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(regionname));
                 return;
             }
-            var username = (UserAccount)Params[1].Value;
-            var z = ((IntParam)Params[2]).TValue;
-            var protect = ((BoolParam)Params[3]).TValue;
-            CreateFastRegionRequest(args, regionname, username, z, protect);
+            CreateFastRegionRequest(args, regionname, args.Player.Account, Plugin.Config.DefaultRequestZ, true);
         }
 
         private void CreateFastRegionRequest(CommandArgsExtension args, string regionName, UserAccount username, int z, bool protect)
