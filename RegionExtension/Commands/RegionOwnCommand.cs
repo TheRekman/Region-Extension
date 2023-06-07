@@ -21,7 +21,10 @@ namespace RegionExtension.Commands
             new SelfOwnerList(),
             new AllowUserSubCommand(true),
             new RemoveUserSubCommand(true),
-            new RegionInfo(true)
+            new RegionInfo(true),
+            new SetSubCommand(),
+            new DefineRequestSubCommand(),
+            new FastRegionRequestSubCommand()
         }.Concat(base.SubCommands).ToArray();
     }
 }

@@ -38,7 +38,9 @@ namespace RegionExtension.Commands
             new FastRegionSubCommand(),
             new FastRegionBreakSubCommand(),
             new OwnerList(),
-            new LastActiveList()
+            new LastActiveList(),
+            new RequestAcceptSubCommand(),
+            new RequestDenySubCommand()
         }.Concat(base.SubCommands).ToArray();
     }
 }

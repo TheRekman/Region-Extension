@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "requestdeny", "rd" };
 
-        public override string Description => "Accept region request.";
+        public override string Description => "Deny region request.";
 
         public override void InitializeParams()
         {
