@@ -17,7 +17,6 @@ namespace RegionExtension.Database
     public class DeletedRegionsDB
     {
         private IDbConnection _database;
-        private int _maxCount = 20;
 
         private SqlTable _table =
             new SqlTable("DeletedRegions",
@@ -105,7 +104,8 @@ namespace RegionExtension.Database
                     while (reader.Read())
                     {
                         var userid = reader.Get<int>(TableInfo.DeleterId.ToString());
-                        var username = userid == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(userid).Name;
+                        var user = TShock.UserAccounts.GetUserAccountByID(userid);
+                        var username = user == null ? "Server" : user.Name;
                         regs.Add(new DeletedInfo(
                                 reader.Get<string>(TableInfo.RegionName.ToString()),
                                 DateTime.Parse(reader.Get<string>(TableInfo.DeletionDate.ToString())),
@@ -202,6 +202,69 @@ namespace RegionExtension.Database
                 TShock.Log.Error(ex.Message);
                 return null;
             }
+        }
+
+        public List<RegionExtended> GetRegionsByUser(UserAccount user)
+        {
+            var res = new List<RegionExtended>();
+            try
+            {
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.DeleterId.ToString()}='{user.ID}'"))
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.Get<int>(TableInfo.RegionId.ToString());
+                        var worldId = reader.Get<string>(TableInfo.WorldId.ToString());
+                        var name = reader.Get<string>(TableInfo.RegionName.ToString());
+                        var area = new Microsoft.Xna.Framework.Rectangle(
+                                   reader.Get<int>(TableInfo.X.ToString()),
+                                   reader.Get<int>(TableInfo.Y.ToString()),
+                                   reader.Get<int>(TableInfo.Width.ToString()),
+                                   reader.Get<int>(TableInfo.Height.ToString())
+                                   );
+                        var allowIdString = reader.Get<string>(TableInfo.UserIds.ToString()).Split(',');
+                        var allowIds = new List<int>();
+                        foreach (var str in allowIdString)
+                        {
+                            int n = 0;
+                            if (int.TryParse(str, out n))
+                                allowIds.Add(n);
+                        }
+                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 1 ? true : false;
+                        var allowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList();
+                        var owner = reader.Get<string>(TableInfo.Owner.ToString());
+                        var z = reader.Get<int>(TableInfo.Z.ToString());
+                        res.Add(new RegionExtended()
+                        {
+                            Region = new Region()
+                            {
+                                ID = id,
+                                WorldID = worldId,
+                                Name = name,
+                                Area = area,
+                                AllowedIDs = allowIds,
+                                DisableBuild = disableBuild,
+                                AllowedGroups = allowedGroups,
+                                Owner = owner,
+                                Z = z
+                            },
+                            ExtensionInfo = new RegionExtensionInfo(
+                                id,
+                                TShock.UserAccounts.GetUserAccountByName(owner).ID,
+                                DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
+                                DateTime.UtcNow,
+                                DateTime.UtcNow
+                            )
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TShock.Log.Error(ex.Message);
+                return null;
+            }
+            return res;
         }
 
         private enum TableInfo

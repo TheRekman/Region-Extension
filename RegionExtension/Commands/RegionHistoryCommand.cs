@@ -19,6 +19,7 @@ namespace RegionExtension.Commands
             new UndoSubCommand(),
             new RedoSubCommand(),
             new RestoreSubCommand(),
+            new RestoreRegionUserSubCommand(),
             new GetHistorySubCommand(),
             new DeletedRegionsList()
         }.Concat(base.SubCommands).ToArray();
