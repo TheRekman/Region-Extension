@@ -46,9 +46,19 @@ namespace RegionExtension
             ServerApi.Hooks.NetGetData.Register(this, OnGetData);
             ServerApi.Hooks.GamePostInitialize.Register(this, OnPostInitialize, int.MinValue);
             PlayerHooks.PlayerLogout += OnPlayerLogout;
+            PlayerHooks.PlayerPostLogin += OnPlayerLogin;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
             RegionExtensionManager = new RegionExtManager(TShock.DB);
+        }
+
+        private void OnPlayerLogin(PlayerPostLoginEventArgs e)
+        {
+            if (!e.Player.HasPermission(Permissions.manageregion))
+                return;
+            RegionExtensionManager.SendRequestNotify(e.Player, RegionExtensionManager.RegionRequestManager.Requests.OrderBy(r => r.DateCreation)
+                                                                                                                   .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
+                                                                                                                                r.DateCreation + StringTime.FromString(Config.RequestTime))));
         }
 
         private void OnPostInitialize(EventArgs args)

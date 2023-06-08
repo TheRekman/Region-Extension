@@ -265,17 +265,22 @@ namespace RegionExtension.Database
             if(Plugin.Config.SendNotificationsAboutRequests && _lastNotify + StringTime.FromString(Plugin.Config.NotificationPeriod) < DateTime.UtcNow)
             {
                 var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
-                var regions = _regionRequestManager.Requests.OrderBy(r => r.DateCreation)
-                                                            .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
-                                                                                                     r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
                 foreach (var plr in players)
-                    PaginationTools.SendPage(plr, 0, PaginationTools.BuildLinesFromTerms(regions,null, ", ", 200), new PaginationTools.Settings()
-                    {
-                        HeaderFormat = "Active requests:"
-                    });
+                    SendRequestNotify(plr, _regionRequestManager.Requests.OrderBy(r => r.DateCreation)
+                                                        .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
+                                                                                                 r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime))));
                 _lastNotify = DateTime.UtcNow;
             }
             _lastUpdate = DateTime.UtcNow;
+        }
+
+        public void SendRequestNotify(TSPlayer player, IEnumerable<string> strings)
+        {
+            var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+                PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 200), new PaginationTools.Settings()
+                {
+                    HeaderFormat = "Active requests:"
+                });
         }
 
         public List<string> GetRegionInfo(Region region) =>
