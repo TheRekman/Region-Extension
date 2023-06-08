@@ -93,6 +93,7 @@ namespace RegionExtension
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
                 ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
                 PlayerHooks.PlayerLogout -= OnPlayerLogout;
+                PlayerHooks.PlayerPostLogin -= OnPlayerLogin;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
             }
