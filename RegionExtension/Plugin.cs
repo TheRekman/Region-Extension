@@ -54,7 +54,7 @@ namespace RegionExtension
 
         private void OnPlayerLogin(PlayerPostLoginEventArgs e)
         {
-            if (!e.Player.HasPermission(Permissions.manageregion))
+            if (!Config.SendNotificationsAboutRequests || !e.Player.HasPermission(Permissions.manageregion))
                 return;
             RegionExtensionManager.SendRequestNotify(e.Player, RegionExtensionManager.RegionRequestManager.Requests.OrderBy(r => r.DateCreation)
                                                                                                                    .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
