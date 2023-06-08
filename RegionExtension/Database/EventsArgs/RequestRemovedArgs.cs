@@ -12,7 +12,7 @@ namespace RegionExtension.Database.EventsArgs
     {
         public RequestRemovedArgs(TSPlayer user, Request req, bool approved)
         {
-           Remover = user;
+           User = user;
            Request = req;
            Approved = approved;
         }

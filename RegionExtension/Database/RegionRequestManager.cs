@@ -18,7 +18,7 @@ namespace RegionExtension.Database
         private IDbConnection _database;
 
         private SqlTable _table =
-            new SqlTable("ExtendedRegions",
+            new SqlTable("RequestDatabase",
                          new SqlColumn(TableInfo.RegionId.ToString(), MySqlDbType.Int32),
                          new SqlColumn(TableInfo.WorldID.ToString(), MySqlDbType.Text),
                          new SqlColumn(TableInfo.UserID.ToString(), MySqlDbType.Int32),
@@ -102,6 +102,7 @@ namespace RegionExtension.Database
             try
             {
                 _database.Query($"DELETE FROM {_table.Name} WHERE RegionId=@0", region.ID);
+                _requests.RemoveAll(r => r.Region.ID == region.ID);
                 return true;
             }
             catch (Exception ex)

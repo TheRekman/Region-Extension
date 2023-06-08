@@ -124,7 +124,7 @@ namespace RegionExtension.Database
                        .ToList();
         }
 
-        public bool DeleteRegion(int regionId)
+        public bool RemoveRegionFromDeleted(int regionId)
         {
             try
             {

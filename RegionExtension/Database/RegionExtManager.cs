@@ -25,7 +25,6 @@ namespace RegionExtension.Database
         private RegionHistoryManager _historyManager;
         private DeletedRegionsDB _deletedRegionsDB;
         private RegionRequestManager _regionRequestManager;
-        private TemporaryRegionManager _temporaryRegionManager;
         private DateTime _lastUpdate = DateTime.UtcNow;
         private DateTime _lastNotify = DateTime.UtcNow;
 
@@ -52,7 +51,6 @@ namespace RegionExtension.Database
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
         public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
         public RegionRequestManager RegionRequestManager { get => _regionRequestManager; }
-        public TemporaryRegionManager TemporaryRegionManager { get => _temporaryRegionManager; }
 
         public RegionExtManager(IDbConnection db)
         {
@@ -97,8 +95,8 @@ namespace RegionExtension.Database
             _historyManager = new RegionHistoryManager(database);
             _deletedRegionsDB = new DeletedRegionsDB(database);
             _regionRequestManager = new RegionRequestManager(database);
-            _temporaryRegionManager = new TemporaryRegionManager(database);
-            OnPostInitialize();
+            if(OnPostInitialize != null)
+                OnPostInitialize();
         }
 
         public void PostInitialize()
@@ -223,31 +221,36 @@ namespace RegionExtension.Database
 
         public bool CreateRequest(Region region, TSPlayer user)
         {
-            bool res = DefineRegion(user, region) &&
-                       _regionRequestManager.AddRequest(region, user.Account);
-            if (res)
+            if (!DefineRegion(user, region))
+                return false;
+            region = TShock.Regions.GetRegionByName(region.Name);
+            if (region == null)
+                return false;
+            if (_regionRequestManager.AddRequest(region, user.Account))
             {
-                region = TShock.Regions.GetRegionByName(region.Name);
                 var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
-                OnRequestCreated(new RequestCreatedArgs(req));
+                if (OnRequestCreated != null)
+                    OnRequestCreated(new RequestCreatedArgs(req));
             }
-            return res;
+            return true;
         }
 
         public bool RemoveRequest(Region region, TSPlayer user, bool approved)
         {
+            if (region == null)
+                return false;
             bool res = _regionRequestManager.DeleteRequest(region);
             if (!approved && res)
             {
                 res = res && DeleteRegion(user, region);
                 if(res)
-                    DeletedRegions.DeleteRegion(region.ID);
+                    DeletedRegions.RemoveRegionFromDeleted(region.ID);
             }
             if (res)
             {
-                region = TShock.Regions.GetRegionByName(region.Name);
                 var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
-                OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
+                if (OnRequestRemoved != null)
+                    OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
             }
             return res;
         }

@@ -58,8 +58,8 @@ namespace RegionExtension.Commands.SubCommands
             var req = Plugin.RegionExtensionManager.RegionRequestManager.Requests.FirstOrDefault(r => r.Region.ID == region.ID);
             if (req != null && !Plugin.Config.AutoApproveRequest)
             {
-                args.Player.SendInfoMessage("This region requires request confirmation!");
-                args.Player.SendInfoMessage("Region will be deleted in '{0}'!".SFormat(req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
+                args.Player.SendMessage("This region requires request confirmation!", Microsoft.Xna.Framework.Color.Aqua);
+                args.Player.SendMessage("Region will be deleted in '{0}'!".SFormat((req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)).ToString(Utils.DateFormat)), Microsoft.Xna.Framework.Color.Aqua);
             }
         }
 
