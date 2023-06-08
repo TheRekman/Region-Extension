@@ -239,6 +239,9 @@ namespace RegionExtension.Database
         {
             if (region == null)
                 return false;
+            var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
+            if (req == null)
+                return false;
             bool res = _regionRequestManager.DeleteRequest(region);
             if (!approved && res)
             {
@@ -248,7 +251,6 @@ namespace RegionExtension.Database
             }
             if (res)
             {
-                var req = _regionRequestManager.Requests.First(r => r.Region.ID == region.ID);
                 if (OnRequestRemoved != null)
                     OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
             }
@@ -257,10 +259,10 @@ namespace RegionExtension.Database
 
         public void Update()
         {
-            if (DateTime.UtcNow > _lastUpdate.AddSeconds(30))
+            if (DateTime.UtcNow < _lastUpdate.AddSeconds(30))
                 return;
             DateTime date = DateTime.UtcNow - StringTime.FromString(Plugin.Config.RequestTime);
-            var requestsToRemove = _regionRequestManager.Requests.Where(r => r.DateCreation < date);
+            var requestsToRemove = _regionRequestManager.Requests.Where(r => r.DateCreation < date).ToArray();
             foreach(var req in requestsToRemove)
             {
                 RemoveRequest(req.Region, TSPlayer.Server, Plugin.Config.AutoApproveRequest);
@@ -282,7 +284,8 @@ namespace RegionExtension.Database
             var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
                 PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 200), new PaginationTools.Settings()
                 {
-                    HeaderFormat = "Active requests:"
+                    HeaderFormat = "Active requests:",
+                    IncludeFooter = false
                 });
         }
 

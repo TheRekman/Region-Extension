@@ -40,6 +40,7 @@ namespace RegionExtension.Database
                                             new SqliteQueryCreator() : new MysqlQueryCreator();
             var creator = new SqlTableCreator(_database, queryCreator);
             creator.EnsureTableStructure(_table);
+            LoadInfo();
         }
 
         public bool AddRequest(Region region, UserAccount user)

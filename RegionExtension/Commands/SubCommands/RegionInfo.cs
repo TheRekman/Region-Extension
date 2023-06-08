@@ -59,6 +59,7 @@ namespace RegionExtension.Commands.SubCommands
             if (req != null && !Plugin.Config.AutoApproveRequest)
             {
                 args.Player.SendMessage("This region requires request confirmation!", Microsoft.Xna.Framework.Color.Aqua);
+                var res = (req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime));
                 args.Player.SendMessage("Region will be deleted in '{0}'!".SFormat((req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)).ToString(Utils.DateFormat)), Microsoft.Xna.Framework.Color.Aqua);
             }
         }

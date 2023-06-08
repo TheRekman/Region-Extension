@@ -56,7 +56,7 @@ namespace RegionExtension
         {
             var count = Plugin.RegionExtensionManager.RegionRequestManager.Requests.Count(r => r.User.ID == player.Account.ID);
             var area = region.Area.Width * region.Area.Height;
-            if(count > Plugin.Config.MaxRequestCount)
+            if(count >= Plugin.Config.MaxRequestCount)
                 return new (false, "You already have '{0}' requests!".SFormat(count));
             if(area > Plugin.Config.MaxRequestArea)
                 return new (false, "Max region area is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestArea, area));

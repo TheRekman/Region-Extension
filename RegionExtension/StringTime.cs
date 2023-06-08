@@ -60,19 +60,19 @@ namespace RegionExtension
 
         public static DateTime operator +(DateTime dateTime, StringTime stringTime)
         {
-            dateTime.AddSeconds(stringTime.Seconds);
-            dateTime.AddMinutes(stringTime.Minutes);
-            dateTime.AddHours(stringTime.Hours);
-            dateTime.AddDays(stringTime.Days);
+            dateTime = dateTime.AddSeconds(stringTime.Seconds);
+            dateTime = dateTime.AddMinutes(stringTime.Minutes);
+            dateTime = dateTime.AddHours(stringTime.Hours);
+            dateTime = dateTime.AddDays(stringTime.Days);
             return dateTime;
         }
 
         public static DateTime operator -(DateTime dateTime, StringTime stringTime)
         {
-            dateTime.AddSeconds(-stringTime.Seconds);
-            dateTime.AddMinutes(-stringTime.Minutes);
-            dateTime.AddHours(-stringTime.Hours);
-            dateTime.AddDays(-stringTime.Days);
+            dateTime = dateTime.AddSeconds(-stringTime.Seconds);
+            dateTime = dateTime.AddMinutes(-stringTime.Minutes);
+            dateTime = dateTime.AddHours(-stringTime.Hours);
+            dateTime = dateTime.AddDays(-stringTime.Days);
             return dateTime;
         }
     }
