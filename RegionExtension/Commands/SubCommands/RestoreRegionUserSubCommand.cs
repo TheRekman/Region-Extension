@@ -44,7 +44,7 @@ namespace RegionExtension.Commands.SubCommands
             {
                 if (count == 0)
                     break;
-                Plugin.RegionExtensionManager.DeletedRegions.DeleteRegion(reg.Region.ID);
+                Plugin.RegionExtensionManager.DeletedRegions.RemoveRegionFromDeleted(reg.Region.ID);
                 string newName;
                 TryAutoComplete(reg.Region.Name, args, out newName);
                 reg.Region.Name = newName;
@@ -62,7 +62,7 @@ namespace RegionExtension.Commands.SubCommands
             result = str;
             while (TShock.Regions.GetRegionByName(result) != null)
             {
-                result = args.Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
                 num++;
             }
             return true;
