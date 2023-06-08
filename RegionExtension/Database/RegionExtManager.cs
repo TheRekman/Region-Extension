@@ -40,6 +40,7 @@ namespace RegionExtension.Database
         public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
 
         public event Action<BaseRegionArgs> OnRegionDelete;
+        public event Action<BaseRegionArgs> OnRegionDeleted;
         public event Action<BaseRegionArgs> OnRegionDefined;
 
         public event Action OnPostInitialize;
@@ -124,6 +125,11 @@ namespace RegionExtension.Database
                                                     _regionInfoManager.RegionsInfo.First(reg => reg.Id == args.Region.ID));
                 _regionInfoManager.RemoveRegion(args.Region.ID);
             };
+            OnRegionDeleted += (args) =>
+            {
+                if (_regionRequestManager.Requests.Any(r => r.Region.ID == args.Region.ID))
+                    _regionRequestManager.DeleteRequest(args.Region);
+            };
             OnRegionDefined += (args) =>
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
         }
@@ -201,7 +207,10 @@ namespace RegionExtension.Database
         public bool DeleteRegion(TSPlayer user, Region region)
         {
             OnRegionDelete(new BaseRegionArgs(user, region));
-            return TShock.Regions.DeleteRegion(region.Name);
+            var res = TShock.Regions.DeleteRegion(region.Name);
+            if (res && OnRegionDelete != null)
+                OnRegionDeleted(new BaseRegionArgs(user, region));
+            return res;
         }
 
         public bool DefineRegion(CommandArgsExtension args, Region region) =>

@@ -1,4 +1,5 @@
-﻿using MonoMod;
+﻿using Terraria;
+using MonoMod;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Relational;
 using System;
@@ -99,7 +100,7 @@ namespace RegionExtension.Database
             var regs = new List<DeletedInfo>();
             try
             {
-                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name}"))
+                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.WorldId}={Main.worldID}"))
                 {
                     while (reader.Read())
                     {
@@ -209,7 +210,7 @@ namespace RegionExtension.Database
             var res = new List<RegionExtended>();
             try
             {
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.DeleterId.ToString()}='{user.ID}'"))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.DeleterId.ToString()}='{user.ID}' AND {TableInfo.WorldId}={Main.worldID}"))
                 {
                     while (reader.Read())
                     {

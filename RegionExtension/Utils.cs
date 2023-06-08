@@ -45,10 +45,10 @@ namespace RegionExtension
         {
             var firstClr = Color.White;
             var secondClr = Color.Red;
-            var r = firstClr.R + (secondClr.R - firstClr.R) * pos;
-            var g = firstClr.G + (secondClr.G - firstClr.G) * pos;
-            var b = firstClr.B + (secondClr.B - firstClr.B) * pos;
-            var hex = firstClr.Hex3();
+            int r = (int)Math.Floor(firstClr.R + (secondClr.R - firstClr.R) * pos);
+            int g = (int)Math.Floor(firstClr.G + (secondClr.G - firstClr.G) * pos);
+            int b = (int)Math.Floor(firstClr.B + (secondClr.B - firstClr.B) * pos);
+            var hex = Color.FromNonPremultiplied(r, g, b, 255).Hex3();
             return $"[c/{hex}:{str}]";
         }
 
@@ -70,7 +70,7 @@ namespace RegionExtension
         public static string GetGradientByDateTime(string str, DateTime start, DateTime end)
         {
             var dateNow = DateTime.UtcNow;
-            var pos = (end - start).TotalSeconds / (dateNow - start).TotalSeconds;
+            var pos = (dateNow - start).TotalSeconds / (end - start).TotalSeconds;
             return GetGradientByPos(str, pos);
         }
     }
