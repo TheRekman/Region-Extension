@@ -31,7 +31,7 @@ namespace RegionExtension.Commands.SubCommands
         private void SendRegionList(CommandArgsExtension args, int page)
         {
             var regions = Plugin.RegionExtensionManager.DeletedRegions.GetRegionsInfo();
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, regions,
                         new PaginationTools.Settings
