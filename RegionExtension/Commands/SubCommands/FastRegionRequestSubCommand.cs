@@ -30,12 +30,12 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(regionname));
                 return;
             }
-            CreateFastRegionRequest(args, regionname, args.Player.Account, Plugin.Config.DefaultRequestZ, true);
+            CreateFastRegionRequest(args, regionname, args.Player.Account);
         }
 
-        private void CreateFastRegionRequest(CommandArgsExtension args, string regionName, UserAccount username, int z, bool protect)
+        private void CreateFastRegionRequest(CommandArgsExtension args, string regionName, UserAccount username)
         {
-            args.Plugin.FastRegions.Add(new FastRegion(args.Player, regionName, username.Name, z, protect, true));
+            args.Plugin.FastRegions.Add(new FastRegion(args.Player, regionName, username.Name, 0, true, true));
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)

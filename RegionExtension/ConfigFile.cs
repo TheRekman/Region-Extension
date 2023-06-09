@@ -14,16 +14,23 @@ namespace RegionExtension
         public bool ContextAllow = true;
         public bool AutoCompleteSameName = true;
         public string AutoCompleteSameNameFormat = "{0}:{1}"; //{0} - region name, {1} - region number
-        public int MaxRequestCount = 3;
-        public string RequestTime = "3d";
-        public bool AutoApproveRequest = false;
-        public int MaxRequestArea = 40000;
-        public int MaxRequestHeight = 200;
-        public int MaxRequestWidth = 200;
-        public bool ProtectRequestedRegion = true;
-        public int DefaultRequestZ = 0;
-        public bool SendNotificationsAboutRequests = true;
         public string NotificationPeriod = "10m";
+        public RequestSettings[] RequestSettings = new RequestSettings[]
+            {
+                new RequestSettings {},
+                new RequestSettings
+                {
+                    GroupName = "admin",
+                    MaxRequestCount = 0,
+                    RequestTime = "0s",
+                    AutoApproveRequest = true,
+                    MaxRequestArea = 0,
+                    MaxRequestHeight = 0,
+                    MaxRequestWidth = 0,
+                    ProtectRequestedRegion = true,
+                    DefaultRequestZ = 0
+                }
+            };
 
         public static ConfigFile Read()
         {

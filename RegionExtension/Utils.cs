@@ -56,15 +56,36 @@ namespace RegionExtension
         {
             var count = Plugin.RegionExtensionManager.RegionRequestManager.Requests.Count(r => r.User.ID == player.Account.ID);
             var area = region.Area.Width * region.Area.Height;
-            if(count >= Plugin.Config.MaxRequestCount)
+            var settings = GetSettingsByTSPlayer(player);
+            if(settings.MaxRequestCount != 0 && count >= settings.MaxRequestCount)
                 return new (false, "You already have '{0}' requests!".SFormat(count));
-            if(area > Plugin.Config.MaxRequestArea)
-                return new (false, "Max region area is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestArea, area));
-            if (region.Area.Width > Plugin.Config.MaxRequestWidth)
-                return new(false, "Max region width is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestWidth, region.Area.Width));
-            if (region.Area.Height > Plugin.Config.MaxRequestHeight)
-                return new(false, "Max region height is '{0}' tiles! Your is '{1}'.".SFormat(Plugin.Config.MaxRequestWidth, region.Area.Height));
+            if(settings.MaxRequestArea != 0 && area > settings.MaxRequestArea)
+                return new (false, "Max region area is '{0}' tiles! Your is '{1}'.".SFormat(settings.MaxRequestArea, area));
+            if (settings.MaxRequestWidth != 0 && region.Area.Width > settings.MaxRequestWidth)
+                return new(false, "Max region width is '{0}' tiles! Your is '{1}'.".SFormat(settings.MaxRequestWidth, region.Area.Width));
+            if (settings.MaxRequestHeight != 0 && region.Area.Height > settings.MaxRequestHeight)
+                return new(false, "Max region height is '{0}' tiles! Your is '{1}'.".SFormat(settings.MaxRequestWidth, region.Area.Height));
             return (true, "All checks passed");
+        }
+
+        public static RequestSettings GetSettingsByTSPlayer(TSPlayer plr)
+        {
+            var settings = Plugin.Config.RequestSettings.FirstOrDefault(r => r.GroupName == plr?.Group.Name);
+            if (settings == null)
+                settings = Plugin.Config.RequestSettings.FirstOrDefault(r => r.GroupName == "default");
+            if (settings == null)
+                settings = new RequestSettings();
+            return settings;
+        }
+
+        public static RequestSettings GetSettingsByUserAccount(UserAccount account)
+        {
+            var settings = Plugin.Config.RequestSettings.FirstOrDefault(r => r.GroupName == account?.Group);
+            if (settings == null)
+                settings = Plugin.Config.RequestSettings.FirstOrDefault(r => r.GroupName == "default");
+            if (settings == null)
+                settings = new RequestSettings();
+            return settings;
         }
 
         public static string GetGradientByDateTime(string str, DateTime start, DateTime end)

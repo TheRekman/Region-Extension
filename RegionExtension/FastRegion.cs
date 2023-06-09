@@ -79,6 +79,9 @@ namespace RegionExtension
             if (_isRequest)
             {
                 var checkResult = Utils.CheckConfigConditions(_player, region);
+                var settings = Utils.GetSettingsByTSPlayer(_player);
+                region.Z = settings.DefaultRequestZ;
+                region.DisableBuild = settings.ProtectRequestedRegion;
                 if (!checkResult.res)
                 {
                     _player.SendErrorMessage(checkResult.msg);
@@ -94,9 +97,7 @@ namespace RegionExtension
                 return;
             }
             if (Plugin.RegionExtensionManager.DefineRegion(_player, region))
-            {
                 _player.SendSuccessMessage("Set region " + _regionName);
-            }
         }
     }
 }

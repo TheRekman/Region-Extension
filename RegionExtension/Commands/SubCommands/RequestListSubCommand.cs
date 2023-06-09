@@ -34,7 +34,7 @@ namespace RegionExtension.Commands.SubCommands
         {
             var regionNames = Plugin.RegionExtensionManager.RegionRequestManager.Requests.OrderBy(r => r.DateCreation)
                                                                                          .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
-                                                                                                      r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)));
+                                                                                                      r.DateCreation + StringTime.FromString(Utils.GetSettingsByUserAccount(r.User).RequestTime)));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames),

@@ -56,11 +56,13 @@ namespace RegionExtension.Commands.SubCommands
                 }
             );
             var req = Plugin.RegionExtensionManager.RegionRequestManager.Requests.FirstOrDefault(r => r.Region.ID == region.ID);
-            if (req != null && !Plugin.Config.AutoApproveRequest)
+            var settings = Utils.GetSettingsByUserAccount(req.User);
+            var reqTime = StringTime.FromString(settings.RequestTime);
+            if (req != null && !settings.AutoApproveRequest && !reqTime.IsZero())
             {
                 args.Player.SendMessage("This region requires request confirmation!", Microsoft.Xna.Framework.Color.Aqua);
-                var res = (req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime));
-                args.Player.SendMessage("Region will be deleted in '{0}'!".SFormat((req.DateCreation + StringTime.FromString(Plugin.Config.RequestTime)).ToString(Utils.DateFormat)), Microsoft.Xna.Framework.Color.Aqua);
+                var res = (req.DateCreation + StringTime.FromString(Utils.GetSettingsByUserAccount(req.User).RequestTime));
+                args.Player.SendMessage("Region will be deleted in '{0}'!".SFormat((req.DateCreation + reqTime).ToString(Utils.DateFormat)), Microsoft.Xna.Framework.Color.Aqua);
             }
         }
 

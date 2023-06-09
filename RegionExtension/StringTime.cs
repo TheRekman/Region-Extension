@@ -75,5 +75,8 @@ namespace RegionExtension
             dateTime = dateTime.AddDays(-stringTime.Days);
             return dateTime;
         }
+
+        public bool IsZero() => 
+            Days + Hours + Minutes + Seconds == 0;
     }
 }

@@ -128,7 +128,7 @@ namespace RegionExtension.Database
             OnRegionDeleted += (args) =>
             {
                 if (_regionRequestManager.Requests.Any(r => r.Region.ID == args.Region.ID))
-                    _regionRequestManager.DeleteRequest(args.Region);
+                    RemoveRequest(args.Region, args.UserExecutor, false);
             };
             OnRegionDefined += (args) =>
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
@@ -244,7 +244,7 @@ namespace RegionExtension.Database
             return true;
         }
 
-        public bool RemoveRequest(Region region, TSPlayer user, bool approved)
+        public bool RemoveRequest(Region region, TSPlayer user, bool deleteRegion)
         {
             if (region == null)
                 return false;
@@ -252,7 +252,7 @@ namespace RegionExtension.Database
             if (req == null)
                 return false;
             bool res = _regionRequestManager.DeleteRequest(region);
-            if (!approved && res)
+            if (!deleteRegion && res)
             {
                 res = res && DeleteRegion(user, region);
                 if(res)
@@ -261,7 +261,7 @@ namespace RegionExtension.Database
             if (res)
             {
                 if (OnRequestRemoved != null)
-                    OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
+                    OnRequestRemoved(new RequestRemovedArgs(user, req, deleteRegion));
             }
             return res;
         }
@@ -270,19 +270,24 @@ namespace RegionExtension.Database
         {
             if (DateTime.UtcNow < _lastUpdate.AddSeconds(30))
                 return;
-            DateTime date = DateTime.UtcNow - StringTime.FromString(Plugin.Config.RequestTime);
-            var requestsToRemove = _regionRequestManager.Requests.Where(r => r.DateCreation < date).ToArray();
+            var requestsToRemove = _regionRequestManager.Requests.Where(r =>
+            {
+                var settings = Utils.GetSettingsByUserAccount(r.User).RequestTime;
+                var time = StringTime.FromString(Utils.GetSettingsByUserAccount(r.User).RequestTime);
+                if(time.IsZero())
+                    return false;
+                return r.DateCreation + time < DateTime.UtcNow;
+            }).ToArray();
             foreach(var req in requestsToRemove)
             {
-                RemoveRequest(req.Region, TSPlayer.Server, Plugin.Config.AutoApproveRequest);
+                RemoveRequest(req.Region, TSPlayer.Server, Utils.GetSettingsByUserAccount(req.User).AutoApproveRequest);
             }
-            if(Plugin.Config.SendNotificationsAboutRequests && _lastNotify + StringTime.FromString(Plugin.Config.NotificationPeriod) < DateTime.UtcNow)
+            var timePeriod = StringTime.FromString(Plugin.Config.NotificationPeriod);
+            if (!timePeriod.IsZero() && _lastNotify + timePeriod < DateTime.UtcNow)
             {
                 var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
                 foreach (var plr in players)
-                    SendRequestNotify(plr, _regionRequestManager.Requests.OrderBy(r => r.DateCreation)
-                                                        .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
-                                                                                                 r.DateCreation + StringTime.FromString(Plugin.Config.RequestTime))));
+                    SendRequestNotify(plr, _regionRequestManager.GetSortedRegionRequestsNames());
                 _lastNotify = DateTime.UtcNow;
             }
             _lastUpdate = DateTime.UtcNow;

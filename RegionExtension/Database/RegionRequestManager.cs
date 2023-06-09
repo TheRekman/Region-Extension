@@ -113,6 +113,16 @@ namespace RegionExtension.Database
             }
         }
 
+        public IEnumerable<string> GetSortedRegionRequestsNames() =>
+            Requests.Select(r =>
+                            {
+                                var time = StringTime.FromString(Utils.GetSettingsByUserAccount(r.User).RequestTime);
+                                var endTime = r.DateCreation + time;
+                                var str = time.IsZero() ? $"[c/fffffff:{r.Region.Name}" :
+                                                        Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation, endTime);
+                                return (str: str, endTime: endTime);
+                            }).OrderBy(r => r.endTime).Select(r => r.str);
+
         enum TableInfo
         {
             RegionId,

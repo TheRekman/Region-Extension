@@ -60,11 +60,9 @@ namespace RegionExtension
 
         private void OnPlayerLogin(PlayerPostLoginEventArgs e)
         {
-            if (!Config.SendNotificationsAboutRequests || !e.Player.HasPermission(Permissions.manageregion))
+            if (!StringTime.FromString(Config.NotificationPeriod).IsZero() || !e.Player.HasPermission(Permissions.manageregion))
                 return;
-            RegionExtensionManager.SendRequestNotify(e.Player, RegionExtensionManager.RegionRequestManager.Requests.OrderBy(r => r.DateCreation)
-                                                                                                                   .Select(r => Utils.GetGradientByDateTime(r.Region.Name, r.DateCreation,
-                                                                                                                                r.DateCreation + StringTime.FromString(Config.RequestTime))));
+            RegionExtensionManager.SendRequestNotify(e.Player, RegionExtensionManager.RegionRequestManager.GetSortedRegionRequestsNames());
         }
 
         private void OnPostInitialize(EventArgs args)
