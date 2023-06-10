@@ -83,7 +83,7 @@ namespace RegionExtension.Database
                             TShock.Config.Settings.MySqlPassword
                             );
                 }
-                catch (MySqlException ex)
+                catch
                 {
                     throw new Exception("MySql not setup correctly");
                 }
@@ -128,7 +128,13 @@ namespace RegionExtension.Database
             OnRegionDeleted += (args) =>
             {
                 if (_regionRequestManager.Requests.Any(r => r.Region.ID == args.Region.ID))
-                    RemoveRequest(args.Region, args.UserExecutor, false);
+                    _regionRequestManager.DeleteRequest(args.Region);
+            };
+            OnRequestRemoved += (args) =>
+            {
+                if (!args.Approved)
+                    TShock.Regions.DeleteRegion(args.Request.Region.ID);
+
             };
             OnRegionDefined += (args) =>
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
@@ -244,7 +250,7 @@ namespace RegionExtension.Database
             return true;
         }
 
-        public bool RemoveRequest(Region region, TSPlayer user, bool deleteRegion)
+        public bool RemoveRequest(Region region, TSPlayer user, bool approved)
         {
             if (region == null)
                 return false;
@@ -252,23 +258,17 @@ namespace RegionExtension.Database
             if (req == null)
                 return false;
             bool res = _regionRequestManager.DeleteRequest(region);
-            if (!deleteRegion && res)
-            {
-                res = res && DeleteRegion(user, region);
-                if(res)
-                    DeletedRegions.RemoveRegionFromDeleted(region.ID);
-            }
             if (res)
             {
                 if (OnRequestRemoved != null)
-                    OnRequestRemoved(new RequestRemovedArgs(user, req, deleteRegion));
+                    OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
             }
             return res;
         }
 
         public void Update()
         {
-            if (DateTime.UtcNow < _lastUpdate.AddSeconds(30))
+            if (DateTime.UtcNow < _lastUpdate.AddSeconds(10))
                 return;
             var requestsToRemove = _regionRequestManager.Requests.Where(r =>
             {

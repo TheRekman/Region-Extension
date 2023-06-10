@@ -130,7 +130,8 @@ namespace RegionExtension.Database
             UserID,
             DateCreation,
             Denied,
-            Denier
+            Denier,
+            Type
         }
     }
 
