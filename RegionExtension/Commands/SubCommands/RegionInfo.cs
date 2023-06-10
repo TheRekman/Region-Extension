@@ -56,9 +56,11 @@ namespace RegionExtension.Commands.SubCommands
                 }
             );
             var req = Plugin.RegionExtensionManager.RegionRequestManager.Requests.FirstOrDefault(r => r.Region.ID == region.ID);
+            if (req == null)
+                return;
             var settings = Utils.GetSettingsByUserAccount(req.User);
             var reqTime = StringTime.FromString(settings.RequestTime);
-            if (req != null && !settings.AutoApproveRequest && !reqTime.IsZero())
+            if (!settings.AutoApproveRequest && !reqTime.IsZero())
             {
                 args.Player.SendMessage("This region requires request confirmation!", Microsoft.Xna.Framework.Color.Aqua);
                 var res = (req.DateCreation + StringTime.FromString(Utils.GetSettingsByUserAccount(req.User).RequestTime));

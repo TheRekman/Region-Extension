@@ -147,5 +147,19 @@ namespace RegionExtension.Database
         public Region Region { get; set; }
         public UserAccount User { get; set; }
         public DateTime DateCreation { get; set; }
+
+        public IEnumerable<string> GetInfoStrings()
+        {
+            var settings = Utils.GetSettingsByUserAccount(User);
+            var requestTime = (DateCreation + StringTime.FromString(settings.RequestTime)).ToString(Utils.DateFormat);
+            return new string[]
+            {
+                "Region: " + Region.Name,
+                "User: " +  User.Name,
+                "DateCreation: " + DateCreation.ToString(Utils.DateFormat),
+                settings.AutoApproveRequest ? "DateDeletion: " + requestTime :
+                                              "DateApprove: " + requestTime
+            };
+        }
     }
 }

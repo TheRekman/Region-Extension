@@ -15,6 +15,7 @@ using RegionExtension.Database.EventsArgs;
 using System.Linq;
 using Steamworks;
 using TShockAPI.Configuration;
+using Microsoft.Xna.Framework;
 
 namespace RegionExtension.Database
 {
@@ -299,7 +300,8 @@ namespace RegionExtension.Database
                 PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 200), new PaginationTools.Settings()
                 {
                     HeaderFormat = "Active requests:",
-                    IncludeFooter = false
+                    IncludeFooter = false,
+                    LineTextColor = Color.White
                 });
         }
 
