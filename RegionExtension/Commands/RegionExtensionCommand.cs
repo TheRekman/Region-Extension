@@ -40,8 +40,9 @@ namespace RegionExtension.Commands
             new OwnerList(),
             new LastActiveList(),
             new RequestListSubCommand(),
+            new RequestInfoSubCommand(),
             new RequestAcceptSubCommand(),
-            new RequestDenySubCommand()
+            new RequestDenySubCommand(),
         }.Concat(base.SubCommands).ToArray();
     }
 }

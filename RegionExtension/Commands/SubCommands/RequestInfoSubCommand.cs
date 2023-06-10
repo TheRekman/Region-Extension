@@ -9,7 +9,7 @@ using TShockAPI.DB;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    internal class RequestInfoSubCommand : SubCommand
+    public class RequestInfoSubCommand : SubCommand
     {
 
         public override string[] Names => new string[] { "requestinfo", "ri" };

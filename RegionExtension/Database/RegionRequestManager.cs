@@ -157,8 +157,8 @@ namespace RegionExtension.Database
                 "Region: " + Region.Name,
                 "User: " +  User.Name,
                 "DateCreation: " + DateCreation.ToString(Utils.DateFormat),
-                settings.AutoApproveRequest ? "DateDeletion: " + requestTime :
-                                              "DateApprove: " + requestTime
+                settings.AutoApproveRequest ? "DateApprove: " + requestTime :
+                                              "DateDeletion: " + requestTime
             };
         }
     }
