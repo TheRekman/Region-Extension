@@ -38,11 +38,11 @@ namespace RegionExtension.Commands.SubCommands
         {
             if (Plugin.RegionExtensionManager.RemoveRequest(region, args.Player, false))
             {
-                args.Player.SendSuccessMessage("Region '{0}' denied!");
+                args.Player.SendSuccessMessage("Region '{0}' denied!".SFormat(region.Name));
             }
             else
             {
-                args.Player.SendErrorMessage("Failed deny region '{0}'!");
+                args.Player.SendErrorMessage("Failed deny region '{0}'!".SFormat(region.Name));
             }
         }
     }
