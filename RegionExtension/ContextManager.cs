@@ -36,16 +36,7 @@ namespace RegionExtension
 
         private void Help(CommandArgs args)
         {
-            List<string> contextCommandDescs = new List<string>();
-            for(int i = 0; i < Contexts.Count; i++)
-            {
-                string aliases = "";
-                for(int j = 1; j < Contexts[i].Names.Length ; j++)
-                    aliases += $"{Contexts[i].Names[j]}, ";
-                aliases.Remove(aliases.Length - 2, 2);
-                contextCommandDescs.Add("{0} ({1}) - {2}".SFormat(Contexts[i].Names[0], aliases, Contexts[i].Description));
-            }
-
+            var strings = Contexts.Select(c => "{0} - {1}".SFormat(string.Join('/', c.Names), c.Description));
             int pageNumberCon = 1;
             if (args.Parameters.Count > 0)
             {
@@ -55,11 +46,11 @@ namespace RegionExtension
             }
 
             PaginationTools.SendPage(
-              args.Player, pageNumberCon, contextCommandDescs,
+              args.Player, pageNumberCon, strings.ToList(),
               new PaginationTools.Settings
               {
                   HeaderFormat = "Available contexts command ({0}/{1}):",
-                  FooterFormat = "Type {0}/re context {{0}} for more contexts.".SFormat(TShock.Config.Settings.CommandSpecifier)
+                  FooterFormat = "Type {0}/context {{0}} for more contexts.".SFormat(TShock.Config.Settings.CommandSpecifier)
               }
             );
 

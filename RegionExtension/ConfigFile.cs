@@ -20,7 +20,7 @@ namespace RegionExtension
                 new RequestSettings {},
                 new RequestSettings
                 {
-                    GroupName = "admin",
+                    GroupName = "superadmin",
                     MaxRequestCount = 0,
                     RequestTime = "0s",
                     AutoApproveRequest = true,
