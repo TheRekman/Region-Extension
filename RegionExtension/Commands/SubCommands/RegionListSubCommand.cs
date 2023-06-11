@@ -38,7 +38,7 @@ namespace RegionExtension.Commands.SubCommands
                                                     .ToList();
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
-            PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames),
+            PaginationTools.SendPage(args.Player, page, PaginationTools.BuildLinesFromTerms(regionNames, null, ", ", 240),
                         new PaginationTools.Settings
                         {
                             HeaderFormat = "Regions ({0}/{1}):",

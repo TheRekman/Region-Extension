@@ -297,7 +297,7 @@ namespace RegionExtension.Database
         public void SendRequestNotify(TSPlayer player, IEnumerable<string> strings)
         {
             var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
-                PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 200), new PaginationTools.Settings()
+                PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 240), new PaginationTools.Settings()
                 {
                     HeaderFormat = "Active requests:",
                     IncludeFooter = false,
