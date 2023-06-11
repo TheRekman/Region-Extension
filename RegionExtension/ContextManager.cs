@@ -36,7 +36,7 @@ namespace RegionExtension
 
         private void Help(CommandArgs args)
         {
-            var strings = Contexts.Select(c => "{0} - {1}".SFormat(string.Join('/', c.Names), c.Description));
+            var strings = Contexts.Select(c => "{1} - {2}".SFormat(string.Join('/', c.Names), c.Description));
             int pageNumberCon = 1;
             if (args.Parameters.Count > 0)
             {
@@ -53,6 +53,8 @@ namespace RegionExtension
                   FooterFormat = "Type {0}/context {{0}} for more contexts.".SFormat(TShock.Config.Settings.CommandSpecifier)
               }
             );
+
+            args.Player.SendInfoMessage($"Specifier: {Plugin.Config.ContextSpecifier}");
 
         }
 
