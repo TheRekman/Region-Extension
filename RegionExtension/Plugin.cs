@@ -12,6 +12,9 @@ using TShockAPI.Hooks;
 using RegionExtension.Database;
 using System.Reflection;
 using Org.BouncyCastle.Crypto.Engines;
+using Terraria.DataStructures;
+using System.Security.AccessControl;
+using System.Threading.Tasks;
 
 namespace RegionExtension
 {
@@ -30,6 +33,8 @@ namespace RegionExtension
         public List<FastRegion> FastRegions;
         public static ConfigFile Config;
         public static RegionExtManager RegionExtensionManager;
+        private List<Point16> _lastActive = new List<Point16>();
+        private DateTime _lastActiveCheck = DateTime.UtcNow;
         #endregion
 
         bool _checkingHasBuild = false;
@@ -56,6 +61,7 @@ namespace RegionExtension
         private void OnPostUpdate(EventArgs args)
         {
             RegionExtensionManager.Update();
+            UpdateLastActive();
         }
 
         private void OnPlayerLogin(PlayerPostLoginEventArgs e)
@@ -83,9 +89,8 @@ namespace RegionExtension
                 return;
             }
             _checkingHasBuild = true;
-            if(TShock.Regions.InArea(e.X, e.Y) && e.Player.HasBuildPermission(e.X, e.Y, true))
-                foreach(var id in TShock.Regions.InAreaRegionID(e.X, e.Y))
-                    RegionExtensionManager.InfoManager.UpdateLastActivity(id, DateTime.UtcNow);
+            if (e.Player.HasBuildPermission(e.X, e.Y, true) && TShock.Regions.InArea(e.X, e.Y))
+                _lastActive.Add(new Point16(e.X, e.Y));
             _checkingHasBuild = false;
         }
 
@@ -102,6 +107,25 @@ namespace RegionExtension
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
             }
+        }
+
+        private void UpdateLastActive()
+        {
+            if (DateTime.UtcNow < _lastActiveCheck.AddSeconds(90))
+                return;
+            var points = _lastActive;
+            _lastActive = new List<Point16>();
+            Task.Run(() =>
+            {
+                var regionsToUpdate = new HashSet<int>();
+                foreach (var point in points)
+                    foreach (var id in TShock.Regions.InAreaRegionID(point.X, point.Y))
+                            regionsToUpdate.Add(id);
+                foreach (var id in regionsToUpdate)
+                    RegionExtensionManager.InfoManager.UpdateLastActivity(id, DateTime.UtcNow);
+                points.Clear();
+            });
+            _lastActiveCheck = DateTime.UtcNow;
         }
 
         private void OnInitialize(EventArgs args)

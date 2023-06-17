@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RegionExtension.Commands.SubCommands;
+using RegionExtension.Database;
 
 namespace RegionExtension.Commands
 {
@@ -24,7 +25,9 @@ namespace RegionExtension.Commands
             new RegionInfo(true),
             new SetSubCommand(),
             new DefineRequestSubCommand(),
-            new FastRegionRequestSubCommand()
+            new DeleteRegionSubCommand(true),
+            new FastRegionRequestSubCommand(),
+            new FastRegionBreakSubCommand()
         }.Concat(base.SubCommands).ToArray();
     }
 }
