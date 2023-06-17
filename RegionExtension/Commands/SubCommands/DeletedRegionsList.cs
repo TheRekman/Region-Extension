@@ -10,7 +10,6 @@ namespace RegionExtension.Commands.SubCommands
 {
     internal class DeletedRegionsList : SubCommand
     {
-        private bool _checkRegionOwn;
         public override string[] Names => new string[] { "dellist", "dl" };
 
         public override string Description => "get list of regions.";
@@ -23,19 +22,9 @@ namespace RegionExtension.Commands.SubCommands
             };
         }
 
-        public DeletedRegionsList(bool checkRegionOwn = false)
-        {
-            _checkRegionOwn = checkRegionOwn;
-        }
-
         public override void Execute(CommandArgsExtension args)
         {
             var page = ((IntParam)Params[0]).TValue;
-            if (_checkRegionOwn && !CheckRegionOwn(args, region))
-            {
-                args.Player.SendErrorMessage("You cannot manage '{0}' region!".SFormat(region.Name));
-                return;
-            }
             SendRegionList(args, page);
         }
 
@@ -53,8 +42,5 @@ namespace RegionExtension.Commands.SubCommands
                             NothingToDisplayString = "There are currently no regions."
                         });
         }
-
-        public bool CheckRegionOwn(CommandArgsExtension args, Region region)
-            => region.Owner == args.Player.Account.Name;
     }
 }

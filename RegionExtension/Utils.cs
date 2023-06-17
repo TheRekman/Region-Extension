@@ -49,6 +49,18 @@ namespace RegionExtension
             int g = (int)Math.Floor(firstClr.G + (secondClr.G - firstClr.G) * pos);
             int b = (int)Math.Floor(firstClr.B + (secondClr.B - firstClr.B) * pos);
             var hex = Color.FromNonPremultiplied(r, g, b, 255).Hex3();
+            if(pos < 0 || pos > 1)
+            {
+                r = 255;
+                g = 255;
+                b = 255;
+            }
+            if(str.Contains("]"))
+            {
+                var strs = str.Split(']');
+                var res = string.Join($"[c/{hex}:]]", strs.Select(s => string.IsNullOrEmpty(s) ? "" : $"[c/{hex}:{s}]"));
+                return res;
+            }
             return $"[c/{hex}:{str}]";
         }
 
