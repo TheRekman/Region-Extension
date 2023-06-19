@@ -299,7 +299,7 @@ namespace RegionExtension.Database
             var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
                 PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 240), new PaginationTools.Settings()
                 {
-                    HeaderFormat = "Active requests:",
+                    HeaderFormat = "Active region requests:",
                     IncludeFooter = false,
                     LineTextColor = Color.White
                 });
