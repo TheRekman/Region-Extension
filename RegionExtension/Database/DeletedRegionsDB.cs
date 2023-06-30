@@ -52,6 +52,7 @@ namespace RegionExtension.Database
                                             new SqliteQueryCreator() : new MysqlQueryCreator();
             var creator = new SqlTableCreator(_database, queryCreator);
             creator.EnsureTableStructure(_table);
+            LoadRegions();
         }
 
         public bool RegisterDeletedRegion(Region region, UserAccount userDeleter, RegionExtensionInfo info)
@@ -87,6 +88,7 @@ namespace RegionExtension.Database
                             DateTime.UtcNow);
                 string query = $"INSERT INTO {_table.Name} (RegionId, DeleterId, WorldId, RegionName, X, Y, Width, Height, UserIds, Protected, `Groups`, Owner, Z, CreationDate, DeletionDate) VALUES ({values});";
                 _database.Query(query);
+                _deletedInfo.Add(new DeletedInfo(new RegionExtended() { Region = region, ExtensionInfo = info }, DateTime.UtcNow, userDeleter.Name));
                 return true;
             }
             catch (Exception ex)

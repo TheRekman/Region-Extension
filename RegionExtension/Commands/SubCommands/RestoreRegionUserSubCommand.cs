@@ -39,21 +39,24 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Failed found region by user '{0}'!".SFormat(target.Name));
                 return;
             }
-            var restoredCount = 0;
-            foreach (var reg in regions)
+            Task.Run(() =>
             {
-                if (count == 0)
-                    break;
-                Plugin.RegionExtensionManager.DeletedRegions.RemoveRegionFromDeleted(reg.Region.ID);
-                string newName;
-                TryAutoComplete(reg.Region.Name, args, out newName);
-                reg.Region.Name = newName;
-                if (!Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
-                    args.Player.SendErrorMessage("Failed restore region '{0}'!".SFormat(reg.Region.Name));
-                restoredCount++;
-                count--;
-            }
-            args.Player.SendSuccessMessage("'{0}' regions restored!".SFormat(restoredCount));
+                var restoredCount = 0;
+                foreach (var reg in regions)
+                {
+                    if (count == 0)
+                        break;
+                    Plugin.RegionExtensionManager.DeletedRegions.RemoveRegionFromDeleted(reg.Region.ID);
+                    string newName;
+                    TryAutoComplete(reg.Region.Name, args, out newName);
+                    reg.Region.Name = newName;
+                    if (!Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
+                        args.Player.SendErrorMessage("Failed restore region '{0}'!".SFormat(reg.Region.Name));
+                    restoredCount++;
+                    count--;
+                }
+                args.Player.SendSuccessMessage("'{0}' regions restored!".SFormat(restoredCount));
+            });
         }
 
         public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
