@@ -194,7 +194,8 @@ namespace RegionExtension.Database
                 lines.Add("Region is not shared with any groups.");
             }
             var extInfo = RegionsInfo.First(ri => ri.Id == id);
-            var userName = extInfo.LastUserId == 0 ? "Server" : TShock.UserAccounts.GetUserAccountByID(extInfo.LastUserId).Name;
+            var user = TShock.UserAccounts.GetUserAccountByID(extInfo.LastUserId);
+            var userName = user == null ? "N/A" : user.Name;
             lines.Add(string.Concat("Last user: ", userName));
             lines.Add(string.Concat("Last update: ", extInfo.LastUpdate.ToString(Utils.DateFormat)));
             lines.Add(string.Concat("Last activity: ", extInfo.LastActivity.ToString(Utils.DateFormat)));
