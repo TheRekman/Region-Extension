@@ -140,8 +140,13 @@ namespace RegionExtension.Database
             }
         }
 
-        public RegionExtended GetRegionByName(string regionName) =>
-            _deletedInfo.FirstOrDefault(r => r.RegionName == regionName).RegionExt;
+        public RegionExtended GetRegionByName(string regionName)
+        {
+            var reg = _deletedInfo.FirstOrDefault(r => r.RegionName == regionName);
+            if (reg == null)
+                return null;
+            return reg.RegionExt;
+        }
 
         public List<RegionExtended> GetRegionsByUser(UserAccount user) =>
             _deletedInfo.Where(r => r.DeleterUser == user.Name)

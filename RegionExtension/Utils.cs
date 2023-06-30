@@ -116,12 +116,13 @@ namespace RegionExtension
                 return !TShock.Regions.Regions.Any(r => r.Name.ToLower().Equals(str.ToLower()));
             }
             int num = 0;
-            result = str;
-            while (TShock.Regions.Regions.Any(r => r.Name.ToLower().Equals(str.ToLower())))
+            string res = str;
+            while (TShock.Regions.Regions.Any(r => r.Name.ToLower().Equals(res.ToLower())))
             {
-                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                res = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
                 num++;
             }
+            result = res;
             return true;
         }
     }

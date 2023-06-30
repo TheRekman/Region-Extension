@@ -50,8 +50,8 @@ namespace RegionExtension.Commands.SubCommands
                     string newName;
                     if (!TryAutoComplete(reg.Region.Name, reg.Region.Area, out newName))
                     {
-                        args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(region));
-                        return;
+                        args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(reg.Region.Name));
+                        continue;
                     }
                     reg.Region.Name = newName;
                     if (!Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
@@ -67,14 +67,19 @@ namespace RegionExtension.Commands.SubCommands
         {
             int num = 0;
             var reg = TShock.Regions.Regions.FirstOrDefault(r => r.Name.ToLower().Equals(str.ToLower()));
-            result = str;
+            var res = str;
             while (reg != null)
             {
                 if (reg.Area.Equals(regionArea))
+                {
+                    result = null;
                     return false;
-                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                }
+                res = Plugin.Config.AutoCompleteSameNameFormat.SFormat(res, num);
+                reg = TShock.Regions.Regions.FirstOrDefault(r => r.Name.ToLower().Equals(res.ToLower()));
                 num++;
             }
+            result = res;
             return true;
         }
     }
