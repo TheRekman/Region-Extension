@@ -1,5 +1,6 @@
 ﻿using IL.Terraria.DataStructures;
 using Microsoft.Xna.Framework;
+using RegionExtension.Commands;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,23 @@ namespace RegionExtension
             var dateNow = DateTime.UtcNow;
             var pos = (dateNow - start).TotalSeconds / (end - start).TotalSeconds;
             return GetGradientByPos(str, pos);
+        }
+
+        public static bool TryAutoComplete(string str, out string result)
+        {
+            if (!Plugin.Config.AutoCompleteSameName)
+            {
+                result = str;
+                return !TShock.Regions.Regions.Any(r => r.Name.ToLower().Equals(str.ToLower()));
+            }
+            int num = 0;
+            result = str;
+            while (TShock.Regions.Regions.Any(r => r.Name.ToLower().Equals(str.ToLower())))
+            {
+                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                num++;
+            }
+            return true;
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Microsoft.Xna.Framework;
+using RegionExtension.Commands.Parameters;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +48,11 @@ namespace RegionExtension.Commands.SubCommands
                         break;
                     Plugin.RegionExtensionManager.DeletedRegions.RemoveRegionFromDeleted(reg.Region.ID);
                     string newName;
-                    TryAutoComplete(reg.Region.Name, args, out newName);
+                    if (!TryAutoComplete(reg.Region.Name, reg.Region.Area, out newName))
+                    {
+                        args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(region));
+                        return;
+                    }
                     reg.Region.Name = newName;
                     if (!Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
                         args.Player.SendErrorMessage("Failed restore region '{0}'!".SFormat(reg.Region.Name));
@@ -59,12 +63,15 @@ namespace RegionExtension.Commands.SubCommands
             });
         }
 
-        public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
+        public bool TryAutoComplete(string str, Rectangle regionArea, out string result)
         {
             int num = 0;
+            var reg = TShock.Regions.Regions.FirstOrDefault(r => r.Name.ToLower().Equals(str.ToLower()));
             result = str;
-            while (TShock.Regions.GetRegionByName(result) != null)
+            while (reg != null)
             {
+                if (reg.Area.Equals(regionArea))
+                    return false;
                 result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
                 num++;
             }
