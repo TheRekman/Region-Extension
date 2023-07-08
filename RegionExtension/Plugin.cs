@@ -46,11 +46,17 @@ namespace RegionExtension
             ServerApi.Hooks.NetGetData.Register(this, OnGetData);
             ServerApi.Hooks.GamePostInitialize.Register(this, OnPostInitialize, int.MinValue);
             ServerApi.Hooks.GamePostUpdate.Register(this, OnPostUpdate);
+            ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer);
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerPostLogin += OnPlayerLogin;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
             RegionExtensionManager = new RegionExtManager(TShock.DB);
+        }
+
+        private void OnGreetPlayer(GreetPlayerEventArgs args)
+        {
+            RegionExtensionManager.TriggerManager.OnPlayerEnter(args);
         }
 
         private void OnPostUpdate(EventArgs args)

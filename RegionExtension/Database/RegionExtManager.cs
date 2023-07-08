@@ -16,6 +16,7 @@ using System.Linq;
 using Steamworks;
 using TShockAPI.Configuration;
 using Microsoft.Xna.Framework;
+using RegionExtension.Trigger;
 
 namespace RegionExtension.Database
 {
@@ -53,6 +54,7 @@ namespace RegionExtension.Database
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
         public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
         public RegionRequestManager RegionRequestManager { get => _regionRequestManager; }
+        public TriggerManager TriggerManager { get; private set; }
 
         public RegionExtManager(IDbConnection db)
         {
@@ -269,6 +271,7 @@ namespace RegionExtension.Database
 
         public void Update()
         {
+            TriggerManager.OnUpdate();
             if (DateTime.UtcNow < _lastUpdate.AddSeconds(10))
                 return;
             var requestsToRemove = _regionRequestManager.Requests.Where(r =>
