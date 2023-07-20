@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.DB;
 
-namespace RegionExtension.Trigger.Actions
+namespace RegionExtension.RegionTriggers.Actions
 {
     public class TriggerActionArgs
     {

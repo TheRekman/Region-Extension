@@ -16,7 +16,7 @@ using System.Linq;
 using Steamworks;
 using TShockAPI.Configuration;
 using Microsoft.Xna.Framework;
-using RegionExtension.Trigger;
+using RegionExtension.RegionTriggers;
 
 namespace RegionExtension.Database
 {
@@ -99,7 +99,8 @@ namespace RegionExtension.Database
             _historyManager = new RegionHistoryManager(database);
             _deletedRegionsDB = new DeletedRegionsDB(database);
             _regionRequestManager = new RegionRequestManager(database);
-            if(OnPostInitialize != null)
+            TriggerManager = new TriggerManager(database);
+            if (OnPostInitialize != null)
                 OnPostInitialize();
         }
 

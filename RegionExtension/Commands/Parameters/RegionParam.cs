@@ -39,7 +39,7 @@ namespace RegionExtension.Commands.Parameters
             return true;
         }
 
-        public override bool TrySetDefaultValue(CommandArgs args = null)
+        public override bool TrySetDefaultValue(CommandArgsExtension args = null)
         {
             if (args.Player.CurrentRegion == null)
                 return false;
