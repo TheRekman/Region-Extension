@@ -28,7 +28,7 @@ namespace RegionExtension.RegionTriggers
             Initialize();
         }
 
-        private static ActionFormer[] Formers { get => new ActionFormer[] { CommandAction.Former }; }
+        private static ActionFormer[] Formers { get => new ActionFormer[] { CommandAction.Former, PushAction.Former }; }
 
         public static ActionFormer GetFormer(string name)
         {
@@ -72,10 +72,10 @@ namespace RegionExtension.RegionTriggers
 
         public bool CreateTrigger(Region region, RegionEvents regionEvent, ITriggerAction triggerAction)
         {
-            if (!_database.SaveValue(new TriggerDBUnit(region.ID, _triggers[region].Count, triggerAction.Name, regionEvent.ToString(), triggerAction.GetArgsString())))
-                return false;
             if (!_triggers.ContainsKey(region))
                 _triggers.Add(region, new List<Trigger>());
+            if (!_database.SaveValue(new TriggerDBUnit(region.ID, _triggers[region].Count, triggerAction.Name, regionEvent.ToString(), triggerAction.GetArgsString())))
+                return false;
             var triggerUnit = _database.GetValues(TriggerDBUnit.Reader, new[] { (nameof(TriggerDBUnit.RegionId), (object)region.ID), (nameof(TriggerDBUnit.LocalId), _triggers[region].Count) }).First();
             var trigger = new Trigger(triggerUnit.Id, _triggers[region].Count, region, regionEvent, triggerAction);
             _triggers[region].Add(trigger);
