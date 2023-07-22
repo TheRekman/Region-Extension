@@ -6,12 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
-using IL.Terraria;
+using Terraria;
+using Microsoft.Xna.Framework;
+using Org.BouncyCastle.Bcpg;
 
 namespace RegionExtension.RegionTriggers.Actions
 {
     public class PushAction : ITriggerAction
     {
+
+        private const int _pushDistance = 5;
         public string Name => "push";
         public string Description => "Pushes player from region.";
 
@@ -24,19 +28,27 @@ namespace RegionExtension.RegionTriggers.Actions
 
         public void Execute(TriggerActionArgs args)
         {
-            var distanceLeft = args.Player.TileX - args.Region.Area.X;
-            var distanceRight = Math.Abs(args.Player.TileX - (args.Region.Area.X + args.Region.Area.Width));
-            var distanceUp = args.Player.TileY - args.Region.Area.Y;
-            var distanceDown = Math.Abs(args.Player.TileY - (args.Region.Area.Y + args.Region.Area.Height));
-            var minX = Math.Min(distanceLeft, distanceRight);
-            var minY = Math.Min(distanceUp, distanceDown);
-            int newX = distanceLeft < distanceRight ? -distanceLeft : distanceRight;
-            int newY = distanceUp < distanceDown ? -distanceUp : distanceDown;
-            if (minX < minY)
-                newY *= (int)Math.Ceiling(args.Region.Area.Height / (float)args.Region.Area.Width);
+            var plr = args.Player;
+            var regArea = args.Region.Area;
+            var pushArea = new Rectangle(regArea.X - _pushDistance, regArea.Y - _pushDistance, regArea.Width + _pushDistance * 2, regArea.Height + _pushDistance * 2);
+            var localX = plr.TileX - pushArea.X;
+            var localY = plr.TileY - pushArea.Y;
+            var centerX = pushArea.Width / 2;
+            var centerY = pushArea.Height / 2;
+            var dX = centerX - localX;
+            var dY = centerY - localY;
+            int x, y;
+            if (pushArea.Width * Math.Abs(dY) < pushArea.Height * Math.Abs(dX))
+            {
+                x = Math.Sign(dX) * centerX;
+                y = dY * x / dX;
+            }
             else
-                newX *= (int)Math.Ceiling(args.Region.Area.Width / (float)args.Region.Area.Height);
-            args.Player.Teleport((args.Player.TileX + newX) * 16, (args.Player.TileY + newY) * 16);
+            {
+                y = Math.Sign(dY) * centerY;
+                x = dX * y / dY;
+            }
+            plr.Teleport((plr.TileX - x) * 16, (plr.TileY - y) * 16);
         }
 
         public string GetArgsString() => null;
