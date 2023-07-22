@@ -40,11 +40,15 @@ namespace RegionExtension.RegionTriggers.Actions
             int x, y;
             if (pushArea.Width * Math.Abs(dY) < pushArea.Height * Math.Abs(dX))
             {
+                if (dX == 0)
+                    dX = 1;
                 x = Math.Sign(dX) * centerX;
                 y = dY * x / dX;
             }
             else
             {
+                if (dY == 0)
+                    dY = 1;
                 y = Math.Sign(dY) * centerY;
                 x = dX * y / dY;
             }

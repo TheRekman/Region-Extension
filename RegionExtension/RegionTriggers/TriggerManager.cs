@@ -19,7 +19,8 @@ namespace RegionExtension.RegionTriggers
     {
         private DateTime _lastUpdate = DateTime.UtcNow;
         private DatabaseTable<TriggerDBUnit> _database;
-        private Dictionary<TSPlayer, Region> _lastRegions = new Dictionary<TSPlayer, Region>();
+        private Region[] _lastRegions = new Region[TShock.Players.Length];
+
         Dictionary<Region, List<Trigger>> _triggers = new Dictionary<Region, List<Trigger>>();
 
         public TriggerManager(IDbConnection dbConnection)
@@ -63,8 +64,7 @@ namespace RegionExtension.RegionTriggers
 
         public void OnPlayerEnter(GreetPlayerEventArgs args)
         {
-            if (!_lastRegions.ContainsKey(TShock.Players[args.Who]))
-                _lastRegions.Add(TShock.Players[args.Who], null);
+            _lastRegions[args.Who] = null;
         }
 
         public IEnumerable<Trigger> GetTriggers(Region region) =>
@@ -110,27 +110,29 @@ namespace RegionExtension.RegionTriggers
             {
                 if (DateTime.UtcNow > lasUpd.AddMilliseconds(500))
                     return;
-                foreach (var player in TShock.Players.Where(p => p != null && p.Active))
-                {
-                    var region = _lastRegions[player];
-                    if (region != player.CurrentRegion)
+                for(int i = 0; i < TShock.Players.Length; i++)
+                    if (TShock.Players[i] != null && TShock.Players[i].Active)
                     {
-                        if (player.CurrentRegion != null && _triggers.ContainsKey(player.CurrentRegion))
-                            foreach (var trigger in _triggers[player.CurrentRegion].Where(t => t.Event == RegionEvents.OnEnter))
-                                trigger.Action.Execute(new TriggerActionArgs(player, player.CurrentRegion));
-                        if (region != null && _triggers.ContainsKey(region))
+                        var region = _lastRegions[i];
+                        var player = TShock.Players[i];
+                        if (region != player.CurrentRegion)
                         {
-                            if (region != null)
-                                foreach (var trigger in _triggers[region].Where(t => t.Event == RegionEvents.OnLeave))
-                                    trigger.Action.Execute(new TriggerActionArgs(player, region));
-                        }
+                            if (player.CurrentRegion != null && _triggers.ContainsKey(player.CurrentRegion))
+                                foreach (var trigger in _triggers[player.CurrentRegion].Where(t => t.Event == RegionEvents.OnEnter))
+                                    trigger.Action.Execute(new TriggerActionArgs(player, player.CurrentRegion));
+                            if (region != null && _triggers.ContainsKey(region))
+                            {
+                                if (region != null)
+                                    foreach (var trigger in _triggers[region].Where(t => t.Event == RegionEvents.OnLeave))
+                                        trigger.Action.Execute(new TriggerActionArgs(player, region));
+                            }
 
-                        _lastRegions[player] = player.CurrentRegion;
+                            _lastRegions[i] = player.CurrentRegion;
+                        }
+                        if (region != null && _triggers.ContainsKey(region))
+                            foreach (var trigger in _triggers[region].Where(t => t.Event == RegionEvents.OnIn))
+                                trigger.Action.Execute(new TriggerActionArgs(player, region));
                     }
-                    if (region != null && _triggers.ContainsKey(region))
-                        foreach (var trigger in _triggers[region].Where(t => t.Event == RegionEvents.OnIn))
-                            trigger.Action.Execute(new TriggerActionArgs(player, region));
-                }
             });
 
             _lastUpdate = DateTime.Now;
