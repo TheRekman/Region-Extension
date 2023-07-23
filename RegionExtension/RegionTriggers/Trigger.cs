@@ -15,6 +15,7 @@ namespace RegionExtension.RegionTriggers
         public Region Region { get; set; }
         public RegionEvents Event { get; set; }
         public ITriggerAction Action { get; set; }
+        public IEnumerable<Func<bool>> Conditions { get; set; }  
 
         public Trigger(int id, int localId, Region region, RegionEvents @event, ITriggerAction action)
         {
