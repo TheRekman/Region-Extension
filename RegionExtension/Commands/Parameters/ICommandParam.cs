@@ -10,6 +10,7 @@ namespace RegionExtension.Commands.Parameters
         object Value { get; }
         bool Optional { get; }
         bool Dynamic { get; }
+        bool Parametrical { get; }
         int Count { get; }
         public string GetBracketName();
         public string GetColoredBracketName();

@@ -56,7 +56,5 @@ namespace RegionExtension.RegionTriggers.Actions
         }
 
         public string GetArgsString() => null;
-
-        public void SetArgsString(string args) { }
     }
 }

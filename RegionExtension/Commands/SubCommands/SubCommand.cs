@@ -46,6 +46,15 @@ namespace RegionExtension.Commands.SubCommands
                         return false;
                     if (paramsCopy[i].Dynamic)
                     {
+                        if (paramsCopy[i].Parametrical)
+                        {
+                            if (i != paramsCopy.Count - 1)
+                                throw new ArgumentException("Parametrical param must be last!");
+                            while (enumerator.MoveNext())
+                                if (!paramsCopy[i].TrySetValue(enumerator.Current, args))
+                                    return false;
+                            break;
+                        }
                         dynamicParams.Add(paramsCopy[i]);
                         var temp = paramsCopy.Take(i + 1).ToList();
                         temp.AddRange(paramsCopy[i].GetAdditionalParams());
@@ -57,7 +66,8 @@ namespace RegionExtension.Commands.SubCommands
                 {
                     args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}{1} {2} {3}"
                                                     .SFormat(TShockAPI.Commands.Specifier, usedCommandName, usedSubCommandName,
-                                                            string.Join(' ', paramsCopy.Select(p => p.GetBracketName()))));
+                                                            string.Join(' ', paramsCopy.Where(p => !string.IsNullOrEmpty(p.Name))
+                                                                                       .Select(p => p.GetBracketName()))));
                     return false;
                 }
             }

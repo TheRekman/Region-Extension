@@ -32,7 +32,13 @@ namespace RegionExtension.RegionTriggers
             Initialize();
         }
 
-        private static ActionFormer[] Formers { get => new ActionFormer[] { CommandAction.Former, PushAction.Former }; }
+        private static ActionFormer[] Formers { get => new ActionFormer[]
+        {
+            CommandAction.Former,
+            PushAction.Former,
+            SendPacketAction.Former,
+            SendMessageAction.Former
+        };}
 
         public static ActionFormer GetFormer(string name)
         {
@@ -132,7 +138,7 @@ namespace RegionExtension.RegionTriggers
 
         private void TriggerEvent(RegionEvents events, TSPlayer player, Region region)
         {
-            if (region == null || !_triggers.ContainsKey(region) || !_defaultConditions.Any(c => c.Predicate(player, region)))
+            if (region == null || !_triggers.ContainsKey(region))
                 return;
             foreach (var trigger in _triggers[region].Where(t => t.Event == events))
                 trigger.Action.Execute(new TriggerActionArgs(player, region));

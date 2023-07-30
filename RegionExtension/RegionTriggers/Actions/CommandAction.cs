@@ -70,8 +70,5 @@ namespace RegionExtension.RegionTriggers.Actions
 
         public string GetArgsString() =>
             _commandString;
-
-        public void SetArgsString(string args) =>
-            _commandString = args;
     }
 }

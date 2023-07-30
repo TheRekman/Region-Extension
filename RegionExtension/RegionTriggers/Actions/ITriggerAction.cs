@@ -15,6 +15,5 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ActionFormer Former { get; }
         public void Execute(TriggerActionArgs args);
         public string GetArgsString();
-        public void SetArgsString(string args);
     }
 }

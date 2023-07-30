@@ -20,6 +20,13 @@ namespace RegionExtension.Commands.Parameters
         public bool Optional => _optional;
         public virtual bool Dynamic { get; protected set; } = false;
         public int Count { get; } = 1;
+        public bool Parametrical { get; protected set; } = false;
+
+        public CommandParam() :
+            this("", "", true, default)
+        {
+        }
+
         public CommandParam(string name, string description, bool optional = false, T defaultValue = default(T))
         {
             _name = name;
