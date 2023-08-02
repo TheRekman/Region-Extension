@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
+using Terraria;
 
 namespace RegionExtension.Commands.Parameters
 {
@@ -15,7 +16,8 @@ namespace RegionExtension.Commands.Parameters
         Dictionary<Type, Func<ICommandParam>> _simpleParams = new Dictionary<Type, Func<ICommandParam>>
         {
             { typeof(string), () => new StringParam("", "") },
-            { typeof(int), () => new IntParam("", "") }
+            { typeof(int), () => new IntParam("", "") },
+            { typeof(Item), () => new ItemParam("", "") }
         };
 
         public ArrayParam(string name, string description, int len = 0, bool optional = false, T[] defaultValue = default) :

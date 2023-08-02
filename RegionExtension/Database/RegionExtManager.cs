@@ -55,6 +55,7 @@ namespace RegionExtension.Database
         public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
         public RegionRequestManager RegionRequestManager { get => _regionRequestManager; }
         public TriggerManager TriggerManager { get; private set; }
+        public PropertyManager PropertyManager { get; private set; }
 
         public RegionExtManager(IDbConnection db)
         {
@@ -62,7 +63,7 @@ namespace RegionExtension.Database
             EventHandler();
         }
 
-        public void InitializeDatabase()
+        public void InitializeDatabase(TerrariaPlugin plugin)
         {
             IDbConnection database;
             if (TShock.Config.Settings.StorageType.ToLower() == "sqlite")
@@ -100,13 +101,14 @@ namespace RegionExtension.Database
             _deletedRegionsDB = new DeletedRegionsDB(database);
             _regionRequestManager = new RegionRequestManager(database);
             TriggerManager = new TriggerManager(database);
+            PropertyManager = new PropertyManager(database, plugin);
             if (OnPostInitialize != null)
                 OnPostInitialize();
         }
 
-        public void PostInitialize()
+        public void PostInitialize(TerrariaPlugin plugin)
         {
-            InitializeDatabase();
+            InitializeDatabase(plugin);
             _regionInfoManager.PostInitialize();
         }
 

@@ -130,11 +130,14 @@ namespace RegionExtension.Database
             return true;
         }
 
-        public bool RemoveByColumn(string name, object value)
+        public bool RemoveByColumn(params (string columnName, object value)[] conditions)
         {
+            var query = $"DELETE FROM {Name}";
+            if (conditions != null && conditions.Length != 0)
+                query += " WHERE " + string.Join(" AND ", conditions.Select(c => c.columnName + "='" + c.value + "'"));
             try
             {
-                Connection.Query($"DELETE FROM {Name} WHERE {name}='{value}'");
+                Connection.Query(query);
             }
             catch (Exception ex)
             {
@@ -146,7 +149,6 @@ namespace RegionExtension.Database
 
         public bool UpdateByColumn(string columnName, object value, params (string columnName, object value)[] conditions)
         {
-            var res = new List<T>();
             var query = $"UPDATE {Name} SET {columnName}='{value}'";
             if (conditions != null && conditions.Length != 0)
                 query += " WHERE " + string.Join(" AND ", conditions.Select(c => c.columnName + "='" + c.value + "'"));

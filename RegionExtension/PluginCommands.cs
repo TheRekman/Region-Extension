@@ -24,7 +24,8 @@ namespace RegionExtension
                 new RegionExtensionCommand(),
                 new RegionOwnCommand(),
                 new RegionHistoryCommand(),
-                new RegionTriggerCommand()
+                new RegionTriggerCommand(),
+                new RegionProperty()
                 );
         }
 

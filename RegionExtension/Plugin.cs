@@ -78,7 +78,7 @@ namespace RegionExtension
             PluginCommands.Initialize(this);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
-            RegionExtensionManager.PostInitialize();
+            RegionExtensionManager.PostInitialize(this);
         }
 
         private void OnHasPlayerPermission(PlayerHasBuildPermissionEventArgs e)

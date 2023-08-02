@@ -47,7 +47,6 @@ namespace RegionExtension.RegionTriggers
             return res;
         }
 
-
         public void Initialize()
         {
             _database.InitializeTable();
@@ -90,7 +89,6 @@ namespace RegionExtension.RegionTriggers
             _triggers[region].Add(trigger);
             return true;
         }
-
 
         public bool RemoveTrigger(Region region, int id)
         {
