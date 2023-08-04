@@ -14,7 +14,6 @@ namespace RegionExtension.RegionTriggers.Actions
     internal class SendMessageAction : ITriggerAction
     {
         private string _text = string.Empty;
-        
         public string Name => "msg";
         public string Description => "Send message.";
 

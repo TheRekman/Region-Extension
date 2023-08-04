@@ -1,6 +1,7 @@
 ﻿using OTAPI;
 using RegionExtension.Database;
 using RegionExtension.RegionTriggers.Actions;
+using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,7 +13,7 @@ using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
 using TShockAPI.Hooks;
-
+    
 namespace RegionExtension.RegionTriggers
 {
     public class TriggerManager
@@ -21,10 +22,6 @@ namespace RegionExtension.RegionTriggers
         private DatabaseTable<TriggerDBUnit> _database;
         private Region[] _lastRegions = new Region[TShock.Players.Length];
         Dictionary<Region, List<Trigger>> _triggers = new Dictionary<Region, List<Trigger>>();
-        private IEnumerable<Condition> _conditions = new Condition[]{
-            new Condition("notallowed", (p, r) => !(p.Account != null && (r.AllowedIDs.Contains(p.Account.ID) || r.Owner == p.Account.Name))),
-            new Condition("allowed", (p, r) => p.Account != null && (r.AllowedIDs.Contains(p.Account.ID) || r.Owner == p.Account.Name))};
-        private IEnumerable<Condition> _defaultConditions;
 
         public TriggerManager(IDbConnection dbConnection)
         {
@@ -67,7 +64,6 @@ namespace RegionExtension.RegionTriggers
                     }
                 }    
             }
-            _defaultConditions = _conditions.Where(c => c.Name == "notallowed");
         }
 
         public void OnPlayerEnter(GreetPlayerEventArgs args)

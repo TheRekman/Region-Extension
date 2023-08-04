@@ -1,4 +1,5 @@
 ﻿using RegionExtension.RegionTriggers.Actions;
+using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace RegionExtension.RegionTriggers
         public Region Region { get; set; }
         public RegionEvents Event { get; set; }
         public ITriggerAction Action { get; set; }
-        public IEnumerable<Func<bool>> Conditions { get; set; }  
+        public IEnumerable<Condition> Conditions { get; set; }  
 
         public Trigger(int id, int localId, Region region, RegionEvents @event, ITriggerAction action)
         {

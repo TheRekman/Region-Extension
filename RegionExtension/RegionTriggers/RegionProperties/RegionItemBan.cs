@@ -12,6 +12,7 @@ using TShockAPI;
 using TShockAPI.DB;
 using TShockAPI.Hooks;
 using TShockAPI.Localization;
+using RegionExtension.RegionTriggers.Conditions;
 
 namespace RegionExtension.RegionTriggers.RegionProperties
 {

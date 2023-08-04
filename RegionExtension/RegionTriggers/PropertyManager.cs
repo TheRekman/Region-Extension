@@ -1,5 +1,4 @@
-﻿using NuGet.Protocol.Plugins;
-using RegionExtension.Commands.Parameters;
+﻿using RegionExtension.Commands.Parameters;
 using RegionExtension.Database;
 using RegionExtension.RegionTriggers.RegionProperties;
 using System;
@@ -12,7 +11,6 @@ using System.Threading.Tasks;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
-using static NuGet.Client.ManagedCodeConventions;
 
 namespace RegionExtension.RegionTriggers
 {
