@@ -10,7 +10,7 @@ namespace RegionExtension.RegionTriggers.Conditions
 {
     public interface IRegionCondition
     {
-        static ConditionFormer Former { get; }
+        static ConditionFormer ConditionFormer { get; }
         string[] GetNames();
         bool IsReversed();
         bool Check(TSPlayer player, Region region);

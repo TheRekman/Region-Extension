@@ -1,5 +1,5 @@
 ﻿using RegionExtension.Commands.Parameters;
-using RegionExtension.Commands.SubCommands;
+using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
 
-namespace RegionExtension.Commands
+namespace RegionExtension.Commands.SubCommands
 {
-    internal class PropertyList : SubCommand
+    public class ConditionList : SubCommand
     {
-        public override string[] Names => new string[] { "list", "l" };
+        public override string[] Names => new string[] { "conditionlist", "cl" };
 
-        public override string Description => "List available properties.";
+        public override string Description => "List available conditions.";
 
         public override void InitializeParams()
         {
@@ -31,16 +31,16 @@ namespace RegionExtension.Commands
 
         private void ListProperties(CommandArgsExtension args, int page)
         {
-            var triggers = Plugin.RegionExtensionManager.PropertyManager.RegionProperties.Select(p => "{0} - {1}".SFormat(string.Join('/', p.Names), p.Permission));
+            var triggers = ConditionManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join('/', f.Names), string.Join(" ", f.CommandParams.Select(p => p.GetBracketName())), f.Description));
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),
                         new PaginationTools.Settings
                         {
-                            HeaderFormat = "Region properties ({0}/{1}):",
+                            HeaderFormat = "Conditions ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
-                            NothingToDisplayString = "There are currently no regions."
+                            NothingToDisplayString = "There are currently no conditions."
                         });
         }
     }

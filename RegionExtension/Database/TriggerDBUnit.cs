@@ -24,6 +24,7 @@ namespace RegionExtension.Database
         public int RegionId { get; private set; }
         public string ActionName { get; private set; }
         public string RegionEvent { get; private set; }
+        public string Conditions { get; private set; }
         public string Args { get; private set; }
         public static Func<QueryResult, TriggerDBUnit> Reader { get; } = (r) => ReadFromDb(r);
 

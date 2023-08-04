@@ -2,6 +2,7 @@
 using RegionExtension.Database;
 using RegionExtension.RegionTriggers.Actions;
 using RegionExtension.RegionTriggers.Conditions;
+using RegionExtension.RegionTriggers.RegionProperties;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -134,8 +135,35 @@ namespace RegionExtension.RegionTriggers
         {
             if (region == null || !_triggers.ContainsKey(region))
                 return;
-            foreach (var trigger in _triggers[region].Where(t => t.Event == events))
+            foreach (var trigger in _triggers[region].Where(t => t.Event == events && t.Conditions.CheckConditions(player, region)))
                 trigger.Action.Execute(new TriggerActionArgs(player, region));
+        }
+
+        public bool AddCondition(Region region, IRegionCondition condition, IEnumerable<int> localIds)
+        {
+            var triggers = _triggers[region];
+            localIds ??= triggers.Select(t => t.LocalId);
+            var res = true;
+            foreach (var i in localIds.Intersect(triggers.Select(t => t.LocalId)))
+            {
+                triggers[i].Conditions = triggers[i].Conditions.Where(c => !c.GetNames()[0].Equals(condition.GetNames()[0]))
+                                                               .Append(condition);
+                res = true && _database.UpdateByColumn(nameof(TriggerDBUnit.Conditions), ConditionManager.GenerateConditionsString(triggers[i].Conditions), new[] { (nameof(TriggerDBUnit.Id), (object)triggers[i].Id) });
+            }
+            return res;
+        }
+
+        public bool RemoveCondition(Region region, IRegionCondition condition, IEnumerable<int> localIds)
+        {
+            var triggers = _triggers[region];
+            localIds ??= triggers.Select(t => t.LocalId);
+            var res = true;
+            foreach (var i in localIds.Intersect(triggers.Select(t => t.Id)))
+            {
+                triggers[i].Conditions = triggers[i].Conditions.Where(c => !c.GetNames()[0].Equals(condition.GetNames()[0]));
+                res = true && _database.UpdateByColumn(nameof(TriggerDBUnit.Conditions), ConditionManager.GenerateConditionsString(triggers[i].Conditions), new[] { (nameof(TriggerDBUnit.Id), (object)triggers[i].Id) });
+            }
+            return res;
         }
     }
 

@@ -35,7 +35,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         public string[] GetNames() => Names;
 
         public bool Check(TSPlayer player, Region region) =>
-            player.Account != null && ((region.AllowedIDs.Contains(p.Account.ID) || region.Owner == player.Account.Name) ^ Reversed);
+            (player.Account != null && (region.AllowedIDs.Contains(player.Account.ID) || region.Owner == player.Account.Name)) ^ Reversed;
 
         public string GetString() =>
             string.Join(' ', Names[0]);

@@ -10,10 +10,11 @@ using RegionExtension.RegionTriggers.Conditions;
 
 namespace RegionExtension.Commands.Parameters
 {
-    internal class ConditionParam : CommandParam<Condition>
+    public class ConditionParam : CommandParam<IRegionCondition>
     {
+        private string _name;
         private ICommandParam[] _additionalParams;
-        public ConditionParam(string name, string description, bool optional = false, Condition defaultValue = null)
+        public ConditionParam(string name, string description, bool optional = false, IRegionCondition defaultValue = null)
             : base(name, description, optional, defaultValue)
         {
             Dynamic = true;
@@ -28,6 +29,7 @@ namespace RegionExtension.Commands.Parameters
                 return false;
             }
             _additionalParams = param;
+            _name = str;
             return true;
         }
 
@@ -36,7 +38,7 @@ namespace RegionExtension.Commands.Parameters
 
         public override bool TrySetDynamicValue(CommandArgsExtension args)
         {
-            var res = ConditionManager.GetCondition(Name, _additionalParams);
+            var res = ConditionManager.GetCondition(_name, _additionalParams);
             if (res == null)
                 return false;
             _value = res;

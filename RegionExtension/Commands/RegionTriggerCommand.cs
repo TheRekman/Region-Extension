@@ -18,7 +18,10 @@ namespace RegionExtension.Commands
         {
             new AddTrigger(),
             new DeleteTrigger(),
-            new TriggerList()
+            new TriggerList(),
+            new ConditionList(),
+            new AddTriggerCondition(),
+            new RemoveTriggerCondition()
         }.Concat(base.SubCommands).ToArray();
     }
 }
