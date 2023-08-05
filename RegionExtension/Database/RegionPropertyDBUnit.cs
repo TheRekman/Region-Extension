@@ -15,6 +15,7 @@ namespace RegionExtension.Database
         public int Id { get; private set; }
         public int RegionId { get; private set; }
         public string PropertyName { get; private set; }
+        public string Conditions { get; private set; }
         public string Args { get; private set; }
         public static Func<QueryResult, RegionPropertyDBUnit> Reader { get; } = (r) => ReadFromDb(r);
 

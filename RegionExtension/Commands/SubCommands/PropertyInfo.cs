@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
 
@@ -45,7 +46,8 @@ namespace RegionExtension.Commands.SubCommands
         {
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             var usedSubCommandName = args.Parameters[0];
-            PaginationTools.SendPage(args.Player, page, property.GetStringArgs(region).Split(' '),
+            var info = property.GetStringArgs(region);
+            PaginationTools.SendPage(args.Player, page, info.Args.Split(' '),
                         new PaginationTools.Settings
                         {
                             HeaderFormat = "Property {0} of region {1} ({{0}}/{{1}}):".SFormat(property.Names[0], region.Name),
@@ -53,6 +55,9 @@ namespace RegionExtension.Commands.SubCommands
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName, region.Name),
                             NothingToDisplayString = "There are currently no settings for {0} property.".SFormat(property.Names[0])
                         });
+            if (!string.IsNullOrEmpty(info.Conditions))
+                args.Player.SendInfoMessage("Conditions: " + info.Conditions);
+
         }
     }
 }

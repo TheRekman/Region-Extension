@@ -21,8 +21,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         void RemoveRegionProperties(Region region, ICommandParam[] commandParams);
         void AddRegionProperties(Region region, ICommandParam[] commandParams);
         void ClearProperties(Region region);
-        string GetStringArgs(Region region);
-        void SetFromString(Region region, string args);
-        
+        ConditionStringPair GetStringArgs(Region region);
+        void SetFromString(Region region, ConditionStringPair pair);
+        void AddCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition);
+        void RemoveCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition);
+
     }
 }

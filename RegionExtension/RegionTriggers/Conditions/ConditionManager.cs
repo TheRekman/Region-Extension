@@ -29,12 +29,15 @@ namespace RegionExtension.RegionTriggers.Conditions
             string.Join(", ", conditions.Select(c => c.GetString()));
 
         public static IEnumerable<IRegionCondition> GetRegionConditionsFromString(string str) =>
-            str.Split(", ").Select(s => _formers.FirstOrDefault(f => f.Names[0].Equals(GetName(s.Split(' ')[0]), StringComparison.OrdinalIgnoreCase))?.FormerFromString(str));
+            str.Split(", ").Select(s => _formers.FirstOrDefault(f => f.Names[0].Equals(GetName(s.Split(' ')[0]), StringComparison.OrdinalIgnoreCase))?.FormerFromString(str)).Where(c => c != null);
 
         private static string GetName(string str) =>
             str.StartsWith('!') ? str.Substring(1) : str;
 
         public static bool CheckConditions(this IEnumerable<IRegionCondition> conditions, TSPlayer player, Region region) =>
             conditions == null || conditions.Count() < 1 || conditions.All(c => c.Check(player, region));
+
+        public static bool EqualsCondition(this IEnumerable<IRegionCondition> conditions1, IEnumerable<IRegionCondition> conditions2) =>
+            conditions1.Count() == conditions2.Count() && conditions1.All(c => conditions2.Any(c2 => c.GetNames()[0].Equals(c2.GetNames()[0])));
     }
 }

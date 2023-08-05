@@ -1,5 +1,6 @@
 ﻿using RegionExtension.Commands.Parameters;
 using RegionExtension.Database;
+using RegionExtension.RegionTriggers.Conditions;
 using RegionExtension.RegionTriggers.RegionProperties;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace RegionExtension.RegionTriggers
                 prop.InitializeEventHandler(plugin);
             foreach (var region in TShock.Regions.Regions)
             {
-                var list = _database.GetValues(RegionPropertyDBUnit.Reader, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) }).Select(p => (p.PropertyName, p.Args));
+                var list = _database.GetValues(RegionPropertyDBUnit.Reader, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) }).Select(p => (p.PropertyName, p.Conditions, p.Args));
                 foreach(var propInfo in list)
                 {
                     if (string.IsNullOrEmpty(propInfo.Args))
@@ -45,7 +46,7 @@ namespace RegionExtension.RegionTriggers
                         _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), (object)propInfo.PropertyName) });
                         continue;
                     }
-                    _regionProperties.FirstOrDefault(p => p.Names[0].Equals(propInfo.PropertyName)).SetFromString(region, propInfo.Args);
+                    _regionProperties.FirstOrDefault(p => p.Names[0].Equals(propInfo.PropertyName)).SetFromString(region, new(propInfo.Conditions, propInfo.Args));
                 }
             }
         }
@@ -56,25 +57,16 @@ namespace RegionExtension.RegionTriggers
         public ICommandParam[] GetPropertyParams(string propertyName) =>
             _regionProperties.FirstOrDefault(p => p.Names.Contains(propertyName.ToLower()))?.CommandParams;
 
-        public void UpdateRegionProperty(Region region, string propertyName, ICommandParam[] commandParams, bool remove = false)
-        {
-            var prop = _regionProperties.First(p => p.Names.Contains(propertyName.ToLower()));
-            if (!prop.DefinedRegions.Contains(region))
-                _database.SaveValue(new RegionPropertyDBUnit(region.ID, prop.Names[0], ""));
-            if (remove)
-                prop.RemoveRegionProperties(region, commandParams);
-            else
-                prop.AddRegionProperties(region, commandParams);
-            _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), prop.GetStringArgs(region), new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
-        }
-
         public bool AddRegionProps(Region region, string propertyName, ICommandParam[] commandParams)
         {
             var prop = _regionProperties.First(p => p.Names.Contains(propertyName.ToLower()));
             if (!prop.DefinedRegions.Contains(region))
                 _database.SaveValue(new RegionPropertyDBUnit(region.ID, prop.Names[0], ""));
             prop.AddRegionProperties(region, commandParams);
-            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), prop.GetStringArgs(region), new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+            var pair = prop.GetStringArgs(region);
+            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), pair.Args, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) }) &&
+                   _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Conditions), pair.Conditions, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+
         }
 
         public bool RemoveRegionProperties(Region region, string propertyName, ICommandParam[] commandParams)
@@ -85,9 +77,33 @@ namespace RegionExtension.RegionTriggers
             prop.RemoveRegionProperties(region, commandParams);
             if (!prop.DefinedRegions.Contains(region))
                 return _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
-            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), prop.GetStringArgs(region), new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+            var pair = prop.GetStringArgs(region);
+            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), pair.Args, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) }) &&
+                   _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Conditions), pair.Conditions, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+
         }
 
+        public bool AddRegionCondition(Region region, string propertyName, ICommandParam[] commandParams, IRegionCondition regionCondition)
+        {
+            var prop = _regionProperties.First(p => p.Names.Contains(propertyName.ToLower()));
+            if (!prop.DefinedRegions.Contains(region))
+                _database.SaveValue(new RegionPropertyDBUnit(region.ID, prop.Names[0], ""));
+            prop.AddCondition(region, commandParams, regionCondition);
+            var pair = prop.GetStringArgs(region);
+            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), pair.Args, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) }) &&
+                   _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Conditions), pair.Conditions, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+        }
+
+        public bool RemoveRegionCondition(Region region, string propertyName, ICommandParam[] commandParams, IRegionCondition regionCondition)
+        {
+            var prop = _regionProperties.First(p => p.Names.Contains(propertyName.ToLower()));
+            if (!prop.DefinedRegions.Contains(region))
+                _database.SaveValue(new RegionPropertyDBUnit(region.ID, prop.Names[0], ""));
+            prop.RemoveCondition(region, commandParams, regionCondition);
+            var pair = prop.GetStringArgs(region);
+            return _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Args), pair.Args, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) }) &&
+                   _database.UpdateByColumn(nameof(RegionPropertyDBUnit.Conditions), pair.Conditions, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+        }
 
         public void ClearProperty(Region region, string propertyName)
         {

@@ -19,7 +19,9 @@ namespace RegionExtension.Commands
             new AddProperty(),
             new RemoveProperty(),
             new PropertyList(),
-            new PropertyInfo()
+            new PropertyInfo(),
+            new AddPropertyCondition(),
+            new RemovePropertyCondition()
         }.Concat(base.SubCommands).ToArray();
     }
 }

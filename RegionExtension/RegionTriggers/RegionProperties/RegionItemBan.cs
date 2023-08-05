@@ -21,11 +21,12 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public string[] Names => new[] { "itemban", "ib"};
         public string Description => "";
         public string Permission => "regionext.triggers.itemban";
-        public ICommandParam[] CommandParams => new[] { new ArrayParam<Item>("items...", "Items which will be banned in region.")};
+        public ICommandParam[] CommandParams => new[] { new ArrayParam<Item>("items...", "Items which will be banned in region.", 0, true, new Item[0])};
         public Region[] DefinedRegions =>_itemsBan.Keys.ToArray();
 
-        private Dictionary<Region, List<int>> _itemsBan = new Dictionary<Region, List<int>>();
+        private Dictionary<Region, ConditionDataPair<int>> _itemsBan = new Dictionary<Region, ConditionDataPair<int>>();
         private DateTime _lastUpdate = DateTime.Now;
+
         public void InitializeEventHandler(TerrariaPlugin plugin)
         {
             ServerApi.Hooks.GamePostUpdate.Register(plugin, OnPostUpdate);
@@ -46,7 +47,9 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (reg == null || !_itemsBan.ContainsKey(reg))
                 return;
             var items = _itemsBan[reg];
-            if (items.Contains(player.TPlayer.inventory[player.TPlayer.selectedItem].netID))
+            if(!items.Conditions.CheckConditions(player, reg))
+                return;
+            if (items.Data.Contains(player.TPlayer.inventory[player.TPlayer.selectedItem].netID))
             {
                 string itemName = player.TPlayer.inventory[player.TPlayer.selectedItem].Name;
                 player.Disable($"holding banned item: {itemName}", DisableFlags.None);
@@ -54,10 +57,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             }
             if (!Main.ServerSideCharacter || (Main.ServerSideCharacter && player.IsLoggedIn))
             {
-                CheckItemInventoryBan(player, player.TPlayer.armor, items);
-                CheckItemInventoryBan(player, player.TPlayer.dye, items);
-                CheckItemInventoryBan(player, player.TPlayer.miscEquips, items);
-                CheckItemInventoryBan(player, player.TPlayer.miscDyes, items);
+                CheckItemInventoryBan(player, player.TPlayer.armor, items.Data);
+                CheckItemInventoryBan(player, player.TPlayer.dye, items.Data);
+                CheckItemInventoryBan(player, player.TPlayer.miscEquips, items.Data);
+                CheckItemInventoryBan(player, player.TPlayer.miscDyes, items.Data);
             }
         }
 
@@ -88,11 +91,12 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)
         {
-            var itemsToBan = (Item[])commandParams[0].Value;
+            var itemsToBan = ((Item[])commandParams[0].Value).Select(i => i.type);
             if(!_itemsBan.ContainsKey(region))
-                _itemsBan.Add(region, new List<int>());
-            _itemsBan[region].AddRange(itemsToBan.Select(i => i.type)
-                                                 .Where(t => !_itemsBan[region].Contains(t)));
+                _itemsBan.Add(region, new(new List<IRegionCondition>(), new List<int>()));
+            _itemsBan[region].Data.AddRange(itemsToBan);
+            _itemsBan[region].Data = _itemsBan[region].Data.GroupBy(x => x).Select(x => x.First()).ToList();
+            _itemsBan[region].Data.Sort();
         }
 
         public void RemoveRegionProperties(Region region, ICommandParam[] commandParams)
@@ -100,28 +104,37 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             var itemsToBan = (Item[])commandParams[0].Value;
             if (!_itemsBan.ContainsKey(region))
                 return;
-            _itemsBan[region].RemoveAll(t => itemsToBan.Select(i => i.type)
-                                                       .Contains(t));
-            if (_itemsBan[region].Count == 0)
+            _itemsBan[region].Data.RemoveAll(i => itemsToBan.Select(i => i.type).Contains(i));
+            if (_itemsBan[region].Data.Count < 1)
                 _itemsBan.Remove(region);
         }
 
-        public void SetFromString(Region region, string args)
+        public void SetFromString(Region region, ConditionStringPair args)
         {
-           var itemsToBan = args.Split(' ').Select(s => int.Parse(s));
            if (!_itemsBan.ContainsKey(region))
-                _itemsBan.Add(region, new List<int>());
-            _itemsBan[region].AddRange(itemsToBan.Where(t => !_itemsBan[region].Contains(t)));
+                _itemsBan.Add(region, ConditionDataPair<int>.GetFromString(args));
         }
 
-        public string GetStringArgs(Region region)
-        {
-            if (!_itemsBan.ContainsKey(region))
-                return null;
-            return string.Join(" ", _itemsBan[region]);
-        }
+        public ConditionStringPair GetStringArgs(Region region) =>
+            _itemsBan[region]?.ConvertToString();
 
         public void ClearProperties(Region region) =>
             _itemsBan.Remove(region);
+
+        public void AddCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition)
+        {
+            var itemsToBan = ((Item[])commandParams[0].Value).Select(i => i.type);
+            if (!_itemsBan.ContainsKey(region))
+                return;
+            _itemsBan[region].Conditions = _itemsBan[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).Append(condition).ToList();
+        }
+
+        public void RemoveCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition)
+        {
+            var itemsToBan = ((Item[])commandParams[0].Value).Select(i => i.type);
+            if (!_itemsBan.ContainsKey(region))
+                return;
+            _itemsBan[region].Conditions = _itemsBan[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
+        }
     }
 }
