@@ -10,7 +10,7 @@ namespace RegionExtension.Commands
     internal class RegionProperty : CommandExtension
     {
         public override string[] Names => new[] { "regionproperty", "rp" };
-        public override string[] Permissions => new[] { "regionext.property" };
+        public override string[] Permissions => new[] { RegionExtension.Permissions.RegionPropertyCmd };
         public override string HelpText => "Manages region property.";
 
         public override ISubCommand[] SubCommands =>

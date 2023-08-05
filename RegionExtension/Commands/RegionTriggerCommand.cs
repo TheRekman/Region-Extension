@@ -10,7 +10,7 @@ namespace RegionExtension.Commands
     public class RegionTriggerCommand : CommandExtension
     {
         public override string[] Names => new[] { "regiontrigger", "rt" };
-        public override string[] Permissions => new[] { "regionext.trigger" };
+        public override string[] Permissions => new[] { RegionExtension.Permissions.RegionTriggerCmd };
         public override string HelpText => "Manages region trigger.";
 
         public override ISubCommand[] SubCommands =>

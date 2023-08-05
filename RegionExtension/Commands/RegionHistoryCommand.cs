@@ -10,7 +10,7 @@ namespace RegionExtension.Commands
     public class RegionHistoryCommand : CommandExtension
     {
         public override string[] Names => new[] { "regionhistory", "rh" };
-        public override string[] Permissions => new[] { "regionext.history" };
+        public override string[] Permissions => new[] { RegionExtension.Permissions.RegionHistoryCmd };
         public override string HelpText => "Manages region history.";
 
         public override ISubCommand[] SubCommands =>
