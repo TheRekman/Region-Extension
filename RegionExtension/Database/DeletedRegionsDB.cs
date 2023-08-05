@@ -19,6 +19,8 @@ namespace RegionExtension.Database
     {
         private IDbConnection _database;
 
+        private List<DeletedInfo> _deletedInfo = new List<DeletedInfo>();
+
         private SqlTable _table =
             new SqlTable("DeletedRegions",
                  new SqlColumn(TableInfo.RegionId.ToString(), MySqlDbType.Int32) { NotNull = true },
@@ -50,6 +52,7 @@ namespace RegionExtension.Database
                                             new SqliteQueryCreator() : new MysqlQueryCreator();
             var creator = new SqlTableCreator(_database, queryCreator);
             creator.EnsureTableStructure(_table);
+            LoadRegions();
         }
 
         public bool RegisterDeletedRegion(Region region, UserAccount userDeleter, RegionExtensionInfo info)
@@ -85,6 +88,7 @@ namespace RegionExtension.Database
                             DateTime.UtcNow);
                 string query = $"INSERT INTO {_table.Name} (RegionId, DeleterId, WorldId, RegionName, X, Y, Width, Height, UserIds, Protected, `Groups`, Owner, Z, CreationDate, DeletionDate) VALUES ({values});";
                 _database.Query(query);
+                _deletedInfo.Add(new DeletedInfo(new RegionExtended() { Region = region, ExtensionInfo = info }, DateTime.UtcNow, userDeleter.Name));
                 return true;
             }
             catch (Exception ex)
@@ -94,42 +98,39 @@ namespace RegionExtension.Database
             }
         }
 
-        public List<string> GetRegionsInfo()
+        public bool LoadRegions()
         {
-            var res = new List<string>();
-            var regs = new List<DeletedInfo>();
             try
             {
-                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.WorldId}={Main.worldID}"))
+                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.WorldId}={Main.worldID}"))
                 {
                     while (reader.Read())
                     {
-                        var userid = reader.Get<int>(TableInfo.DeleterId.ToString());
-                        var user = TShock.UserAccounts.GetUserAccountByID(userid);
-                        var username = user == null ? "Server" : user.Name;
-                        regs.Add(new DeletedInfo(
-                                reader.Get<string>(TableInfo.RegionName.ToString()),
-                                DateTime.Parse(reader.Get<string>(TableInfo.DeletionDate.ToString())),
-                                username));
+                        var info = DeletedInfo.ReadFromDB(reader);
+                        _deletedInfo.Add(info);
                     }
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 TShock.Log.Error(ex.Message);
-                return null;
+                return false;
             }
-            return regs.OrderBy(r => r.DeletionDate)
-                       .Reverse()
-                       .Select(r => string.Join(' ', r.DeletionDate.ToString(Utils.DateFormat), r.RegionName, r.DeleterUser))
-                       .ToList();
         }
+
+        public List<string> GetRegionsInfo() => 
+            _deletedInfo.OrderBy(r => r.DeletionDate)
+                               .Reverse()
+                               .Select(r => string.Join(' ', r.DeletionDate.ToString(Utils.DateFormat), r.RegionName, r.DeleterUser))
+                               .ToList();
 
         public bool RemoveRegionFromDeleted(int regionId)
         {
             try
             {
                 _database.Query($"DELETE FROM {_table.Name} WHERE RegionId={regionId}");
+                _deletedInfo.RemoveAll(r => r.RegionExt.Region.ID == regionId);
                 return true;
             }
             catch (Exception ex)
@@ -141,134 +142,18 @@ namespace RegionExtension.Database
 
         public RegionExtended GetRegionByName(string regionName)
         {
-            try
-            {
-                var res = new List<string>();
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.RegionName.ToString()}='{regionName}'"))
-                {
-                    if (reader.Read())
-                    {
-                        int id = reader.Get<int>(TableInfo.RegionId.ToString());
-                        var worldId = reader.Get<string>(TableInfo.WorldId.ToString());
-                        var name = reader.Get<string>(TableInfo.RegionName.ToString());
-                        var area = new Microsoft.Xna.Framework.Rectangle(
-                                   reader.Get<int>(TableInfo.X.ToString()),
-                                   reader.Get<int>(TableInfo.Y.ToString()),
-                                   reader.Get<int>(TableInfo.Width.ToString()),
-                                   reader.Get<int>(TableInfo.Height.ToString())
-                                   );
-                        var allowIdString = reader.Get<string>(TableInfo.UserIds.ToString()).Split(',');
-                        var allowIds = new List<int>();
-                        foreach(var str in allowIdString)
-                        {
-                            int n = 0;
-                            if(int.TryParse(str, out n))
-                                allowIds.Add(n);
-                        }
-                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 1 ? true : false;
-                        var allowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList();
-                        var owner = reader.Get<string>(TableInfo.Owner.ToString());
-                        var z = reader.Get<int>(TableInfo.Z.ToString());
-                        return new RegionExtended()
-                        {
-                            Region = new Region()
-                            {
-                                ID = id,
-                                WorldID = worldId,
-                                Name = name,
-                                Area = area,
-                                AllowedIDs = allowIds,
-                                DisableBuild = disableBuild,
-                                AllowedGroups = allowedGroups,
-                                Owner = owner,
-                                Z = z
-                            },
-                            ExtensionInfo = new RegionExtensionInfo(
-                                id,
-                                TShock.UserAccounts.GetUserAccountByName(owner).ID,
-                                DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
-                                DateTime.UtcNow,
-                                DateTime.UtcNow
-                            )
-                        };
-                    }
-                       
-                    else
-                        return null;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                TShock.Log.Error(ex.Message);
+            var reg = _deletedInfo.FirstOrDefault(r => r.RegionName == regionName);
+            if (reg == null)
                 return null;
-            }
+            return reg.RegionExt;
         }
 
-        public List<RegionExtended> GetRegionsByUser(UserAccount user)
-        {
-            var res = new List<RegionExtended>();
-            try
-            {
-                using (var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE {TableInfo.DeleterId.ToString()}='{user.ID}' AND {TableInfo.WorldId}={Main.worldID}"))
-                {
-                    while (reader.Read())
-                    {
-                        int id = reader.Get<int>(TableInfo.RegionId.ToString());
-                        var worldId = reader.Get<string>(TableInfo.WorldId.ToString());
-                        var name = reader.Get<string>(TableInfo.RegionName.ToString());
-                        var area = new Microsoft.Xna.Framework.Rectangle(
-                                   reader.Get<int>(TableInfo.X.ToString()),
-                                   reader.Get<int>(TableInfo.Y.ToString()),
-                                   reader.Get<int>(TableInfo.Width.ToString()),
-                                   reader.Get<int>(TableInfo.Height.ToString())
-                                   );
-                        var allowIdString = reader.Get<string>(TableInfo.UserIds.ToString()).Split(',');
-                        var allowIds = new List<int>();
-                        foreach (var str in allowIdString)
-                        {
-                            int n = 0;
-                            if (int.TryParse(str, out n))
-                                allowIds.Add(n);
-                        }
-                        var disableBuild = reader.Get<int>(TableInfo.Protected.ToString()) == 1 ? true : false;
-                        var allowedGroups = reader.Get<string>(TableInfo.Groups.ToString()).Split(' ').ToList();
-                        var owner = reader.Get<string>(TableInfo.Owner.ToString());
-                        var z = reader.Get<int>(TableInfo.Z.ToString());
-                        res.Add(new RegionExtended()
-                        {
-                            Region = new Region()
-                            {
-                                ID = id,
-                                WorldID = worldId,
-                                Name = name,
-                                Area = area,
-                                AllowedIDs = allowIds,
-                                DisableBuild = disableBuild,
-                                AllowedGroups = allowedGroups,
-                                Owner = owner,
-                                Z = z
-                            },
-                            ExtensionInfo = new RegionExtensionInfo(
-                                id,
-                                TShock.UserAccounts.GetUserAccountByName(owner).ID,
-                                DateTime.Parse(reader.Get<string>(TableInfo.CreationDate.ToString())),
-                                DateTime.UtcNow,
-                                DateTime.UtcNow
-                            )
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                TShock.Log.Error(ex.Message);
-                return null;
-            }
-            return res;
-        }
+        public List<RegionExtended> GetRegionsByUser(UserAccount user) =>
+            _deletedInfo.Where(r => r.DeleterUser == user.Name)
+                        .Select(r => r.RegionExt)
+                        .ToList();
 
-        private enum TableInfo
+        public enum TableInfo
         {
             RegionId,
             DeleterId,
@@ -289,15 +174,67 @@ namespace RegionExtension.Database
     }
     public class DeletedInfo
     {
-        public DeletedInfo(string regionName, DateTime deletionDate, string deleterUser)
+        public DeletedInfo(RegionExtended region, DateTime deletionDate, string deleterUser)
         {
-            RegionName = regionName;
+            RegionExt = region;
             DeletionDate = deletionDate;
             DeleterUser = deleterUser;
         }
 
-        public string RegionName { get; set; }
+        public RegionExtended RegionExt { get; set; }
+        public string RegionName { get => RegionExt.Region.Name; }
         public DateTime DeletionDate { get; set; }
         public string DeleterUser{ get; set; }
+
+        public static DeletedInfo ReadFromDB(QueryResult reader)
+        {
+            int id = reader.Get<int>(DeletedRegionsDB.TableInfo.RegionId.ToString());
+            var worldId = reader.Get<string>(DeletedRegionsDB.TableInfo.WorldId.ToString());
+            var name = reader.Get<string>(DeletedRegionsDB.TableInfo.RegionName.ToString());
+            var area = new Microsoft.Xna.Framework.Rectangle(
+                        reader.Get<int>(DeletedRegionsDB.TableInfo.X.ToString()),
+                        reader.Get<int>(DeletedRegionsDB.TableInfo.Y.ToString()),
+                        reader.Get<int>(DeletedRegionsDB.TableInfo.Width.ToString()),
+                        reader.Get<int>(DeletedRegionsDB.TableInfo.Height.ToString())
+                        );
+            var allowIdString = reader.Get<string>(DeletedRegionsDB.TableInfo.UserIds.ToString()).Split(',');
+            var allowIds = new List<int>();
+            foreach (var str in allowIdString)
+            {
+                int n = 0;
+                if (int.TryParse(str, out n))
+                    allowIds.Add(n);
+            }
+            var disableBuild = reader.Get<int>(DeletedRegionsDB.TableInfo.Protected.ToString()) == 1 ? true : false;
+            var allowedGroups = reader.Get<string>(DeletedRegionsDB.TableInfo.Groups.ToString()).Split(' ').ToList();
+            var owner = reader.Get<string>(DeletedRegionsDB.TableInfo.Owner.ToString());
+            var z = reader.Get<int>(DeletedRegionsDB.TableInfo.Z.ToString());
+            var deletionTime = DateTime.Parse(reader.Get<string>(DeletedRegionsDB.TableInfo.DeletionDate.ToString()));
+            var userid = reader.Get<int>(DeletedRegionsDB.TableInfo.DeleterId.ToString());
+            var user = TShock.UserAccounts.GetUserAccountByID(userid);
+            var username = user == null ? "Server" : user.Name;
+            return new DeletedInfo(new RegionExtended()
+            {
+                Region = new Region()
+                {
+                    ID = id,
+                    WorldID = worldId,
+                    Name = name,
+                    Area = area,
+                    AllowedIDs = allowIds,
+                    DisableBuild = disableBuild,
+                    AllowedGroups = allowedGroups,
+                    Owner = owner,
+                    Z = z
+                },
+                ExtensionInfo = new RegionExtensionInfo(
+                    id,
+                    TShock.UserAccounts.GetUserAccountByName(owner).ID,
+                    DateTime.Parse(reader.Get<string>(DeletedRegionsDB.TableInfo.CreationDate.ToString())),
+                    DateTime.UtcNow,
+                    DateTime.UtcNow
+                )
+            }, deletionTime, username);
+        }
     }
 }

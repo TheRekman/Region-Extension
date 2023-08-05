@@ -1,4 +1,5 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Microsoft.Xna.Framework;
+using RegionExtension.Commands.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,11 @@ namespace RegionExtension.Commands.SubCommands
             }
             Plugin.RegionExtensionManager.DeletedRegions.RemoveRegionFromDeleted(reg.Region.ID);
             string newName;
-            TryAutoComplete(region, args, out newName);
+            if(!TryAutoComplete(region, reg.Region.Area, out newName))
+            {
+                args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(region));
+                return;
+            }
             reg.Region.Name = newName;
             if (Plugin.RegionExtensionManager.DefineRegion(args, reg.Region))
                 args.Player.SendSuccessMessage("Region restored '{0}'!".SFormat(region));
@@ -45,15 +50,23 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Failed restore region!");
         }
 
-        public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
+        public bool TryAutoComplete(string str, Rectangle regionArea, out string result)
         {
             int num = 0;
-            result = str;
-            while (TShock.Regions.GetRegionByName(result) != null)
+            var reg = TShock.Regions.Regions.FirstOrDefault(r => r.Name.ToLower().Equals(str.ToLower()));
+            var res = str;
+            while (reg != null)
             {
-                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
+                if (reg.Area.Equals(regionArea))
+                {
+                    result = null;
+                    return false;
+                }
+                res = Plugin.Config.AutoCompleteSameNameFormat.SFormat(res, num);
+                reg = TShock.Regions.Regions.FirstOrDefault(r => r.Name.ToLower().Equals(res.ToLower()));
                 num++;
             }
+            result = res;
             return true;
         }
     }

@@ -32,7 +32,7 @@ namespace RegionExtension.Commands.SubCommands
                 args.Player.SendErrorMessage("Set points before define region!");
                 return;
             }
-            if (!TryAutoComplete((string)Params[0].Value, args, out regionname))
+            if (!Utils.TryAutoComplete((string)Params[0].Value, out regionname))
             {
                 args.Player.SendErrorMessage("Region '{0}' already exist!".SFormat(regionname));
                 return;
@@ -67,23 +67,6 @@ namespace RegionExtension.Commands.SubCommands
             }
             else
                 args.Player.SendErrorMessage("Failed define region '{0}'!".SFormat(region.Name));
-        }
-
-        public bool TryAutoComplete(string str, CommandArgsExtension args, out string result)
-        {
-            if (!Plugin.Config.AutoCompleteSameName)
-            {
-                result = str;
-                return TShock.Regions.GetRegionByName(str) != null;
-            }
-            int num = 0;
-            result = str;
-            while (TShock.Regions.GetRegionByName(result) != null)
-            {
-                result = Plugin.Config.AutoCompleteSameNameFormat.SFormat(str, num);
-                num++;
-            }
-            return true;
         }
     }
 }
