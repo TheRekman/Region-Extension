@@ -115,7 +115,7 @@ namespace RegionExtension.RegionTriggers
                 if (DateTime.UtcNow > lasUpd.AddMilliseconds(500))
                     return;
                 for(int i = 0; i < TShock.Players.Length; i++)
-                    if (TShock.Players[i] != null && TShock.Players[i].Active)
+                    if (TShock.Players[i] != null && TShock.Players[i].Active && !Plugin.TriggerIgnores[i])
                     {
                         var lastRegion = _lastRegions[i];
                         var player = TShock.Players[i];

@@ -24,7 +24,8 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                           new ArrayParam<int>("data...", "data of package. Max: 7 int", 0, true, new int[7])
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
-                                                                      s => FromString(s));
+                                                                      s => FromString(s))
+                                                                      { Permission = Permissions.TriggerSendPacket };
         private int _msgType;
         private string _text;
         private int[] _data = new int[7];

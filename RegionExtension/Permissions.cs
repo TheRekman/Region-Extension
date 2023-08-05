@@ -15,5 +15,9 @@ namespace RegionExtension
         public static readonly string RegionPropertyCmd = string.Join('.', Main, "property");
         public static readonly string RegionHistoryCmd = string.Join('.', Main, "history");
         public static readonly string TriggerIgnore = string.Join('.', RegionTriggerCmd, "ignore");
+        public static readonly string TriggerSendPacket = string.Join('.', RegionTriggerCmd, "sendpacket");
+        public static readonly string TriggerMessage = string.Join('.', RegionTriggerCmd, "message");
+        public static readonly string TriggerPush = string.Join('.', RegionTriggerCmd, "push");
+        public static readonly string TriggerCommand = string.Join('.', RegionTriggerCmd, "command");
     }
 }

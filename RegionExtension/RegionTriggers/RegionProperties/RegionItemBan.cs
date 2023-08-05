@@ -35,7 +35,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         {
             if (DateTime.Now.AddSeconds(-1) < _lastUpdate)
                 return;
-            foreach(var plr in TShock.Players.Where(p => p != null && p.Active))
+            foreach(var plr in TShock.Players.Where(p => p != null && p.Active && !Plugin.TriggerIgnores[p.Index]))
                 CheckItemBan(plr);
             _lastUpdate = DateTime.Now;
         }

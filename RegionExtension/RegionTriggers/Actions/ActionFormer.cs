@@ -20,5 +20,7 @@ namespace RegionExtension.RegionTriggers.Actions
             Action = action;
             FromString = fromString;
         }
+
+        public string Permission { get; set; }
     }
 }

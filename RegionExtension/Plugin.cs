@@ -33,6 +33,7 @@ namespace RegionExtension
         public List<FastRegion> FastRegions;
         public static ConfigFile Config;
         public static RegionExtManager RegionExtensionManager;
+        public static bool[] TriggerIgnores = new bool[255];
         private List<Point16> _lastActive = new List<Point16>();
         private DateTime _lastActiveCheck = DateTime.UtcNow;
         #endregion
@@ -62,6 +63,7 @@ namespace RegionExtension
         private void OnGreetPlayer(GreetPlayerEventArgs args)
         {
             RegionExtensionManager.TriggerManager.OnPlayerEnter(args);
+            TriggerIgnores[args.Who] = false;
         }
 
         private void OnPostUpdate(EventArgs args)
@@ -72,7 +74,7 @@ namespace RegionExtension
 
         private void OnPlayerLogin(PlayerPostLoginEventArgs e)
         {
-            if (!StringTime.FromString(Config.NotificationPeriod).IsZero() || !e.Player.HasPermission(Permissions.manageregion))
+            if (!StringTime.FromString(Config.NotificationPeriod).IsZero() || !e.Player.HasPermission(Permissions.RegionExtCmd))
                 return;
             RegionExtensionManager.SendRequestNotify(e.Player, RegionExtensionManager.RegionRequestManager.GetSortedRegionRequestsNames());
         }
@@ -207,7 +209,7 @@ namespace RegionExtension
 
         private void OnPlayerCommand(PlayerCommandEventArgs args)
         {
-            if (!args.Player.HasPermission(Permissions.manageregion) && !args.Player.HasPermission("regionext.own")) return;
+            if (!args.Player.HasPermission(Permissions.RegionExtCmd) && !args.Player.HasPermission("regionext.own")) return;
             switch (args.CommandName)
             {
                 case "/re":

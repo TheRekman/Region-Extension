@@ -23,6 +23,16 @@ namespace RegionExtension.Commands
                     command.Names)
                     { HelpText = command.HelpText });
             }
+            TShockAPI.Commands.ChatCommands.Add(
+                    new Command(
+                    Permissions.TriggerIgnore,
+                    args =>
+                    {
+                        Plugin.TriggerIgnores[args.Player.Index] = !Plugin.TriggerIgnores[args.Player.Index];
+                        args.Player.SendInfoMessage("Trigger ignore is " + (Plugin.TriggerIgnores[args.Player.Index] ? "activated!" : "disabled!"));
+                    },
+                    "triggerignore", "ti")
+                    { HelpText = "Ignores any trigger and property activation." });
         }
     }
 }

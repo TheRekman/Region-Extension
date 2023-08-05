@@ -22,7 +22,8 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                           new ArrayParam<string>("text...", "which text")
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
-                                                                      s => new SendMessageAction(s));
+                                                                      s => new SendMessageAction(s))
+                                                                      { Permission = Permissions.TriggerMessage };
 
         private SendMessageAction(string text)
         {

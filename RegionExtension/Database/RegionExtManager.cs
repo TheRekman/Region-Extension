@@ -292,7 +292,7 @@ namespace RegionExtension.Database
             var timePeriod = StringTime.FromString(Plugin.Config.NotificationPeriod);
             if (!timePeriod.IsZero() && _lastNotify + timePeriod < DateTime.UtcNow)
             {
-                var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+                var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.RegionExtCmd));
                 foreach (var plr in players)
                     SendRequestNotify(plr, _regionRequestManager.GetSortedRegionRequestsNames());
                 _lastNotify = DateTime.UtcNow;
@@ -302,7 +302,7 @@ namespace RegionExtension.Database
 
         public void SendRequestNotify(TSPlayer player, IEnumerable<string> strings)
         {
-            var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+            var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.RegionExtCmd));
                 PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 240), new PaginationTools.Settings()
                 {
                     HeaderFormat = "Active region requests:",

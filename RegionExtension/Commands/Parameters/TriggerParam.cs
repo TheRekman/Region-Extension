@@ -26,6 +26,11 @@ namespace RegionExtension.Commands.Parameters
                 args.Player.SendErrorMessage("Failed found '{0}' trigger!".SFormat(str));
                 return false;
             }
+            if (!args.Player.HasPermission(former.Permission))
+            {
+                args.Player.SendErrorMessage("You don't have permission to use '{0}' trigger!".SFormat(str));
+                return false;
+            }
             _former = former;
             return true;
         }

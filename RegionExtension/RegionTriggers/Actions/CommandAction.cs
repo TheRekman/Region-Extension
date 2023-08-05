@@ -18,7 +18,8 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ActionFormer Former { get; } = new ActionFormer("cmd", "Command trigger!",
                                                                       new ICommandParam[] {  new StringParam("command", "command string") },
                                                                       (param, args) => CreateTriggerAction(param, args),
-                                                                      s => CreateCommandAction(s, TSPlayer.Server).Action);
+                                                                      s => CreateCommandAction(s, TSPlayer.Server).Action)
+                                                                      { Permission = Permissions.TriggerCommand };
 
         private string _commandString;
 

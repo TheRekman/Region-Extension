@@ -22,7 +22,8 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ActionFormer Former { get; } = new ActionFormer("push", "Pushes player from region",
                                                                       new ICommandParam[] { },
                                                                       (param, args) => CreateTriggerAction(param, args),
-                                                                      s => new PushAction());
+                                                                      s => new PushAction())
+                                                                      { Permission = Permissions.TriggerPush};
         public static ITriggerAction CreateTriggerAction(ICommandParam[] param, CommandArgsExtension args) =>
             new PushAction();
 

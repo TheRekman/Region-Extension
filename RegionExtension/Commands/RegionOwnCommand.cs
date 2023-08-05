@@ -11,7 +11,7 @@ namespace RegionExtension.Commands
     public class RegionOwnCommand : CommandExtension
     {
         public override string[] Names => new[] { "regionown", "ro" };
-        public override string[] Permissions => new[] { "regionext.own" };
+        public override string[] Permissions => new[] { RegionExtension.Permissions.RegionOwnCmd };
         public override string HelpText => "Provides commands for regions in which you owner.";
 
         public override ISubCommand[] SubCommands =>
