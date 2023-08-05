@@ -25,7 +25,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         public static IRegionCondition GetCondition(string name, ICommandParam[] commandParams = null) =>
             _formers.FirstOrDefault(f => f.Names.Contains(GetName(name).ToLower()))?.Former(commandParams, name.StartsWith('!'));
 
-        public static string GenerateConditionsString(IEnumerable<IRegionCondition> conditions) =>
+        public static string GenerateConditionsString(this IEnumerable<IRegionCondition> conditions) =>
             string.Join(", ", conditions.Select(c => c.GetString()));
 
         public static IEnumerable<IRegionCondition> GetRegionConditionsFromString(string str) =>

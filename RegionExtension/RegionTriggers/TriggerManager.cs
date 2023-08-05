@@ -30,7 +30,7 @@ namespace RegionExtension.RegionTriggers
             Initialize();
         }
 
-        private static ActionFormer[] Formers { get => new ActionFormer[]
+        public static ActionFormer[] Formers { get => new ActionFormer[]
         {
             CommandAction.Former,
             PushAction.Former,

@@ -13,6 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using NuGet.Protocol;
 using System.Data.Common;
 using System.Linq;
+using RegionExtension.RegionTriggers.Conditions;
 
 namespace RegionExtension.Database
 {
@@ -63,6 +64,7 @@ namespace RegionExtension.Database
             ActionName = trigger.Action.Name;
             RegionEvent = trigger.Event.ToString();
             Args = trigger.Action.GetArgsString();
+            Conditions = trigger.Conditions.GenerateConditionsString();
         }
 
         public static TriggerDBUnit ReadFromDb(QueryResult reader) =>
@@ -76,6 +78,7 @@ namespace RegionExtension.Database
             var former = TriggerManager.GetFormer(ActionName);
             var action = former.FromString(Args);
             var trigger = new Trigger(Id, LocalId, reg, Enum.Parse<RegionEvents>(RegionEvent, true), action);
+            trigger.Conditions = ConditionManager.GetRegionConditionsFromString(Conditions);
             return trigger;
         }
     }
