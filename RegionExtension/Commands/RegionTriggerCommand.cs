@@ -20,6 +20,7 @@ namespace RegionExtension.Commands
             new DeleteTrigger(),
             new TriggerInfo(),
             new TriggerList(),
+            new EventList(),
             new ConditionList(),
             new AddTriggerCondition(),
             new RemoveTriggerCondition()

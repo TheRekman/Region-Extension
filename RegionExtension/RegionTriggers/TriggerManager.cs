@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TerrariaApi.Server;
@@ -23,6 +24,13 @@ namespace RegionExtension.RegionTriggers
         private DatabaseTable<TriggerDBUnit> _database;
         private Region[] _lastRegions = new Region[TShock.Players.Length];
         Dictionary<Region, List<Trigger>> _triggers = new Dictionary<Region, List<Trigger>>();
+
+        public static readonly RegionEvent[] Events = new RegionEvent[]
+        {
+            new RegionEvent(new[] {"onenter", "enter", "e" }, "activates when players enters in region", RegionEvents.OnEnter),
+            new RegionEvent(new[] {"onleave", "leave", "l" }, "activates when players leaves from region", RegionEvents.OnLeave),
+            new RegionEvent(new[] {"onin", "in", "i" }, "activates while players was in region", RegionEvents.OnIn)
+        };
 
         public TriggerManager(IDbConnection dbConnection)
         {
@@ -41,8 +49,7 @@ namespace RegionExtension.RegionTriggers
 
         public static ActionFormer GetFormer(string name)
         {
-            var res = Formers.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            var iss = Formers.Any(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var res = Formers.FirstOrDefault(f => f.Names.Contains(name.ToLower()));
             return res;
         }
 
@@ -176,5 +183,18 @@ namespace RegionExtension.RegionTriggers
         OnEnter,
         OnLeave,
         OnIn
+    }
+
+    public class RegionEvent
+    {
+        public string[] Names { get; }
+        public string Description { get; }
+        public RegionEvents Event { get; }
+        public RegionEvent(string[] names, string desc, RegionEvents regionEvent)
+        {
+            Names = names;
+            Description = desc;
+            Event = regionEvent;
+        }
     }
 }

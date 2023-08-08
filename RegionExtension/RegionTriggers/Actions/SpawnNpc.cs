@@ -17,13 +17,13 @@ namespace RegionExtension.RegionTriggers.Actions
         private int _type, _health, _strength;
         private Function _x, _y;
 
-        public static ActionFormer Former { get; } = new ActionFormer("spawnnpc", "Spawns npc.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnnpc", "spawnmob", "sn", "sm" }, "Spawns npc.",
                                                                       new ICommandParam[] {
                                                                           new NpcParam("npc", "type of npc which will be spawned."),
                                                                           new FunctionParam("x", "Spawn coordinate by X. Auto increment region X. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionX),
                                                                           new FunctionParam("y", "Spawn coordinate by Y. Auto increment region Y. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionY),
                                                                           new IntParam("health", "NPC custom max HP. default: Npc", true, -1),
-                                                                          new IntParam("strength", "Stats increase of npc. default: 1", true, 1)
+                                                                          new IntParam("strength", "Stats increase of npc. default: gamemode", true, Main.GameMode)
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new SpawnNpc(s))

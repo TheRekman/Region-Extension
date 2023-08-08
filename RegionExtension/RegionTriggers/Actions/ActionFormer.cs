@@ -6,15 +6,15 @@ namespace RegionExtension.RegionTriggers.Actions
 {
     public class ActionFormer
     {
-        public string Name { get; }
+        public string[] Names { get; }
         public string Description { get; }
         public ICommandParam[] Params { get; }
         public Func<ICommandParam[], CommandArgsExtension, ITriggerAction> Action { get; }
         public Func<string, ITriggerAction> FromString { get; }
 
-        public ActionFormer(string name, string description, ICommandParam[] @params, Func<ICommandParam[], CommandArgsExtension, ITriggerAction> action, Func<string, ITriggerAction> fromString)
+        public ActionFormer(string[] names, string description, ICommandParam[] @params, Func<ICommandParam[], CommandArgsExtension, ITriggerAction> action, Func<string, ITriggerAction> fromString)
         {
-            Name = name;
+            Names = names;
             Description = description;
             Params = @params;
             Action = action;

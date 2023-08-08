@@ -30,7 +30,7 @@ namespace RegionExtension.RegionTriggers
 
         public static Dictionary<string, Func<TSPlayer, Region, int>> ReplacesOnCreation = new Dictionary<string, Func<TSPlayer, Region, int>>
         {
-            {"@lx", (p, r) => p.TileX - r.Area.X },
+            {"@lx", (p, r) =>  p.TileX - r.Area.X },
             {"@ly", (p, r) => p.TileY - r.Area.Y },
             {"@gx", (p, r) => p.TileX },
             {"@gy", (p, r) => p.TileY }
@@ -86,23 +86,51 @@ namespace RegionExtension.RegionTriggers
                 else if (function[i] == ')')
                 {
                     var opened = OpenedBracket.Pop();
-                    function = function.Take(opened + 1).ToString() + CountWithCheckSkip(player, region, function.Substring(i, i - opened)).ToString() + function.Skip(i + 1);
+                    function = function.Take(opened + 1).ToString() + CountWithCheckSkip(player, region, new StringBuilder(function.Substring(i, i - opened))).ToString() + function.Skip(i + 1);
                 }
             }
-            return CountWithCheckSkip(player, region, function);
+            return CountWithCheckSkip(player, region, new StringBuilder(function));
         }
 
-        private static int CountWithCheckSkip(TSPlayer player, Region region, string function)
+        private static int CountWithCheckSkip(TSPlayer player, Region region, StringBuilder function)
         {
             for(int i = 0; i < function.Length; i++)
                 if (_priortyActions.ContainsKey(function[i]))
-                    return _priortyActions[function[i]](CountWithCheckSkip(player, region, function.Substring(0, i)),
-                                   CountWithCheckSkip(player, region, function.Substring(i + 1, function.Length - i - 1)));
+                {
+                    var leftid = FindFirstLeftKeySym(i, function.ToString());
+                    var rightid = FindFirstRightKeySym(i, function.ToString());
+                    var leftCorner = function.ToString().Substring(leftid + 1, i - leftid - 1);
+                    var rightCorner = function.ToString().Substring(i + 1, rightid - i - 1);
+                    var res = _priortyActions[function[i]](int.Parse(leftCorner), int.Parse(rightCorner));
+                    function = function.Replace(string.Join("", leftCorner, function[i], rightCorner), res.ToString());
+                }
             for (int i = 0; i < function.Length; i++)
                 if (_actions.ContainsKey(function[i]))
-                    return _actions[function[i]](CountWithCheckSkip(player, region, function.Substring(0, i)),
-                                   CountWithCheckSkip(player, region, function.Substring(i + 1, function.Length - i - 1)));
-            return int.Parse(function);
+                {
+                    var leftid = FindFirstLeftKeySym(i, function.ToString());
+                    var rightid = FindFirstRightKeySym(i, function.ToString());
+                    var leftCorner = function.ToString().Substring(leftid + 1, i - leftid - 1);
+                    var rightCorner = function.ToString().Substring(i + 1, rightid - i - 1);
+                    var res = _actions[function[i]](int.Parse(leftCorner), int.Parse(rightCorner));
+                    function = function.Replace(string.Join("", leftCorner, function[i], rightCorner), res.ToString());
+                }
+            return int.Parse(function.ToString());
+        }
+
+        private static int FindFirstLeftKeySym(int i, string function)
+        {
+            for (int j = i - 1; j >= 0; j--)
+                if (_priortyActions.ContainsKey(function[j]) || _actions.ContainsKey(function[j]))
+                    return j;
+            return -1;
+        }
+
+        private static int FindFirstRightKeySym(int i, string function)
+        {
+            for (int j = i + 1; j < function.Length; j++)
+                if (_priortyActions.ContainsKey(function[j]) || _actions.ContainsKey(function[j]))
+                    return j;
+            return function.Length;
         }
     }
 }

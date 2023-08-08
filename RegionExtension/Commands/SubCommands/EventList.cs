@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
-using TShockAPI.DB;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    public class TriggerList : SubCommand
+    public class EventList : SubCommand
     {
-        public override string[] Names => new string[] { "list", "l" };
+        public override string[] Names => new string[] { "eventlist", "el" };
 
-        public override string Description => "List all available triggers.";
+        public override string Description => "List all available events.";
 
         public override void InitializeParams()
         {
@@ -32,7 +31,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendTriggerList(CommandArgsExtension args, int page)
         {
-            var triggers = TriggerManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names), string.Join(' ', f.Params.Select(p => p.GetBracketName())), f.Description));
+            var triggers = TriggerManager.Events.Select(e => "{0} - {1}".SFormat(string.Join("/", e.Names), e.Description));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),

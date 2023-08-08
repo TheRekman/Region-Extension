@@ -18,13 +18,13 @@ namespace RegionExtension.Commands.Parameters
 
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
         {
-            RegionEvents regionEvent;
-            if (!Enum.TryParse(str, true, out regionEvent) || regionEvent == RegionEvents.None)
+            RegionEvent regionEvent = TriggerManager.Events.FirstOrDefault(e => e.Names.Contains(str.ToLower()));
+            if (regionEvent == null)
             {
                 args.Player.SendErrorMessage("Failed found '{0}' event!".SFormat(str));
                 return false;
             }
-            _value = regionEvent;
+            _value = regionEvent.Event;
             return true;
         }
     }
