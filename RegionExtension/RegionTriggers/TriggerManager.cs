@@ -35,7 +35,8 @@ namespace RegionExtension.RegionTriggers
             CommandAction.Former,
             PushAction.Former,
             SendPacketAction.Former,
-            SendMessageAction.Former
+            SendMessageAction.Former,
+            SpawnNpc.Former
         };}
 
         public static ActionFormer GetFormer(string name)
@@ -110,11 +111,11 @@ namespace RegionExtension.RegionTriggers
         public void OnUpdate()
         {
             var lasUpd = _lastUpdate;
-            Task.Run(() =>
+            Task.Run(() => 
             {
-                if (DateTime.UtcNow > lasUpd.AddMilliseconds(500))
+                if (DateTime.UtcNow < lasUpd.AddMilliseconds(500))
                     return;
-                for(int i = 0; i < TShock.Players.Length; i++)
+                for (int i = 0; i < TShock.Players.Length; i++)
                     if (TShock.Players[i] != null && TShock.Players[i].Active && !Plugin.TriggerIgnores[i])
                     {
                         var lastRegion = _lastRegions[i];
@@ -127,8 +128,9 @@ namespace RegionExtension.RegionTriggers
                         }
                         TriggerEvent(RegionEvents.OnIn, player, player.CurrentRegion);
                     }
+
+                _lastUpdate = DateTime.UtcNow;
             });
-            _lastUpdate = DateTime.Now;
         }
 
         private void TriggerEvent(RegionEvents events, TSPlayer player, Region region)
