@@ -14,12 +14,13 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "spawnnpc";
         public string Description => "Spawns npc.";
 
-        private int _type, _health, _strength;
+        private int _type, _count, _health, _strength;
         private Function _x, _y;
 
         public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnnpc", "spawnmob", "sn", "sm" }, "Spawns npc.",
                                                                       new ICommandParam[] {
                                                                           new NpcParam("npc", "type of npc which will be spawned."),
+                                                                          new IntParam("count", "how many npc will be spawned."),
                                                                           new FunctionParam("x", "Spawn coordinate by X. Auto increment region X. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionX),
                                                                           new FunctionParam("y", "Spawn coordinate by Y. Auto increment region Y. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionY),
                                                                           new IntParam("health", "NPC custom max HP. default: Npc", true, -1),
@@ -33,15 +34,17 @@ namespace RegionExtension.RegionTriggers.Actions
         {
             var parameters = text.Split(' ');
             _type = int.Parse(parameters[0]);
-            _x = new Function(parameters[1]);
-            _y = new Function(parameters[2]);
-            _health = int.Parse(parameters[3]);
-            _strength = int.Parse(parameters[4]);
+            _count = int.Parse(parameters[1]);
+            _x = new Function(parameters[2]);
+            _y = new Function(parameters[3]);
+            _health = int.Parse(parameters[4]);
+            _strength = int.Parse(parameters[5]);
         }
 
-        public SpawnNpc(int type, int health, int strength, Function x, Function y)
+        public SpawnNpc(int type, int count, int health, int strength, Function x, Function y)
         {
             _type = type;
+            _count = count;
             _health = health;
             _strength = strength;
             _x = x;
@@ -51,28 +54,31 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ITriggerAction CreateTriggerAction(ICommandParam[] param, CommandArgsExtension args)
         {
             var npc = (NPC)param[0].Value;
-            var health = (int)param[3].Value;
+            var health = (int)param[4].Value;
             var type = npc.type;
-            return new SpawnNpc(type, health, (int) param[4].Value, (Function)param[1].Value, (Function)param[2].Value);
+            return new SpawnNpc(type, (int)param[2].Value, health, (int) param[5].Value, (Function)param[2].Value, (Function)param[3].Value);
         }
 
         public void Execute(TriggerActionArgs args)
         {
-            var stats = new NPCSpawnParams();
-            stats.strengthMultiplierOverride = _strength;
-            var id = Terraria.NPC.NewNPC(null, _x.Count(args.Player, args.Region) * 16, _y.Count(args.Player, args.Region) * 16, _type);
-            Main.npc[id].SetDefaults(Main.npc[id].type, stats);
-            if(_health != -1)
+            for(int i = 0; i < _count; i++)
             {
-                Main.npc[id].life = _health;
-                Main.npc[id].lifeMax = _health + 1;
-            }    
-            NetMessage.SendData(23, -1, -1, null, id);
-            if (_health != -1)
-                Main.npc[id].lifeMax = _health;
+                var stats = new NPCSpawnParams();
+                stats.strengthMultiplierOverride = _strength;
+                var id = Terraria.NPC.NewNPC(null, (int)Math.Ceiling(_x.Count(args.Player, args.Region) * 16), (int)Math.Ceiling(_y.Count(args.Player, args.Region) * 16), _type);
+                Main.npc[id].SetDefaults(Main.npc[id].type, stats);
+                if (_health != -1)
+                {
+                    Main.npc[id].life = _health;
+                    Main.npc[id].lifeMax = _health + 1;
+                }
+                NetMessage.SendData(23, -1, -1, null, id);
+                if (_health != -1)
+                    Main.npc[id].lifeMax = _health;
+            }
         }
 
         public string GetArgsString() =>
-            string.Join(' ', _type.ToString(), _x.FunctionString, _y.FunctionString, _health.ToString(), _strength.ToString());
+            string.Join(' ', _type.ToString(), _count.ToString(), _x.FunctionString, _y.FunctionString, _health.ToString(), _strength.ToString());
     }
 }

@@ -36,10 +36,13 @@ namespace RegionExtension.Commands.Parameters
             switch (_default)
             {
                 case FunctionParamDefault.InRegionX:
-                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "@r%@w+@cx");
+                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "ri%w+cx");
                     break;
                 case FunctionParamDefault.InRegionY:
-                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "@r%@h+@cy");
+                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "ri%h+cy");
+                    break;
+                case FunctionParamDefault.RandomDouble:
+                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "rd*10");
                     break;
             }
             if (value == null)
@@ -52,7 +55,8 @@ namespace RegionExtension.Commands.Parameters
         {
             None = 0,
             InRegionX = 1,
-            InRegionY = 2
+            InRegionY = 2,
+            RandomDouble = 3
         }
     }
 }
