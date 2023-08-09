@@ -1,11 +1,8 @@
-﻿using NuGet.Packaging;
-using Org.BouncyCastle.Ocsp;
-using RegionExtension.Commands.Parameters;
+﻿using RegionExtension.Commands.Parameters;
 using RegionExtension.RegionTriggers.Actions;
 using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +10,13 @@ using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
-using TShockAPI.Hooks;
 
 namespace RegionExtension.RegionTriggers.RegionProperties
 {
-    internal class AlwaysPvp : IRegionProperty
+    internal class NoPvp : IRegionProperty
     {
-        public string[] Names => new[] { "alwayspvp", "ap" };
-        public string Description => "Activates player pvp and prevents trying to change it.";
+        public string[] Names => new[] { "nopvp", "np" };
+        public string Description => "Deactivates player pvp and prevents trying to change it.";
         public string Permission => "regionext.triggers.itemban";
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();
@@ -36,27 +32,27 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         private void OnIn(TriggerActionArgs obj)
         {
-            if (obj.Player.TPlayer.hostile)
+            if (!obj.Player.TPlayer.hostile)
                 return;
             var reg = obj.Region;
             if (reg == null || !_regions.ContainsKey(reg))
                 return;
             if (!_regions[reg].CheckConditions(obj.Player, reg))
                 return;
-            obj.Player.SetPvP(true);
+            obj.Player.SetPvP(false);
             obj.Player.SendErrorMessage("You cannot change pvp in this region.");
         }
 
         private void OnEnter(TriggerActionArgs obj)
         {
-            if (obj.Player.TPlayer.hostile)
+            if (!obj.Player.TPlayer.hostile)
                 return;
             var reg = obj.Region;
             if (reg == null || !_regions.ContainsKey(reg))
                 return;
             if (!_regions[reg].CheckConditions(obj.Player, reg))
                 return;
-            obj.Player.SetPvP(true);
+            obj.Player.SetPvP(false);
             obj.Player.SendInfoMessage("Your pvp changed due region property.");
         }
 
@@ -70,7 +66,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             switch (args.MsgID)
             {
                 case PacketTypes.TogglePvp:
-                    TShock.Players[args.Msg.whoAmI].SetPvP(true);
+                    TShock.Players[args.Msg.whoAmI].SetPvP(false);
                     TShock.Players[args.Msg.whoAmI].SendErrorMessage("You cannot change pvp in this region.");
                     args.Handled = true;
                     break;
