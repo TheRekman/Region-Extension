@@ -11,6 +11,7 @@ namespace RegionExtension.Commands.Parameters
     internal class FunctionParam : CommandParam<Function>
     {
         FunctionParamDefault _default = FunctionParamDefault.None;
+        string _defaultString = null;
 
         public FunctionParam(string name, string description, bool optional = false, FunctionParamDefault paramDefault = FunctionParamDefault.None)
             : base(name, description, optional, null)
@@ -18,9 +19,15 @@ namespace RegionExtension.Commands.Parameters
             _default = paramDefault;
         }
 
+        public FunctionParam(string name, string description, bool optional = false, string paramDefault = null)
+            : base(name, description, optional, null)
+        {
+            _defaultString = paramDefault;
+        }
+
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
         {
-            var value = Function.GetFunction(args.Player, args.Player.CurrentRegion, str);
+            var value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], str);
             if (value == null)
             {
                 args?.Player.SendErrorMessage("Failed implement function: {0}".SFormat(str));
@@ -36,13 +43,23 @@ namespace RegionExtension.Commands.Parameters
             switch (_default)
             {
                 case FunctionParamDefault.InRegionX:
-                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "ri%w+cx");
+                    value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], "ri%w+cx");
                     break;
                 case FunctionParamDefault.InRegionY:
-                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "ri%h+cy");
+                    value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], "ri%h+cy");
                     break;
                 case FunctionParamDefault.RandomDouble:
-                    value = Function.GetFunction(args.Player, args.Player.CurrentRegion, "rd*10");
+                    value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], "rd*10");
+                    break;
+                case FunctionParamDefault.PlayerX:
+                    value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], "px");
+                    break;
+                case FunctionParamDefault.PlayerY:
+                    value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], "py");
+                    break;
+                default:
+                    if (!string.IsNullOrEmpty(_defaultString))
+                        value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], _defaultString);
                     break;
             }
             if (value == null)
@@ -56,7 +73,8 @@ namespace RegionExtension.Commands.Parameters
             None = 0,
             InRegionX = 1,
             InRegionY = 2,
-            RandomDouble = 3
+            RandomDouble = 3,
+            PlayerX = 4, PlayerY = 5,
         }
     }
 }

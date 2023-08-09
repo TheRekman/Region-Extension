@@ -10,6 +10,7 @@ namespace RegionExtension.Commands.Parameters
 {
     public class RegionParam : CommandParam<Region>
     {
+        public static Region[] LastUsedRegion = new Region[256];
         public RegionParam(string name, string description, bool optional = false, Region defaultValue = null) :
             base(name, description, optional, defaultValue)
         {
@@ -38,6 +39,7 @@ namespace RegionExtension.Commands.Parameters
                 return false;
             }
             _value = region;
+            LastUsedRegion[args.Player.Index] = region;
             return true;
         }
 
@@ -46,6 +48,7 @@ namespace RegionExtension.Commands.Parameters
             if (args.Player.CurrentRegion == null)
                 return false;
             _defaultValue = args.Player.CurrentRegion;
+            LastUsedRegion[args.Player.Index] = args.Player.CurrentRegion;
             return base.TrySetDefaultValue(args);
         }
     }

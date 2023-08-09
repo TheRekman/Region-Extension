@@ -45,7 +45,8 @@ namespace RegionExtension.RegionTriggers
             SendPacketAction.Former,
             SendMessageAction.Former,
             SpawnNpc.Former,
-            ProjectileSpawn.Former
+            ProjectileSpawn.Former,
+            GiveItem.Former
         };}
 
         public static ActionFormer GetFormer(string name)

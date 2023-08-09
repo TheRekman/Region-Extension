@@ -20,7 +20,7 @@ namespace RegionExtension.Commands.Parameters
             var npc = TShock.Utils.GetNPCByIdOrName(str);
             if (npc == null || npc.Count == 0)
             {
-                args.Player.SendErrorMessage("Failed found item {0}!".SFormat(str));
+                args.Player.SendErrorMessage("Failed found npc {0}!".SFormat(str));
                 return false;
             }
             if (npc.Count > 1)

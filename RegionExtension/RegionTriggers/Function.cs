@@ -19,8 +19,8 @@ namespace RegionExtension.RegionTriggers
 
         public static Dictionary<string, Func<TSPlayer, Region, double>> ReplacesOnCount = new Dictionary<string, Func<TSPlayer, Region, double>>
         {
-            {"ax", (p, r) => p.TileX },
-            {"aY", (p, r) => p.TileY },
+            {"px", (p, r) => p.TileX },
+            {"py", (p, r) => p.TileY },
             {"cx", (p, r) => r.Area.X },
             {"cy", (p, r) => r.Area.Y },
             {"w", (p, r) => r.Area.Width },

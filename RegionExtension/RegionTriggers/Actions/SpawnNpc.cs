@@ -56,7 +56,7 @@ namespace RegionExtension.RegionTriggers.Actions
             var npc = (NPC)param[0].Value;
             var health = (int)param[4].Value;
             var type = npc.type;
-            return new SpawnNpc(type, (int)param[2].Value, health, (int) param[5].Value, (Function)param[2].Value, (Function)param[3].Value);
+            return new SpawnNpc(type, (int)param[1].Value, health, (int) param[5].Value, (Function)param[2].Value, (Function)param[3].Value);
         }
 
         public void Execute(TriggerActionArgs args)
