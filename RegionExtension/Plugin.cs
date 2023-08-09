@@ -15,6 +15,8 @@ using Org.BouncyCastle.Crypto.Engines;
 using Terraria.DataStructures;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
+using RegionExtension.Commands.Parameters;
+using Terraria.ID;
 
 namespace RegionExtension
 {
@@ -34,11 +36,13 @@ namespace RegionExtension
         public static ConfigFile Config;
         public static RegionExtManager RegionExtensionManager;
         public static bool[] TriggerIgnores = new bool[255];
+        public static ItemRewrite[] ItemRewrites = new ItemRewrite[400];
         private List<Point16> _lastActive = new List<Point16>();
         private DateTime _lastActiveCheck = DateTime.UtcNow;
         #endregion
 
         bool _checkingHasBuild = false;
+        event Action<SendDataEventArgs> _sendingItemDrop;
 
         #region initialize
         public Plugin(Main game) : base(game)
@@ -53,11 +57,52 @@ namespace RegionExtension
             ServerApi.Hooks.GamePostInitialize.Register(this, OnPostInitialize, int.MinValue);
             ServerApi.Hooks.GamePostUpdate.Register(this, OnPostUpdate);
             ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer);
+            ServerApi.Hooks.NetSendData.Register(this, OnSendData);
+            _sendingItemDrop += OnSendItemDrop;
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerPostLogin += OnPlayerLogin;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
             RegionExtensionManager = new RegionExtManager(TShock.DB);
+        }
+
+        private void OnSendItemDrop(SendDataEventArgs args)
+        {
+            var id = args.number;
+            if (ItemRewrites[id] == null || !ItemRewrites[id].Active)
+                return;
+            _sendingItemDrop -= OnSendItemDrop;
+            args.Handled = true;
+            var bits = new BitsByte(b2: ItemRewrites[id].Damage != -1, b5: ItemRewrites[id].UseTime != -1, b6: ItemRewrites[id].Projectile != -1, b7: ItemRewrites[id].Projectile != -1, b8: ItemRewrites[id].Projectile != -1);
+            var bits2 = new BitsByte(b5: true);
+            if (ItemRewrites[id].Damage != -1)
+                Main.item[id].damage = ItemRewrites[id].Damage;
+            if (ItemRewrites[id].UseTime != -1)
+                Main.item[id].useTime = ItemRewrites[id].UseTime;
+            if (ItemRewrites[id].Projectile != -1)
+            {
+                Main.item[id].shoot = ItemRewrites[id].Projectile;
+                Main.item[id].useAmmo = AmmoID.None;
+                if (Main.item[id].shootSpeed == 0)
+                    Main.item[id].shootSpeed = 10;
+            }
+            NetMessage.SendData((int)args.MsgId, args.remoteClient, args.ignoreClient, args.text, args.number, args.number2, args.number3, args.number4, args.number5, args.number6, args.number7);
+            NetMessage.SendData(88, -1, -1, null, id, bits.value, bits2.value);
+            _sendingItemDrop += OnSendItemDrop;
+        }
+
+        private void OnSendData(SendDataEventArgs args)
+        {
+            switch((int)args.MsgId)
+            {
+                case (int)PacketTypes.ItemDrop:
+                case (int)PacketTypes.UpdateItemDrop:
+                case 145:
+                case 148:
+                    if(_sendingItemDrop != null)
+                        OnSendItemDrop(args);
+                    break;
+            }
         }
 
         private void OnGreetPlayer(GreetPlayerEventArgs args)
@@ -110,6 +155,8 @@ namespace RegionExtension
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
                 ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
                 ServerApi.Hooks.GamePostUpdate.Deregister(this, OnPostUpdate);
+                ServerApi.Hooks.NetGreetPlayer.Deregister(this, OnGreetPlayer);
+                ServerApi.Hooks.NetSendData.Deregister(this, OnSendData);
                 PlayerHooks.PlayerLogout -= OnPlayerLogout;
                 PlayerHooks.PlayerPostLogin -= OnPlayerLogin;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
@@ -186,6 +233,23 @@ namespace RegionExtension
                         }
                     }
                     args.Handled = true;
+                    break;
+                case PacketTypes.ItemDrop:
+                case PacketTypes.UpdateItemDrop:
+                    using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
+                    {
+                        id = reader.ReadInt16();
+                        if (ItemRewrites[id] == null || !ItemRewrites[id].Active)
+                            return;
+                        reader.ReadVector2();
+                        reader.ReadVector2();
+                        reader.ReadInt16();
+                        reader.ReadByte();
+                        reader.ReadByte();
+                        int num56 = (int)reader.ReadInt16();
+                        if (num56 == 0)
+                            ItemRewrites[id].Active = false;
+                    }
                     break;
             }
         }

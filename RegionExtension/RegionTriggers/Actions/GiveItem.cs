@@ -78,24 +78,18 @@ namespace RegionExtension.RegionTriggers.Actions
             var dmg = _damage.Count(args.Player, args.Region);
             var usetime = _usetime.Count(args.Player, args.Region);
             var useAdvaced = dmg != -1 || usetime != -1 || _projectile != -1;
-            var bits = new BitsByte(b2:dmg != -1, b5:usetime != -1, b6:_projectile != -1, b7: _projectile != -1, b8:_projectile != -1);
-            var bits2 = new BitsByte(b5:true);
-            var id = Item.NewItem(null, (int)Math.Ceiling(_x.Count(args.Player, args.Region) * 16), (int)Math.Ceiling(_y.Count(args.Player, args.Region) * 16), 1, 1, _type, _stack, true, _prefix, true);
-            if(dmg != -1)
-                Main.item[id].damage = (int)Math.Ceiling(dmg);
-            if (usetime != -1)
-                Main.item[id].useTime = (int)Math.Ceiling(usetime);
-            if (_projectile != -1)
-            {
-                Main.item[id].shoot = _projectile;
-                Main.item[id].useAmmo = AmmoID.None;
-                if(Main.item[id].shootSpeed == 0)
-                    Main.item[id].shootSpeed = 10;
-            }
-
-            NetMessage.SendData(90, -1, -1, null, id);
+            ItemRewrite itemRewrite = null;
             if (useAdvaced)
-                NetMessage.SendData(88, -1, -1, null, id, bits.value, bits2.value);
+                itemRewrite = new ItemRewrite()
+                {
+                    Damage = (int)Math.Ceiling(dmg),
+                    UseTime = (int)Math.Ceiling(usetime),
+                    Projectile = _projectile,
+                    Active = true
+                };
+            var id = Item.NewItem(null, (int)Math.Ceiling(_x.Count(args.Player, args.Region) * 16), (int)Math.Ceiling(_y.Count(args.Player, args.Region) * 16), 1, 1, _type, _stack, true, _prefix, true);
+            if(useAdvaced)
+                Plugin.ItemRewrites[id] = itemRewrite;
         }
 
         public string GetArgsString() =>

@@ -20,7 +20,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnnpc", "spawnmob", "sn", "sm" }, "Spawns npc.",
                                                                       new ICommandParam[] {
                                                                           new NpcParam("npc", "type of npc which will be spawned."),
-                                                                          new IntParam("count", "how many npc will be spawned."),
+                                                                          new IntParam("count", "how many npc will be spawned. default: 1", true, 1),
                                                                           new FunctionParam("x", "Spawn coordinate by X. Auto increment region X. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionX),
                                                                           new FunctionParam("y", "Spawn coordinate by Y. Auto increment region Y. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionY),
                                                                           new IntParam("health", "NPC custom max HP. default: Npc", true, -1),
