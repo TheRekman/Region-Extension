@@ -19,5 +19,10 @@ namespace RegionExtension
         public static readonly string TriggerMessage = string.Join('.', RegionTriggerCmd, "message");
         public static readonly string TriggerPush = string.Join('.', RegionTriggerCmd, "push");
         public static readonly string TriggerCommand = string.Join('.', RegionTriggerCmd, "command");
+        public static readonly string WarpTrigger = string.Join('.', RegionTriggerCmd, "warp");
+        public static readonly string SpawnNpcTrigger = string.Join('.', RegionTriggerCmd, "spawnnpc");
+        public static readonly string ItemTrigger = string.Join('.', RegionTriggerCmd, "giveitem");
+        public static readonly string TeleportPositionTrigger = string.Join('.', RegionTriggerCmd, "tppos");
+        public static readonly string ProjetileTrigger = string.Join('.', RegionTriggerCmd, "spawnproj");
     }
 }
