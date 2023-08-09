@@ -38,6 +38,10 @@ namespace RegionExtension.RegionTriggers
             Initialize();
         }
 
+        public static event Action<TriggerActionArgs> OnEnter;
+        public static event Action<TriggerActionArgs> OnLeave;
+        public static event Action<TriggerActionArgs> OnIn;
+
         public static ActionFormer[] Formers { get => new ActionFormer[]
         {
             CommandAction.Former,
@@ -136,10 +140,16 @@ namespace RegionExtension.RegionTriggers
                         if (lastRegion != player.CurrentRegion)
                         {
                             TriggerEvent(RegionEvents.OnEnter, player, player.CurrentRegion);
+                            if (OnEnter != null)
+                                OnEnter(new TriggerActionArgs(player, player.CurrentRegion));
                             TriggerEvent(RegionEvents.OnLeave, player, lastRegion);
+                            if (OnLeave != null)
+                                OnLeave(new TriggerActionArgs(player, lastRegion));
                             _lastRegions[i] = player.CurrentRegion;
                         }
                         TriggerEvent(RegionEvents.OnIn, player, player.CurrentRegion);
+                        if (OnIn != null)
+                            OnIn(new TriggerActionArgs(player, lastRegion));
                     }
 
                 _lastUpdate = DateTime.UtcNow;

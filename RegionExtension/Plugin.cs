@@ -239,7 +239,7 @@ namespace RegionExtension
                     using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
                     {
                         id = reader.ReadInt16();
-                        if (id > 400 || ItemRewrites[id] == null || !ItemRewrites[id].Active)
+                        if (id >= 400 || ItemRewrites[id] == null || !ItemRewrites[id].Active)
                             return;
                         reader.ReadVector2();
                         reader.ReadVector2();

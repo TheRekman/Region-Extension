@@ -20,7 +20,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                           new IntParam("time", "buff time. default: 60", true, 60)
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
-                                                                      s => new TeleportToWarp(s))
+                                                                      s => new BuffTrigger(s))
                                                                       { Permission = Permissions.BuffTrigger };
         int _buff, _time;
 

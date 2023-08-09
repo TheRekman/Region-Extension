@@ -35,7 +35,7 @@ namespace RegionExtension.Database
             var res = new List<T>();
             var query = $"SELECT * FROM {Name}";
             if (conditions != null && conditions.Length != 0)
-                query += " WHERE " + string.Join(" AND ", conditions.Select(c => c.columnName + "='" + c.value.ToString().Replace("@", "\\@") + "'"));
+                query += " WHERE " + string.Join(" AND ", conditions.Select(c => c.columnName + "='" + c.value.ToString() + "'"));
             try
             {
                 using (var reader = Connection.QueryReader(query))

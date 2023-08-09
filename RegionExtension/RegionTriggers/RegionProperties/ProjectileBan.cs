@@ -44,14 +44,15 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         public void CheckProjBan(TSPlayer player, GetDataEventArgs args)
         {
+
+            var reg = player.CurrentRegion;
+            if (reg == null || !_projBans.ContainsKey(reg))
+                return;
+            var items = _projBans[reg];
+            if (!items.Conditions.CheckConditions(player, reg))
+                return;
             using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
             {
-                var reg = player.CurrentRegion;
-                if (reg == null || !_projBans.ContainsKey(reg))
-                    return;
-                var items = _projBans[reg];
-                if (!items.Conditions.CheckConditions(player, reg))
-                    return;
                 var id = reader.ReadInt16();
                 reader.ReadVector2();
                 reader.ReadVector2();
