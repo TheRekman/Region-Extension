@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TShockAPI.DB;
+using TShockAPI;
 
 namespace RegionExtension.RegionTriggers.Actions
 {
@@ -37,7 +38,8 @@ namespace RegionExtension.RegionTriggers.Actions
 
         public void Execute(TriggerActionArgs args)
         {
-            args.Player.Teleport((float)_x.Count(args.Player, args.Region) * 16, (float)_y.Count(args.Player, args.Region) * 16, 0);
+            var warp = TShock.Warps.Find(_warpName);
+            args.Player.Teleport(warp.Position.X * 16, warp.Position.Y * 16, 0);
         }
 
         public string GetArgsString() =>
