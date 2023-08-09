@@ -11,8 +11,6 @@ namespace RegionExtension.RegionTriggers.Actions
 {
     internal class TeleportToWarp : ITriggerAction
     {
-
-        private const int _pushDistance = 5;
         public string Name => "warp";
         public string Description => "Teleports player to the warp.";
 

@@ -10,8 +10,6 @@ namespace RegionExtension.RegionTriggers.Actions
 {
     internal class TeleportToPosition : ITriggerAction
     {
-
-        private const int _pushDistance = 5;
         public string Name => "tppos";
         public string Description => "Pushes player from region.";
 

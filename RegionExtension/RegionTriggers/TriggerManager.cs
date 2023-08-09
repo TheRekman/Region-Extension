@@ -46,7 +46,11 @@ namespace RegionExtension.RegionTriggers
             SendMessageAction.Former,
             SpawnNpc.Former,
             ProjectileSpawn.Former,
-            GiveItem.Former
+            GiveItem.Former,
+            TeleportToPosition.Former,
+            TeleportToWarp.Former,
+            Kill.Former,
+            BuffTrigger.Former
         };}
 
         public static ActionFormer GetFormer(string name)
