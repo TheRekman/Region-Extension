@@ -40,13 +40,13 @@ namespace RegionExtension.RegionTriggers.Actions
         public static ITriggerAction CreateTriggerAction(ICommandParam[] param, CommandArgsExtension args)
         {
             var buff = ((Buff)param[0].Value).Id;
-            var time = (int)param[0].Value;
+            var time = (int)param[1].Value;
             return new BuffTrigger(buff, time);
         }
 
         public void Execute(TriggerActionArgs args)
         {
-            args.Player.SetBuff(_buff, _time);
+            args.Player.SetBuff(_buff, _time * 30);
         }
 
         public string GetArgsString() =>
