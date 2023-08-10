@@ -44,6 +44,8 @@ namespace RegionExtension
                 res += Minutes + "m";
             if (Seconds != 0)
                 res += Seconds + "s";
+            if (res == "")
+                res = "0";
             return res;
         }
 
