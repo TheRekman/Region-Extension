@@ -69,7 +69,7 @@ namespace RegionExtension
         private void OnSendItemDrop(SendDataEventArgs args)
         {
             var id = args.number;
-            if (ItemRewrites[id] == null || !ItemRewrites[id].Active)
+            if (id >= 400 || ItemRewrites[id] == null || !ItemRewrites[id].Active)
                 return;
             _sendingItemDrop -= OnSendItemDrop;
             args.Handled = true;

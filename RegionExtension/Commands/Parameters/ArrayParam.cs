@@ -18,7 +18,8 @@ namespace RegionExtension.Commands.Parameters
             { typeof(string), () => new StringParam("", "") },
             { typeof(int), () => new IntParam("", "") },
             { typeof(Item), () => new ItemParam("", "") },
-            { typeof(Projectile), () => new ProjectileParam("", "") }
+            { typeof(Projectile), () => new ProjectileParam("", "") },
+            { typeof(NPC), () => new NpcParam("", "") }
         };
 
         public ArrayParam(string name, string description, int len = 0, bool optional = false, T[] defaultValue = default) :

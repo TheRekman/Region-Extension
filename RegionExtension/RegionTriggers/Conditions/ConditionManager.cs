@@ -31,6 +31,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         public static IEnumerable<IRegionCondition> GetRegionConditionsFromString(string str) =>
             str.Split(", ").Select(s => _formers.FirstOrDefault(f => f.Names[0].Equals(GetName(s.Split(' ')[0]), StringComparison.OrdinalIgnoreCase))?.FormerFromString(str)).Where(c => c != null);
 
+
         private static string GetName(string str) =>
             str.StartsWith('!') ? str.Substring(1) : str;
 

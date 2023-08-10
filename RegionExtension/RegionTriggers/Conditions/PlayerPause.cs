@@ -14,23 +14,23 @@ namespace RegionExtension.RegionTriggers.Conditions
         private StringTime _time;
         private DateTime[] _lastCheck = new DateTime[256];
         public static string[] Names { get; } = new[] { "playerpause", "pp" };
-        public static string Description { get; } = "pauses trigger in given time after activation.";
+        public static string Description { get; } = "pauses trigger for player in given time after activation.";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new TimeParam("time", "time after which trigger will be unpaused. default: 1m", true, new StringTime(0, 0, 1, 0)) };
         public static ConditionFormer ConditionFormer { get; } = new ConditionFormer(Names, Description, CommandParam, (cp, rev) => new Pause(cp, rev), (s) => new Pause(s));
         public bool Reversed { get; }
 
-        public Pause(StringTime time, bool reversed)
+        public PlayerPause(StringTime time, bool reversed)
         {
             _time = time;
             Reversed = reversed;
         }
 
-        public Pause(string s) :
+        public PlayerPause(string s) :
             this(StringTime.FromString(s.Split(' ')[1]), s.StartsWith('!'))
         {
         }
 
-        public Pause(ICommandParam[] commandParam, bool reversed) :
+        public PlayerPause(ICommandParam[] commandParam, bool reversed) :
             this((StringTime)commandParam[0].Value, reversed)
         {
         }

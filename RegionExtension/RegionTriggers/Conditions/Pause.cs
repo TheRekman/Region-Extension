@@ -12,7 +12,7 @@ namespace RegionExtension.RegionTriggers.Conditions
     public class Pause : IRegionCondition
     {
         private StringTime _time;
-        private DateTime _lastCheck = DateTime.MinValue;
+        private DateTime _nextActivation = DateTime.Now;
         public static string[] Names { get; } = new[] { "pause", "p" };
         public static string Description { get; } = "pauses trigger in given time after activation.";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new TimeParam("time", "time after which trigger will be unpaused. default: 1m", true, new StringTime(0, 0, 1, 0)) };
@@ -23,6 +23,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         {
             _time = time;
             Reversed = reversed;
+            _nextActivation = DateTime.Now;
         }
 
         public Pause(string s) :
@@ -39,9 +40,9 @@ namespace RegionExtension.RegionTriggers.Conditions
 
         public bool Check(TSPlayer player, Region region)
         {
-            var res = _lastCheck + _time < DateTime.Now;
+            var res = _nextActivation < DateTime.Now;
             if (res)
-                _lastCheck = DateTime.Now;
+                _nextActivation = DateTime.Now + _time;
             return res;
         }
 
