@@ -27,7 +27,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     {
         private NPCInfo[] _ignoreNpc = new NPCInfo[Main.npc.Length];
         private Queue<NPC> _registerNPC = new Queue<NPC>();
-        private byte[] lastBytes;
+
         public string[] Names => new[] { "banhostile", "bh" };
         public string Description => "Activates player pvp and prevents trying to change it.";
         public string Permission => "regionext.triggers.itemban";
@@ -44,16 +44,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             ServerApi.Hooks.NpcSpawn.Register(plugin, OnNpcSpawn);
             ServerApi.Hooks.NpcKilled.Register(plugin, OnNpcKilled);
             ServerApi.Hooks.ProjectileAIUpdate.Register(plugin, OnProjectileUpdate);
-            Hooks.NetMessage.SendBytes += OnSendBytes;
             OTAPI.Hooks.NPC.Create += OnNPCCreate;
-        }
-
-        private void OnSendBytes(object sender, Hooks.NetMessage.SendBytesEventArgs e)
-        {
-            if (e.Data[2] != 27)
-                return;
-            var bytes1 = lastBytes;
-            var bytes2 = e.Data;
         }
 
         private void OnProjectileUpdate(ProjectileAiUpdateEventArgs args)
