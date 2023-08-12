@@ -2,17 +2,21 @@
 using MonoMod.RuntimeDetour;
 using OTAPI;
 using RegionExtension.Commands.Parameters;
+using RegionExtension.Packet;
 using RegionExtension.RegionTriggers.Actions;
 using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
@@ -23,6 +27,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     {
         private NPCInfo[] _ignoreNpc = new NPCInfo[Main.npc.Length];
         private Queue<NPC> _registerNPC = new Queue<NPC>();
+        private byte[] lastBytes;
         public string[] Names => new[] { "banhostile", "bh" };
         public string Description => "Activates player pvp and prevents trying to change it.";
         public string Permission => "regionext.triggers.itemban";
@@ -39,7 +44,16 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             ServerApi.Hooks.NpcSpawn.Register(plugin, OnNpcSpawn);
             ServerApi.Hooks.NpcKilled.Register(plugin, OnNpcKilled);
             ServerApi.Hooks.ProjectileAIUpdate.Register(plugin, OnProjectileUpdate);
+            Hooks.NetMessage.SendBytes += OnSendBytes;
             OTAPI.Hooks.NPC.Create += OnNPCCreate;
+        }
+
+        private void OnSendBytes(object sender, Hooks.NetMessage.SendBytesEventArgs e)
+        {
+            if (e.Data[2] != 27)
+                return;
+            var bytes1 = lastBytes;
+            var bytes2 = e.Data;
         }
 
         private void OnProjectileUpdate(ProjectileAiUpdateEventArgs args)
@@ -170,8 +184,20 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             Main.npc[args.Npc.whoAmI].active = false;
             NetMessage.SendData(28, number: args.Npc.whoAmI, number2: -1);
-            var pId = Projectile.NewProjectile(null, args.Npc.position + new Vector2(args.Npc.width / 2, args.Npc.height / 2), new Vector2(), 12, 0, 0);
-            Main.projectile[pId].Kill();
+            short pid = 1000;
+            for(short i = 0; i < Main.projectile.Length; i++)
+                if (!Main.projectile[i].active)
+                {
+                    pid = i;
+                    break;
+                }
+            if (pid == 1000)
+                return;
+            Task.Run(() =>
+            {
+                PacketConstructor.SendPacket(-1, new ProjectileUpdatePacket(pid, args.Npc.position.X + args.Npc.width / 2, args.Npc.position.Y + args.Npc.height / 2, 0, 0, (byte)Main.myPlayer, 12));
+                PacketConstructor.SendPacket(-1, new ProjectileDestroyPacket(pid, 255));
+            });
         }
 
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)
@@ -211,7 +237,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _regions[region] = _regions[region].Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
-        
+
         struct NPCInfo
         {
             public NPCInfo()
