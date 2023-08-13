@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "eventlist", "el" };
 
-        public override string Description => "List all available events.";
+        public override string Description => "ListEventsDesc";
 
         public override void InitializeParams()
         {
@@ -31,7 +31,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendTriggerList(CommandArgsExtension args, int page)
         {
-            var triggers = TriggerManager.Events.Select(e => "{0} - {1}".SFormat(string.Join("/", e.Names), e.Description));
+            var triggers = TriggerManager.Events.Select(e => "{0} - {1}".SFormat(string.Join("/", e.Names), Localization.GetStringForPlayer(e.Description, args.Player)));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),

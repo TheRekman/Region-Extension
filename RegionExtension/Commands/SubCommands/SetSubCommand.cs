@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "set" };
 
-        public override string Description => "Sets the temporary region points.";
+        public override string Description => "SetRegionPointDesc";
 
         public override void InitializeParams()
         {

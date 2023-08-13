@@ -20,7 +20,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     internal class AlwaysPvp : IRegionProperty
     {
         public string[] Names => new[] { "alwayspvp", "ap" };
-        public string Description => "Activates player pvp and prevents trying to change it.";
+        public string Description => "AlwaysPvpPropDesc";
         public string Permission => Permissions.PropertyPvp;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();

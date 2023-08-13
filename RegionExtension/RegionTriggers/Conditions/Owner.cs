@@ -12,7 +12,7 @@ namespace RegionExtension.RegionTriggers.Conditions
     internal class Owner : IRegionCondition
     {
         public static string[] Names { get; } = new[] { "owner", "o" };
-        public static string Description { get; } = "if player is owner of the region.";
+        public static string Description { get; } = "OwnerCondDesc";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[0];
         public bool Reversed { get; }
         public static ConditionFormer ConditionFormer { get; } = new ConditionFormer(Names, Description, CommandParam, (cp, rev) => new Owner(cp, rev), (s) => new Owner(s));

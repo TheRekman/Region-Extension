@@ -19,7 +19,7 @@ namespace RegionExtension.RegionTriggers.Actions
 
         private static Random _random = new Random();
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnproj", "sp" }, "Spawns projectile.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnproj", "sp" }, "ProjectileTriggerDesc",
                                                                       new ICommandParam[] {
                                                                           new ProjectileParam("projectile", "type of projectile which will be spawned."),
                                                                           new IntParam("count", "count of projectile. default: 1", true, 1),

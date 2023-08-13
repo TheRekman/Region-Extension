@@ -16,7 +16,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "info", "i" };
 
-        public override string Description => "Info about triggers of the region";
+        public override string Description => "TriggerInfoDesc";
 
         public override void InitializeParams()
         {

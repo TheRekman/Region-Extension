@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "undo", "u" };
 
-        public override string Description => "undo actions on region.";
+        public override string Description => "UndoHistoryDesc";
 
         public override void InitializeParams()
         {

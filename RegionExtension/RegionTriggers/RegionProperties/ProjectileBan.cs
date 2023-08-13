@@ -19,7 +19,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     internal class ProjectileBan : IRegionProperty
     {
         public string[] Names => new[] { "projban", "pb" };
-        public string Description => "Prevents projectile creation from player";
+        public string Description => "ProjBanPropDesc";
         public string Permission => Permissions.PropertyProjectile;
         public ICommandParam[] CommandParams => new[] { new ArrayParam<Projectile>("projs...", "Projectiles which will be banned in region.") };
         public Region[] DefinedRegions => _projBans.Keys.ToArray();

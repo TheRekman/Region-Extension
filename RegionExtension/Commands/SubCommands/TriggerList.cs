@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "list", "l" };
 
-        public override string Description => "List all available triggers.";
+        public override string Description => "TriggerListDesc";
 
         public override void InitializeParams()
         {
@@ -32,7 +32,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendTriggerList(CommandArgsExtension args, int page)
         {
-            var triggers = TriggerManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names), string.Join(' ', f.Params.Select(p => p.GetBracketName())), f.Description));
+            var triggers = TriggerManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names), string.Join(' ', f.Params.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),

@@ -17,7 +17,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "msg";
         public string Description => "Send message.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "message", "msg" }, "Send message to the player.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "message", "msg" }, "MessageTriggerDesc",
                                                                       new ICommandParam[] {
                                                                           new ArrayParam<string>("text...", "which text")
                                                                       },

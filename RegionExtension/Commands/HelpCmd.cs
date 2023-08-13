@@ -43,7 +43,7 @@ namespace RegionExtension.Commands
         {
             var commandsInfo = _targetCommand.SubCommands.Select(sc => "{0} {1} - {2}".SFormat(string.Join('/', sc.Names.Select(s => Utils.ColorCommand(s))),
                                                                                                string.Join(' ', sc.Params.Select(p => p.GetColoredBracketName())),
-                                                                                               sc.Description).Replace("  ", " "));
+                                                                                               Localization.GetStringForPlayer(sc.Description, args.Player)).Replace("  ", " "));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters.Count > 1 ? args.Parameters[0] : "help";
             PaginationTools.SendPage(args.Player, page, commandsInfo.ToList(),

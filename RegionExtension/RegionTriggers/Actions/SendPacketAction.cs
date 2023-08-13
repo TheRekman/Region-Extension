@@ -16,7 +16,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "packet";
         public string Description => "Send packet to the player.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "packet", "pa" }, "Send packet to the player.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "packet", "pa" }, "SendPacketTriggerDesc",
                                                                       new ICommandParam[]
                                                                       {
                                                                           new IntParam("int", "send data"),

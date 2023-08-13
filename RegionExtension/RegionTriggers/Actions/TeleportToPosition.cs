@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "tppos";
         public string Description => "Pushes player from region.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "tppos" }, "Teleports player to the position.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "tppos" }, "TeleportPosTriggerDesc",
                                                                       new ICommandParam[]
                                                                       {
                                                                           new FunctionParam("x", "x for tp.", false, null),

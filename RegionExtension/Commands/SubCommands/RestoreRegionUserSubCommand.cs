@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     internal class RestoreRegionUserSubCommand : SubCommand
     {
         public override string[] Names => new[] { "restoreuser", "resu" };
-        public override string Description => "restore region from deleted regions with user.";
+        public override string Description => "RegionRestoreByUserDesc";
 
         public override void InitializeParams()
         {

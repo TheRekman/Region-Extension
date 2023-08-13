@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
     internal class DefineRequestSubCommand : SubCommand
     {
         public override string[] Names => new[] { "define", "d" };
-        public override string Description => "Defines the region with the given name and send request.";
+        public override string Description => "DefineRequestDesc";
 
         public override void InitializeParams()
         {

@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "list", "l" };
 
-        public override string Description => "Lists all regions.";
+        public override string Description => "RegionListDesc";
 
         public override void InitializeParams()
         {

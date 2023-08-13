@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "remove", "r" };
 
-        public override string Description => "Remove property from the region";
+        public override string Description => "RemovePropertyDesc";
 
         public override void InitializeParams()
         {

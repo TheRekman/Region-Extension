@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "redo", "r" };
 
-        public override string Description => "redo actions on region.";
+        public override string Description => "RedoHistoryDesc";
 
         public override void InitializeParams()
         {

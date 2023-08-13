@@ -11,7 +11,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "ownerlist", "ol" };
 
-        public override string Description => "get list of regions in which you is owner";
+        public override string Description => "SelfOwnerDesc";
 
         public override void InitializeParams()
         {

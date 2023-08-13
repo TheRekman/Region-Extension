@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Conditions
     {
         private int _count;
         public static string[] Names { get; } = new[] { "more", "m" };
-        public static string Description { get; } = "if more players in the region than count.";
+        public static string Description { get; } = "MoreCondDesc";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new IntParam("count", "count") };
         public static ConditionFormer ConditionFormer { get; } = new ConditionFormer(Names, Description, CommandParam, (cp, rev) => new MoreCondition(cp, rev), (s) => new MoreCondition(s));
         public bool Reversed { get; }

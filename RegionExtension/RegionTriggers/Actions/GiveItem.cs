@@ -20,7 +20,7 @@ namespace RegionExtension.RegionTriggers.Actions
         private int _type, _stack, _prefix, _projectile;
         private Function _x, _y, _damage, _usetime;
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "giveitem", "spawnitem", "g", "si" }, "Gives items to the player",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "giveitem", "spawnitem", "g", "si" }, "GiveItemTriggerDesc",
                                                                       new ICommandParam[] {
                                                                           new ItemParam("item", "type of item which will be spawned."),
                                                                           new IntParam("stack", "how many items will be given.", true, 1),

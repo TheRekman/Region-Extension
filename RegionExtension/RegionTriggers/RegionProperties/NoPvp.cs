@@ -16,7 +16,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     internal class NoPvp : IRegionProperty
     {
         public string[] Names => new[] { "nopvp", "np" };
-        public string Description => "Deactivates player pvp and prevents trying to change it.";
+        public string Description => "NoPvpPropDesc";
         public string Permission => Permissions.PropertyPvp;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();

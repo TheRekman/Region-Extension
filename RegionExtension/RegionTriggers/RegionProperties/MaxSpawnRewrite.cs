@@ -16,7 +16,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     internal class MaxSpawnRewrite : IRegionProperty
     {
         public string[] Names => new[] { "maxspawn", "ms" };
-        public string Description => "Rewrite near NPCs count for players.";
+        public string Description => "MaxSpawnPropDesc";
         public string Permission => Permissions.PropertyMaxSpawn;
         public ICommandParam[] CommandParams => new ICommandParam[] { new FloatParam("ratio", "change player npc counting.\n Example: if there are 10 NPCs near the player and the ratio is 0.8, the number of NPCs for player will be 8, and more NPCs may spawn nearby" )};
         public Region[] DefinedRegions => _regions.Keys.ToArray();

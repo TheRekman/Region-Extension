@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "removeg", "rg" };
-        public override string Description => "Removes a user group from a region.";
+        public override string Description => "RegionRemoveGroupDesc";
 
         public override void InitializeParams()
         {

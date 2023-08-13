@@ -11,7 +11,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "ownerlist", "ol" };
 
-        public override string Description => "Get list of regions which the given player is owner";
+        public override string Description => "OwnerListDesc";
 
         public override void InitializeParams()
         {

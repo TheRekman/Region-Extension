@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "clear", "c" };
 
-        public override string Description => "Clears properties from the region";
+        public override string Description => "ClearPropertiesDesc";
 
         public override void InitializeParams()
         {

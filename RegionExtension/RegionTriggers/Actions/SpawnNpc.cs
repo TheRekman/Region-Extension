@@ -17,7 +17,7 @@ namespace RegionExtension.RegionTriggers.Actions
         private int _type, _count, _health, _strength;
         private Function _x, _y;
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnnpc", "spawnmob", "sn", "sm" }, "Spawns npc.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "spawnnpc", "spawnmob", "sn", "sm" }, "SpawnNpcTriggerDesc",
                                                                       new ICommandParam[] {
                                                                           new NpcParam("npc", "type of npc which will be spawned."),
                                                                           new IntParam("count", "how many npc will be spawned. default: 1", true, 1),

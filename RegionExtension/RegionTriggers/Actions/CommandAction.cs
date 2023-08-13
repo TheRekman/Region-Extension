@@ -15,7 +15,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "cmd";
         public string Description => "Command trigger!";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "command", "cmd" }, "Command trigger!",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "command", "cmd" }, "CommandTriggerDesc",
                                                                       new ICommandParam[] {  new StringParam("command", "command string") },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => CreateCommandAction(s, TSPlayer.Server).Action)

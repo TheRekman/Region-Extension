@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Conditions
     {
         private int _count;
         public static string[] Names { get; } = new[] { "exact", "e" };
-        public static string Description { get; } = "if players count in the region.";
+        public static string Description { get; } = "ExactCondDesc";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new IntParam("count", "count") };
         public static ConditionFormer ConditionFormer { get; } = new ConditionFormer(Names, Description, CommandParam, (cp, rev) => new Exact(cp, rev), (s) => new Exact(s));
         public bool Reversed { get; }

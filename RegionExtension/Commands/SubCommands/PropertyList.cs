@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "list", "l" };
 
-        public override string Description => "List available properties.";
+        public override string Description => "PropertyListDesc";
 
         public override void InitializeParams()
         {
@@ -30,7 +30,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void ListProperties(CommandArgsExtension args, int page)
         {
-            var triggers = Plugin.RegionExtensionManager.PropertyManager.RegionProperties.Select(p => "{0} {1} - {2}".SFormat(string.Join('/', p.Names), string.Join(' ', p.CommandParams.Select(p => p.GetBracketName())), p.Description));
+            var triggers = Plugin.RegionExtensionManager.PropertyManager.RegionProperties.Select(p => "{0} {1} - {2}".SFormat(string.Join('/', p.Names), string.Join(' ', p.CommandParams.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(p.Description, args.Player)));
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),

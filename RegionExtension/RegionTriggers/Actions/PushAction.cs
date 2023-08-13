@@ -19,7 +19,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "push";
         public string Description => "Pushes player from region.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "push", "p" }, "Pushes player from region",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "push", "p" }, "PushTriggerDesc",
                                                                       new ICommandParam[] { },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new PushAction())

@@ -15,7 +15,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "warp";
         public string Description => "Teleports player to the warp.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "warp" }, "Teleports player to the warp.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "warp" }, "TeleportWartTriggerDesc",
                                                                       new ICommandParam[]
                                                                       {
                                                                           new WarpParam("warp", "warp for tp.", false, null)

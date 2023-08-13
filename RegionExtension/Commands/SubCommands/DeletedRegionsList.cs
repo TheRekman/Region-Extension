@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "dellist", "dl" };
 
-        public override string Description => "get list of regions.";
+        public override string Description => "ListDeletedRegionsDesc";
 
         public override void InitializeParams()
         {

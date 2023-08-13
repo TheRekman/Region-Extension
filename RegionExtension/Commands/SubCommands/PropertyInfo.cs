@@ -16,7 +16,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "info", "i" };
 
-        public override string Description => "Info about property of the region";
+        public override string Description => "InfoPropertyDesc";
 
         public override void InitializeParams()
         {

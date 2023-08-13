@@ -10,7 +10,7 @@ namespace RegionExtension.Commands.SubCommands
     public class GetRegionNameSubCommand : SubCommand
     {
         public override string[] Names => new[] { "name", "n" };
-        public override string Description => "Shows the name of the region at the given point. Additional params -u, -z, -p";
+        public override string Description => "GetRegionNameDesc";
 
         public override void Execute(CommandArgsExtension args)
         {

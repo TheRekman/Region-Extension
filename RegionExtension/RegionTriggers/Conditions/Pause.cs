@@ -14,7 +14,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         private StringTime _time;
         private DateTime _nextActivation = DateTime.MinValue;
         public static string[] Names { get; } = new[] { "pause", "p" };
-        public static string Description { get; } = "pauses trigger in given time after activation.";
+        public static string Description { get; } = "PauseCondDesc";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new TimeParam("time", "time after which trigger will be unpaused. default: 1m", true, new StringTime(0, 0, 1, 0)) };
         public static ConditionFormer ConditionFormer { get; } = new ConditionFormer(Names, Description, CommandParam, (cp, rev) => new Pause(cp, rev), (s) => new Pause(s));
         public bool Reversed { get; }

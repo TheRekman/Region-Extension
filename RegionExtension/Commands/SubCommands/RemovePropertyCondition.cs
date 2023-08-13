@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "removecond", "rc" };
 
-        public override string Description => "Removes condition from the property";
+        public override string Description => "RemovePropertyConditionDesc";
 
         public override void InitializeParams()
         {

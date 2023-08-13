@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "allowg", "ag" };
-        public override string Description => "Allows a user group to a region.";
+        public override string Description => "AllowGroupDesc";
 
         public override void InitializeParams()
         {

@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "kill";
         public string Description => "Kills player.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "kill", "k" }, "Kills player.",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "kill", "k" }, "KillTriggerDesc",
                                                                       new ICommandParam[] { },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new Kill())

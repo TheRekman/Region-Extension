@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     public class FastRegionRequestSubCommand : SubCommand
     {
         public override string[] Names => new[] { "fastregion", "fr" };
-        public override string Description => "Create new region with two given point and params. Also send request.";
+        public override string Description => "FastRegionRequestDesc";
 
         public override void InitializeParams()
         {

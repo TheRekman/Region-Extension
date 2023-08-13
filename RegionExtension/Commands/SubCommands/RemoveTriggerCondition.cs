@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "removecond", "rc" };
 
-        public override string Description => "Remove condition from the trigger";
+        public override string Description => "RemoveTriggerConditionDesc";
 
         public override void InitializeParams()
         {

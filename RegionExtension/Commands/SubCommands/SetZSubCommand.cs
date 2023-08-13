@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
         public bool _checkRegionOwn;
 
         public override string[] Names => new[] { "z" };
-        public override string Description => "Sets the z-order of the region.";
+        public override string Description => "SetRegionZDesc";
         public override void InitializeParams()
         {
             _params = new ICommandParam[]

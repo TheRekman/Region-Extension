@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "add", "a" };
 
-        public override string Description => "Adds property to the region";
+        public override string Description => "AddPropertyDesc";
 
         public override void InitializeParams()
         {

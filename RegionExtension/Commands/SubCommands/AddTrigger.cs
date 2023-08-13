@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "add", "a" };
 
-        public override string Description => "Adds trigger to the region";
+        public override string Description => "AddTriggerDesc";
 
         public override void InitializeParams()
         {

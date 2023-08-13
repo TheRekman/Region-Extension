@@ -28,9 +28,9 @@ namespace RegionExtension.RegionTriggers
 
         public static readonly RegionEvent[] Events = new RegionEvent[]
         {
-            new RegionEvent(new[] {"onenter", "enter", "e" }, "activates when players enters in region", RegionEvents.OnEnter),
-            new RegionEvent(new[] {"onleave", "leave", "l" }, "activates when players leaves from region", RegionEvents.OnLeave),
-            new RegionEvent(new[] {"onin", "in", "i" }, "activates while players was in region", RegionEvents.OnIn)
+            new RegionEvent(new[] {"onenter", "enter", "e" }, "OnEnterEventDesc", RegionEvents.OnEnter),
+            new RegionEvent(new[] {"onleave", "leave", "l" }, "OnLeaveEventDesc", RegionEvents.OnLeave),
+            new RegionEvent(new[] {"onin", "in", "i" }, "OnInEventDesc", RegionEvents.OnIn)
         };
 
         public TriggerManager(IDbConnection dbConnection)

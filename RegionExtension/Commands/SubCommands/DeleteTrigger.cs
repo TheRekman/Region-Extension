@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "delete", "d" };
 
-        public override string Description => "Deletes trigger from the region";
+        public override string Description => "DeleteTriggerDesc";
 
         public override void InitializeParams()
         {

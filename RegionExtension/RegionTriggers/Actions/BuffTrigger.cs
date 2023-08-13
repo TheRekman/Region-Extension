@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Actions
         public string Name => "buff";
         public string Description => "Buffs player.";
 
-        public static ActionFormer Former { get; } = new ActionFormer(new[] { "buff", "b" }, "Buffs player",
+        public static ActionFormer Former { get; } = new ActionFormer(new[] { "buff", "b" }, "BuffTriggerDesc",
                                                                       new ICommandParam[]
                                                                       {
                                                                           new BuffParam("buff", "buff type."),

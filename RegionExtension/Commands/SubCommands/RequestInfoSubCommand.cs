@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "requestinfo", "ri" };
 
-        public override string Description => "Displays several information about the given request.";
+        public override string Description => "RequestInfoDesc";
 
         public override void InitializeParams()
         {

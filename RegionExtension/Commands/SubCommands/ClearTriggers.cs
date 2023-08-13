@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "clear", "c" };
 
-        public override string Description => "Clears triggers from the region";
+        public override string Description => "ClearTriggersDesc";
 
         public override void InitializeParams()
         {

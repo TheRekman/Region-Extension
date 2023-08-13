@@ -13,7 +13,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "conditionlist", "cl" };
 
-        public override string Description => "List available conditions.";
+        public override string Description => "ConditionListDesc";
 
         public override void InitializeParams()
         {
@@ -31,7 +31,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void ListProperties(CommandArgsExtension args, int page)
         {
-            var triggers = ConditionManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join('/', f.Names), string.Join(" ", f.CommandParams.Select(p => p.GetBracketName())), f.Description));
+            var triggers = ConditionManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join('/', f.Names), string.Join(" ", f.CommandParams.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)));
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),

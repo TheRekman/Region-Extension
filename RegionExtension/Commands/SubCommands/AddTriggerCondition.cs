@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "addcond", "ac" };
 
-        public override string Description => "Adds conditions to the trigger";
+        public override string Description => "AddConditionTriggerDesc";
 
         public override void InitializeParams()
         {
