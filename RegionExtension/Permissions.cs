@@ -32,5 +32,13 @@ namespace RegionExtension
         public static readonly string PropertyProjectile = string.Join(".", RegionPropertyCmd, "projban");
         public static readonly string PropertyItem = string.Join(".", RegionPropertyCmd, "itemban");
         public static readonly string PropertyMaxSpawn = string.Join(".", RegionPropertyCmd, "maxspawn");
+
+        private static readonly IEnumerable<string> PermissionList = typeof(Permissions).GetFields(System.Reflection.BindingFlags.Static |
+                                                                                                   System.Reflection.BindingFlags.Public |
+                                                                                                   System.Reflection.BindingFlags.GetField)
+                                                                                        .Select(f => (string)f.GetValue(null));
+
+        public static IEnumerable<string> GetAllPermissions() => 
+            typeof(Permissions).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.GetField).Select(f => (string)f.GetValue(null));
     }
 }

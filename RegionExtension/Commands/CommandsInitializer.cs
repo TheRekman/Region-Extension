@@ -33,6 +33,28 @@ namespace RegionExtension.Commands
                     },
                     "triggerignore", "ti")
                     { HelpText = "Ignores any trigger and property activation." });
+            TShockAPI.Commands.ChatCommands.Add(
+                    new Command(
+                    TShockAPI.Permissions.managegroup,
+                    args =>
+                    {
+                        var num = 0;
+                        if (!PaginationTools.TryParsePageNumber(args.Parameters, 0, args.Player, out num))
+                            return;
+                        var data = PaginationTools.BuildLinesFromTerms(Permissions.GetAllPermissions());
+                        PaginationTools.SendPage(args.Player, num, PaginationTools.BuildLinesFromTerms(Permissions.GetAllPermissions()),
+                            new PaginationTools.Settings
+                            {
+                                HeaderFormat = "Region extension permissions ({0}/{1}):",
+                                FooterFormat = "Type {0}{1} {{0}} for more."
+                                               .SFormat(TShockAPI.Commands.Specifier, "reperm"),
+                                NothingToDisplayString = "There are currently no permissions."
+                            });
+                        foreach (var item in data)
+                            TShock.Log.Info("[RegionExtensionPermissions] " + item);
+                    },
+                    "reperm")
+                    { HelpText = "Returns all permissions used by Region Extension plugin" });
         }
     }
 }
