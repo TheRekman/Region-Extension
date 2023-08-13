@@ -21,7 +21,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new TeleportToPosition(s))
-                                                                      { Permission = Permissions.TeleportPositionTrigger };
+                                                                      { Permission = Permissions.TriggerTeleportPosition };
         Function _x, _y;
 
         public TeleportToPosition(Function x, Function y)

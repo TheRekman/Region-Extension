@@ -21,7 +21,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     {
         public string[] Names => new[] { "alwayspvp", "ap" };
         public string Description => "Activates player pvp and prevents trying to change it.";
-        public string Permission => "regionext.triggers.itemban";
+        public string Permission => Permissions.PropertyPvp;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 

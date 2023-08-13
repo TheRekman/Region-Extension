@@ -19,12 +19,18 @@ namespace RegionExtension
         public static readonly string TriggerMessage = string.Join('.', RegionTriggerCmd, "message");
         public static readonly string TriggerPush = string.Join('.', RegionTriggerCmd, "push");
         public static readonly string TriggerCommand = string.Join('.', RegionTriggerCmd, "command");
-        public static readonly string WarpTrigger = string.Join('.', RegionTriggerCmd, "warp");
-        public static readonly string SpawnNpcTrigger = string.Join('.', RegionTriggerCmd, "spawnnpc");
-        public static readonly string ItemTrigger = string.Join('.', RegionTriggerCmd, "giveitem");
-        public static readonly string TeleportPositionTrigger = string.Join('.', RegionTriggerCmd, "tppos");
-        public static readonly string ProjetileTrigger = string.Join('.', RegionTriggerCmd, "spawnproj");
-        public static readonly string KillTrigger = string.Join('.', RegionTriggerCmd, "kill");
-        public static readonly string BuffTrigger = string.Join('.', RegionTriggerCmd, "buff");
+        public static readonly string TriggerWarp = string.Join('.', RegionTriggerCmd, "warp");
+        public static readonly string TriggerSpawnNpc = string.Join('.', RegionTriggerCmd, "spawnnpc");
+        public static readonly string TriggerItem = string.Join('.', RegionTriggerCmd, "giveitem");
+        public static readonly string TriggerTeleportPosition = string.Join('.', RegionTriggerCmd, "tppos");
+        public static readonly string TriggerProjetile = string.Join('.', RegionTriggerCmd, "spawnproj");
+        public static readonly string TriggerKill = string.Join('.', RegionTriggerCmd, "kill");
+        public static readonly string TriggerBuff = string.Join('.', RegionTriggerCmd, "buff");
+        public static readonly string PropertyPvp = string.Join(".", RegionPropertyCmd, "pvp");
+        public static readonly string PropertyBanHostile = string.Join(".", RegionPropertyCmd, "banhostile");
+        public static readonly string PropertySpawnRewrite = string.Join(".", RegionPropertyCmd, "spawnrewrite");
+        public static readonly string PropertyProjectile = string.Join(".", RegionPropertyCmd, "projban");
+        public static readonly string PropertyItem = string.Join(".", RegionPropertyCmd, "itemban");
+        public static readonly string PropertyMaxSpawn = string.Join(".", RegionPropertyCmd, "maxspawn");
     }
 }

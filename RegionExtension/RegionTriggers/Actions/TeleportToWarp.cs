@@ -22,7 +22,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new TeleportToWarp(s))
-                                                                      { Permission = Permissions.WarpTrigger };
+                                                                      { Permission = Permissions.TriggerWarp };
         string _warpName;
 
         public TeleportToWarp(string warpname)

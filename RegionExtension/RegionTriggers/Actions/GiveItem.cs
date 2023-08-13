@@ -33,7 +33,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new GiveItem(s))
-                                                                      { Permission = Permissions.ItemTrigger };
+                                                                      { Permission = Permissions.TriggerItem };
 
         private GiveItem(string text)
         {

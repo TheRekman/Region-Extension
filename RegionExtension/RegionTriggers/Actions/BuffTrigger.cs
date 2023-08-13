@@ -21,7 +21,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new BuffTrigger(s))
-                                                                      { Permission = Permissions.BuffTrigger };
+                                                                      { Permission = Permissions.TriggerBuff };
         int _buff, _time;
 
         public BuffTrigger(string str)

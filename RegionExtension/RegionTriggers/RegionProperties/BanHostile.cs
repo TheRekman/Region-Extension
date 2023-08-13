@@ -29,8 +29,8 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         private Queue<NPC> _registerNPC = new Queue<NPC>();
 
         public string[] Names => new[] { "banhostile", "bh" };
-        public string Description => "Activates player pvp and prevents trying to change it.";
-        public string Permission => "regionext.triggers.itemban";
+        public string Description => "Removes any hostile NPCs and projectiles from region, and prevents bosses from entering the region..";
+        public string Permission => Permissions.PropertyBanHostile;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 

@@ -28,7 +28,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new SpawnNpc(s))
-                                                                      { Permission = Permissions.SpawnNpcTrigger };
+                                                                      { Permission = Permissions.TriggerSpawnNpc };
 
         private SpawnNpc(string text)
         {

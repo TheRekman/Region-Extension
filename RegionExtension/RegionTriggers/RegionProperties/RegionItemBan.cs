@@ -19,8 +19,8 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     public class RegionItemBan : IRegionProperty
     {
         public string[] Names => new[] { "itemban", "ib"};
-        public string Description => "";
-        public string Permission => "regionext.triggers.itemban";
+        public string Description => "Ban items in the region.";
+        public string Permission => Permissions.PropertyItem;
         public ICommandParam[] CommandParams => new[] { new ArrayParam<Item>("items...", "Items which will be banned in region.", 0, true, new Item[0])};
         public Region[] DefinedRegions =>_itemsBan.Keys.ToArray();
 

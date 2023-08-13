@@ -17,7 +17,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       new ICommandParam[] { },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new Kill())
-                                                                      { Permission = Permissions.KillTrigger };
+                                                                      { Permission = Permissions.TriggerKill };
 
         public static ITriggerAction CreateTriggerAction(ICommandParam[] param, CommandArgsExtension args) =>
             new Kill();

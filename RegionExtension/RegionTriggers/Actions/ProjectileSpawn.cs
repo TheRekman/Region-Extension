@@ -32,7 +32,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new ProjectileSpawn(s))
-                                                                      { Permission = Permissions.ProjetileTrigger };
+                                                                      { Permission = Permissions.TriggerProjetile };
 
         private ProjectileSpawn(string text)
         {

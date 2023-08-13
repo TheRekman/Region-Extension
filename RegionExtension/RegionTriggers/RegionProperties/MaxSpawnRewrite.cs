@@ -16,9 +16,9 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     internal class MaxSpawnRewrite : IRegionProperty
     {
         public string[] Names => new[] { "maxspawn", "ms" };
-        public string Description => "Activates player pvp and prevents trying to change it.";
-        public string Permission => "regionext.triggers.itemban";
-        public ICommandParam[] CommandParams => new ICommandParam[] { new FloatParam("ratio", "change player npc counting.\n Example: if there are 10 NPCs near the player and the ratio is 0.8, the number of NPCs will be 8, and more NPCs may spawn nearby" )};
+        public string Description => "Rewrite near NPCs count for players.";
+        public string Permission => Permissions.PropertyMaxSpawn;
+        public ICommandParam[] CommandParams => new ICommandParam[] { new FloatParam("ratio", "change player npc counting.\n Example: if there are 10 NPCs near the player and the ratio is 0.8, the number of NPCs for player will be 8, and more NPCs may spawn nearby" )};
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 
         private Dictionary<Region, ConditionDataPair<float>> _regions = new Dictionary<Region, ConditionDataPair<float>>();
