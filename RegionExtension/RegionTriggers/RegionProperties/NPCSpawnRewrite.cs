@@ -22,10 +22,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public string[] Names => new[] { "spawnrewrite", "sr" };
         public string Description => "Rewrites npc spawn in the region.";
         public string Permission => Permissions.PropertySpawnRewrite;
-        public ICommandParam[] CommandParams => new[] { new ArrayParam<NPC>("npcs...", "Npcs which will be spawn in region.") };
+        public ICommandParam[] CommandParams => new[] { new ArrayParam<NPCWeightPair>("npcs...", "Npcs which will be spawn in region with weight in format {npc}:{weight}.") };
         public Region[] DefinedRegions => _npcs.Keys.ToArray();
 
-        private Dictionary<Region, ConditionDataPair<int>> _npcs = new Dictionary<Region, ConditionDataPair<int>>();
+        private Dictionary<Region, ConditionDataPair<NPCWeightPair>> _npcs = new Dictionary<Region, ConditionDataPair<NPCWeightPair>>();
         private DateTime _lastUpdate = DateTime.Now;
 
         public void InitializeEventHandler(TerrariaPlugin plugin)
@@ -60,7 +60,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             var pair = pairs.MaxBy(p => p.Key.Z);
             if (pair.Equals(default(KeyValuePair<Region, ConditionDataPair<int>>)))
                 return;
-            if (pair.Value.Contains(e.Type))
+            if (pair.Value.Any(p => p.NPCType == e.Type))
                 return;
             e.Npc = new NPC();
             _npcsToChange.Add(new(e.Npc, pair.Key));
@@ -73,27 +73,43 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (pair == null)
                 return;
             _npcsToChange.Remove(pair);
-            npc.type = _npcs[pair.Value.Item2].Data[_random.Next(_npcs[pair.Value.Item2].Data.Count())];
+            npc.type = GetRandomType(_npcs[pair.Value.Item2].Data);
             npc.SetDefaults(npc.type, default(NPCSpawnParams));
             _npcsToIgnoreNetId.Add(new (npc, npc.type));
         }
 
+        private static int GetRandomType(IEnumerable<NPCWeightPair> npcs)
+        {
+            var weightSum = npcs.Select(n => n.Weight).Sum();
+            var randomDouble = _random.NextDouble();
+            var finalNum = weightSum * randomDouble;
+            var enumerator = npcs.GetEnumerator();
+            var tempSum = 0f;
+            do
+            {
+                enumerator.MoveNext();
+                var npc = enumerator.Current;
+                tempSum += npc.Weight;
+            } while (tempSum < finalNum);
+            return enumerator.Current.NPCType;
+        }
+
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)
         {
-            var itemsToBan = ((NPC[])commandParams[0].Value).Select(i => i.type);
+            var itemsToBan = ((NPCWeightPair[])commandParams[0].Value);
             if (!_npcs.ContainsKey(region))
-                _npcs.Add(region, new(new List<IRegionCondition>(), new List<int>()));
+                _npcs.Add(region, new(new List<IRegionCondition>(), new List<NPCWeightPair>()));
             _npcs[region].Data.AddRange(itemsToBan);
             _npcs[region].Data = _npcs[region].Data.GroupBy(x => x).Select(x => x.First()).ToList();
-            _npcs[region].Data.Sort();
+            _npcs[region].Data = _npcs[region].Data.OrderBy(n => n.NPCType).ToList();
         }
 
         public void RemoveRegionProperties(Region region, ICommandParam[] commandParams)
         {
-            var itemsToBan = (NPC[])commandParams[0].Value;
+            var itemsToBan = (NPCWeightPair[])commandParams[0].Value;
             if (!_npcs.ContainsKey(region))
                 return;
-            _npcs[region].Data.RemoveAll(i => itemsToBan.Select(i => i.type).Contains(i));
+            _npcs[region].Data.RemoveAll(i => itemsToBan.Select(i => i.NPCType).Any(n => n == i.NPCType));
             if (_npcs[region].Data.Count < 1)
                 _npcs.Remove(region);
         }
@@ -101,7 +117,8 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public void SetFromString(Region region, ConditionStringPair args)
         {
             if (!_npcs.ContainsKey(region))
-                _npcs.Add(region, ConditionDataPair<int>.GetFromString(args));
+                _npcs.Add(region, new ConditionDataPair<NPCWeightPair>(ConditionManager.GetRegionConditionsFromString(args.Conditions).ToList(),
+                                                                       args.Args.Split(' ').Select(s => new NPCWeightPair(s)).ToList()));
         }
 
         public ConditionStringPair GetStringArgs(Region region) =>
