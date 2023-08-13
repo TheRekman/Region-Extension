@@ -46,7 +46,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         }
 
         public string GetString() =>
-            string.Join(' ', "!" + Names[0], _time.ToString());
+            string.Join(' ', (Reversed ? "!" : "") + Names[0], _time.ToString());
 
         public bool IsReversed() =>
             Reversed;

@@ -12,7 +12,7 @@ namespace RegionExtension.RegionTriggers.Conditions
     public class Pause : IRegionCondition
     {
         private StringTime _time;
-        private DateTime _nextActivation = DateTime.Now;
+        private DateTime _nextActivation = DateTime.MinValue;
         public static string[] Names { get; } = new[] { "pause", "p" };
         public static string Description { get; } = "pauses trigger in given time after activation.";
         public static ICommandParam[] CommandParam { get; } = new ICommandParam[] { new TimeParam("time", "time after which trigger will be unpaused. default: 1m", true, new StringTime(0, 0, 1, 0)) };
@@ -23,7 +23,6 @@ namespace RegionExtension.RegionTriggers.Conditions
         {
             _time = time;
             Reversed = reversed;
-            _nextActivation = DateTime.Now;
         }
 
         public Pause(string s) :
@@ -47,7 +46,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         }
 
         public string GetString() =>
-            string.Join(' ', "!" + Names[0], _time.ToString());
+            string.Join(' ', (Reversed ? "!" : "") + Names[0], _time.ToString());
 
         public bool IsReversed() =>
             Reversed;

@@ -78,7 +78,7 @@ namespace RegionExtension.Database
             var former = TriggerManager.GetFormer(ActionName);
             var action = former.FromString(Args);
             var trigger = new Trigger(Id, LocalId, reg, Enum.Parse<RegionEvents>(RegionEvent, true), action);
-            trigger.Conditions = ConditionManager.GetRegionConditionsFromString(Conditions);
+            trigger.Conditions = ConditionManager.GetRegionConditionsFromString(Conditions).ToArray();
             return trigger;
         }
     }

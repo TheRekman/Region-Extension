@@ -38,7 +38,7 @@ namespace RegionExtension.RegionTriggers.Conditions
             (player.Account != null && (region.AllowedIDs.Contains(player.Account.ID) || region.Owner == player.Account.Name)) ^ Reversed;
 
         public string GetString() =>
-            string.Join(' ', "!" + Names[0]);
+            string.Join(' ', (Reversed ? "!" : "") + Names[0]);
 
         public bool IsReversed() =>
             Reversed;
