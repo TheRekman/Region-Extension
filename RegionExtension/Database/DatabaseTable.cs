@@ -24,10 +24,21 @@ namespace RegionExtension.Database
                 { typeof(DateTime), MySqlDbType.Text }
             };
 
+        public PropertyInfo[] PropertiesInfo { get; private set; } = typeof(T).GetProperties();
+        public PropertyInfo[] NonKeyProperties { get; private set; } = typeof(T).GetProperties().Where(p => _types.ContainsKey(p.PropertyType) &&
+                                                                   !p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) &&
+                                                                                                    ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary ||
+                                                                                                                                          s == SqlColumnSettings.AutoIncrement))).ToArray();
+        public PropertyInfo KeyPropertie { get; private set; } = typeof(T).GetProperties().GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) &&
+                                                                                                         ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary)));
+
         public DatabaseTable(string name, IDbConnection connection)
         {
             Name = name;
             Connection = connection;
+            PropertiesInfo = PropertiesInfo;
+            NonKeyProperties = NonKeyProperties.Where(p => _types.ContainsKey(p.PropertyType) && !p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) &&  ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary || s == SqlColumnSettings.AutoIncrement))).ToArray();
+            KeyPropertie = PropertiesInfo.FirstOrDefault(p => p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) && ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary)));
         }
 
         public IEnumerable<T> GetValues(Func<QueryResult, T> unitReader, params (string columnName, object value)[] conditions)
@@ -53,7 +64,7 @@ namespace RegionExtension.Database
 
         public bool InitializeTable()
         {
-            var properties = typeof(T).GetProperties();
+            var properties = PropertiesInfo;
             var columns = new List<SqlColumn>();
             foreach (var property in properties)
             {
@@ -94,10 +105,7 @@ namespace RegionExtension.Database
 
         public bool SaveValue(T dBUnit)
         {
-            var properties = dBUnit.GetType().GetProperties().Where(p => _types.ContainsKey(p.PropertyType) &&
-                                                                   !p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) &&
-                                                                                                    ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary ||
-                                                                                                                                          s == SqlColumnSettings.AutoIncrement)));
+            var properties = NonKeyProperties;
             var names = string.Join(", ", properties.Select(p => p.Name).ToArray());
             var values = "'" + string.Join("', '", properties.Select(p => p.GetValue(dBUnit))) + "'";
             try
@@ -114,8 +122,7 @@ namespace RegionExtension.Database
 
         public bool RemoveByObject(T dBunit)
         {
-            var keyProperty = dBunit.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttributes(true).Any(a => a.GetType() == typeof(SQLSettingAttribute) &&
-                                                                                                         ((SQLSettingAttribute)a).Settings.Any(s => s == SqlColumnSettings.Primary)));
+            var keyProperty = KeyPropertie;
             if (keyProperty == null)
                 throw new ArgumentException("Failed find primary key column!");
             try

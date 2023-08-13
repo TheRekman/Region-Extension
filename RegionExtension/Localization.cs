@@ -69,6 +69,7 @@ namespace RegionExtension
                 {"TriggerListDesc", "List all available triggers." },
                 {"TriggerHelpDesc", "Returns all info about given trigger." },
                 {"UndoHistoryDesc", "Undo actions on region." },
+                {"PropertyHelpDesc", "Returns all info about given property." },
                 #endregion
                 #region Triggers Description
                 {"BuffTriggerDesc", "Buffs player." },
@@ -160,7 +161,9 @@ namespace RegionExtension
                 {"TeleportToRegionDesc", "Телепортирует в центр заданного региона." },
                 {"TriggerInfoDesc", "Информация о триггерах в регионе." },
                 {"TriggerListDesc", "Отображает все доступные триггеры." },
+                {"TriggerHelpDesc", "Отображает информацию о триггере." },
                 {"UndoHistoryDesc", "Отменяет действие над регионом." },
+                {"PropertyHelpDesc", "Отображает информацию о свойстве." },
                 #endregion
                 #region Triggers Description
                 {"BuffTriggerDesc", "Баффает игрока." },

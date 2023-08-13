@@ -69,7 +69,7 @@ namespace RegionExtension.Commands
                         args.Player.SendSuccessMessage("Localization changed to '{0}'!".SFormat(loc));
                     },
                     "reloc")
-                    { HelpText = "Changes Region extension localization." });
+                    { HelpText = "Changes Region extension localization.", AllowServer = false });
         }
     }
 }

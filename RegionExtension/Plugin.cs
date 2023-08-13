@@ -276,16 +276,15 @@ namespace RegionExtension
             if (!args.Player.HasPermission(Permissions.RegionExtCmd) && !args.Player.HasPermission("regionext.own")) return;
             switch (args.CommandName)
             {
-                case "/re":
-                case "/regionext":
-                case "/rt":
-                case "/regiontrigger":
-                case "/rp":
-                case "/regionproperty":
-                case "/ro":
-                case "/regionown":
-                case "region":
                 case "re":
+                case "regionext":
+                case "rt":
+                case "regiontrigger":
+                case "rp":
+                case "regionproperty":
+                case "ro":
+                case "regionown":
+                case "region":
                     for (int i = 1; i < args.Parameters.Count; i++)
                         if (args.Parameters[i].StartsWith(Config.ContextSpecifier))
                             Contexts.InitializeContext(i, args);

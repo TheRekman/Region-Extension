@@ -198,10 +198,10 @@ namespace RegionExtension.RegionTriggers
             var triggers = _triggers[region];
             localIds ??= triggers.Select(t => t.LocalId);
             var res = true;
-            foreach (var i in localIds.Intersect(triggers.Select(t => t.Id)))
+            foreach (var i in localIds.Intersect(triggers.Select(t => t.LocalId)))
             {
                 triggers[i].Conditions = triggers[i].Conditions.Where(c => !c.GetNames()[0].Equals(condition.GetNames()[0]));
-                res = true && _database.UpdateByColumn(nameof(TriggerDBUnit.Conditions), ConditionManager.GenerateConditionsString(triggers[i].Conditions), new[] { (nameof(TriggerDBUnit.Id), (object)triggers[i].Id) });
+                res = _database.UpdateByColumn(nameof(TriggerDBUnit.Conditions), ConditionManager.GenerateConditionsString(triggers[i].Conditions), new[] { (nameof(TriggerDBUnit.Id), (object)triggers[i].Id) });
             }
             return res;
         }

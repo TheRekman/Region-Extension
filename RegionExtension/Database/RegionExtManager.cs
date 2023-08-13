@@ -97,13 +97,20 @@ namespace RegionExtension.Database
                 throw new Exception("Invalid storage type");
             }
             _regionInfoManager = new RegionInfoManager(database);
+            TShock.Log.Info("Info manager loaded.");
             _historyManager = new RegionHistoryManager(database);
+            TShock.Log.Info("History manager loaded.");
             _deletedRegionsDB = new DeletedRegionsDB(database);
+            TShock.Log.Info("Deleted region database loaded.");
             _regionRequestManager = new RegionRequestManager(database);
+            TShock.Log.Info("Request manager loaded.");
             TriggerManager = new TriggerManager(database);
+            TShock.Log.Info("Trigger manager loaded.");
             PropertyManager = new PropertyManager(database, plugin);
+            TShock.Log.Info("Property manager loaded.");
             if (OnPostInitialize != null)
                 OnPostInitialize();
+            TShock.Log.Info("Region extension manager fully loaded!");
         }
 
         public void PostInitialize(TerrariaPlugin plugin)
