@@ -21,8 +21,8 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       new ICommandParam[] {
                                                                           new NpcParam("npc", "type of npc which will be spawned."),
                                                                           new IntParam("count", "how many npc will be spawned. default: 1", true, 1),
-                                                                          new FunctionParam("x", "Spawn coordinate by X. Auto increment region X. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionX),
-                                                                          new FunctionParam("y", "Spawn coordinate by Y. Auto increment region Y. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionY),
+                                                                          new FunctionParam("x", "Spawn coordinate by X. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionX),
+                                                                          new FunctionParam("y", "Spawn coordinate by Y. default: random in region", true, FunctionParam.FunctionParamDefault.InRegionY),
                                                                           new IntParam("health", "NPC custom max HP. default: Npc", true, -1),
                                                                           new IntParam("strength", "Stats increase of npc. default: gamemode", true, Main.GameMode)
                                                                       },

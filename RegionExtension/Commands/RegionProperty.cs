@@ -20,6 +20,7 @@ namespace RegionExtension.Commands
             new RemoveProperty(),
             new PropertyList(),
             new PropertyInfo(),
+            new PropertyHelp(),
             new AddPropertyCondition(),
             new RemovePropertyCondition(),
             new ClearProperties()

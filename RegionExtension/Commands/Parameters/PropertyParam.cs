@@ -13,10 +13,10 @@ namespace RegionExtension.Commands.Parameters
     public class PropertyParam : CommandParam<PropertyFormer>
     {
         PropertyFormer _property;
-        public PropertyParam(string name, string description, bool optional = false, PropertyFormer defaultValue = null)
+        public PropertyParam(string name, string description, bool optional = false, PropertyFormer defaultValue = null, bool ignoreParamSet = false)
             : base(name, description, optional, defaultValue)
         {
-            Dynamic = true;
+            Dynamic = !ignoreParamSet;
         }
 
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
@@ -28,6 +28,8 @@ namespace RegionExtension.Commands.Parameters
                 return false;
             }
             _property = new PropertyFormer(prop.Names[0], prop.CommandParams);
+            if (!Dynamic)
+                _value = _property;
             return true;
         }
 

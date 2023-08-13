@@ -67,6 +67,7 @@ namespace RegionExtension
                 {"TeleportToRegionDesc", "Teleports you to the given region's center." },
                 {"TriggerInfoDesc", "Info about triggers of the region." },
                 {"TriggerListDesc", "List all available triggers." },
+                {"TriggerHelpDesc", "Returns all info about given trigger." },
                 {"UndoHistoryDesc", "Undo actions on region." },
                 #endregion
                 #region Triggers Description
@@ -101,9 +102,9 @@ namespace RegionExtension
                 {"ItemBanPropDesc", "Ban items in the region." },
                 #endregion
                 #region Events Description
-                {"OnEnterEventDesc", "activates when player enters in region" },
-                {"OnLeaveEventDesc", "activates when player leaves from region" },
-                {"OnInEventDesc", "activates while player in the region" }
+                {"OnEnterEventDesc", "Activates when player enters in region" },
+                {"OnLeaveEventDesc", "Activates when player leaves from region" },
+                {"OnInEventDesc", "Activates while player in the region" }
                 #endregion
             } },
             { "RU", new Dictionary<string, string>
@@ -184,18 +185,18 @@ namespace RegionExtension
                 {"PausePlayerCondDesc", "Останавливает триггер на заданное время для игрока. Формат: 0d0h0m0s" },
                 #endregion
                 #region Property Description
-                {"AlwaysPvpPropDesc", "Включает PvP игрока и предотвращает его изменение." },
+                {"AlwaysPvpPropDesc", "Включает режим PvP игрока и предотвращает его изменение." },
                 {"BanHostilePropDesc", "Удаляет всех враждебных НИПов и снаряды, также не позволяет боссу зайти в регион." },
                 {"MaxSpawnPropDesc", "Переписывает количество НИПов возле игрока. Число меньше 1 - увеличит появление НИПов возле игрока, число выше - уменьшит" },
-                {"NoPvpPropDesc", "Выключает PvP игрока и предотвращает его изменение." },
+                {"NoPvpPropDesc", "Выключает режим PvP игрока и предотвращает его изменение." },
                 {"NPCRewritePropDesc", "Изменяет естественное появление НИПов в регионе." },
                 {"ProjBanPropDesc", "Предотвращает использование снаряда игроком." },
                 {"ItemBanPropDesc", "Предотвращает использование предмета игроком." },
                 #endregion
                 #region Events Description
-                {"OnEnterEventDesc", "активируется когда игрок заходит в регион." },
-                {"OnLeaveEventDesc", "активируется когда игрок выходит из региона." },
-                {"OnInEventDesc", "активируется пока игрок находится в регионе." }
+                {"OnEnterEventDesc", "Активируется когда игрок заходит в регион." },
+                {"OnLeaveEventDesc", "Активируется когда игрок выходит из региона." },
+                {"OnInEventDesc", "Активируется пока игрок находится в регионе." }
                 #endregion
             } },
         };
