@@ -60,8 +60,6 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             var pair = pairs.MaxBy(p => p.Key.Z);
             if (pair.Equals(default(KeyValuePair<Region, ConditionDataPair<int>>)))
                 return;
-            if (pair.Value.Any(p => p.NPCType == e.Type))
-                return;
             e.Npc = new NPC();
             _npcsToChange.Add(new(e.Npc, pair.Key));
         }
@@ -100,7 +98,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (!_npcs.ContainsKey(region))
                 _npcs.Add(region, new(new List<IRegionCondition>(), new List<NPCWeightPair>()));
             _npcs[region].Data.AddRange(itemsToBan);
-            _npcs[region].Data = _npcs[region].Data.GroupBy(x => x).Select(x => x.First()).ToList();
+            _npcs[region].Data = _npcs[region].Data.GroupBy(x => x.NPCType).Select(x => x.First()).ToList();
             _npcs[region].Data = _npcs[region].Data.OrderBy(n => n.NPCType).ToList();
         }
 
