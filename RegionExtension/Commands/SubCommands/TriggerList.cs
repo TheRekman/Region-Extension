@@ -1,4 +1,5 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Microsoft.Xna.Framework;
+using RegionExtension.Commands.Parameters;
 using RegionExtension.RegionTriggers;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendTriggerList(CommandArgsExtension args, int page)
         {
-            var triggers = TriggerManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names), string.Join(' ', f.Params.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)));
+            var triggers = TriggerManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names.Select(n => Utils.ColorCommand(n))), string.Join(' ', f.Params.Select(p => p.GetColoredBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)).Replace("  ", " "));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),
@@ -41,7 +42,8 @@ namespace RegionExtension.Commands.SubCommands
                             HeaderFormat = "Region triggers ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
-                            NothingToDisplayString = "There are currently no triggers."
+                            NothingToDisplayString = "There are currently no triggers.",
+                            LineTextColor = Color.White
                         });
         }
     }

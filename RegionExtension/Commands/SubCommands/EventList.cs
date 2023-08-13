@@ -37,7 +37,7 @@ namespace RegionExtension.Commands.SubCommands
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),
                         new PaginationTools.Settings
                         {
-                            HeaderFormat = "Region triggers ({0}/{1}):",
+                            HeaderFormat = "Trigger events ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
                             NothingToDisplayString = "There are currently no regions."

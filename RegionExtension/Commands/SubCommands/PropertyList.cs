@@ -1,4 +1,5 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Microsoft.Xna.Framework;
+using RegionExtension.Commands.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void ListProperties(CommandArgsExtension args, int page)
         {
-            var triggers = Plugin.RegionExtensionManager.PropertyManager.RegionProperties.Select(p => "{0} {1} - {2}".SFormat(string.Join('/', p.Names), string.Join(' ', p.CommandParams.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(p.Description, args.Player)));
+            var triggers = Plugin.RegionExtensionManager.PropertyManager.RegionProperties.Select(p => "{0} {1} - {2}".SFormat(string.Join('/', p.Names.Select(n => Utils.ColorCommand(n))), string.Join(' ', p.CommandParams.Select(p => p.GetColoredBracketName())), Localization.GetStringForPlayer(p.Description, args.Player)).Replace("  ", " "));
             var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),
@@ -39,7 +40,8 @@ namespace RegionExtension.Commands.SubCommands
                             HeaderFormat = "Region properties ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
-                            NothingToDisplayString = "There are currently no regions."
+                            NothingToDisplayString = "There are currently no regions.",
+                            LineTextColor = Color.White
                         });
         }
     }

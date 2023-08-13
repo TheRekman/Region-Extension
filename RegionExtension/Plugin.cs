@@ -278,6 +278,10 @@ namespace RegionExtension
             {
                 case "/re":
                 case "/regionext":
+                case "/rt":
+                case "/regiontrigger":
+                case "/rp":
+                case "/regionproperty":
                 case "/ro":
                 case "/regionown":
                 case "region":

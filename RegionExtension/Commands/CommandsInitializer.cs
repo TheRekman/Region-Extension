@@ -55,6 +55,21 @@ namespace RegionExtension.Commands
                     },
                     "reperm")
                     { HelpText = "Returns all permissions used by Region Extension plugin" });
+            TShockAPI.Commands.ChatCommands.Add(
+                    new Command(
+                    args =>
+                    {
+                        var loc = args.Parameters.Count > 0 ? args.Parameters[0].ToUpper() : Plugin.Config.DefaultLocalization;
+                        if(!Localization.Languages.ContainsKey(loc))
+                        {
+                            args.Player.SendErrorMessage("Invalid language '{0}'! Available localizations: {1}".SFormat(loc, string.Join(" ", Localization.Languages.Select(p => p.Key))));
+                            return;
+                        }
+                        Localization.PlayersLocalization[args.Player.TPlayer.whoAmI] = loc;
+                        args.Player.SendSuccessMessage("Localization changed to '{0}'!".SFormat(loc));
+                    },
+                    "reloc")
+                    { HelpText = "Changes Region extension localization." });
         }
     }
 }
