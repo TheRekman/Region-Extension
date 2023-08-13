@@ -18,9 +18,9 @@ namespace RegionExtension.RegionTriggers
 {
     public class PropertyManager
     {
-        IRegionProperty[] _regionProperties = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes().Where(t => typeof(IRegionProperty).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                                                                                                                  .Select(t => (IRegionProperty)t.GetConstructors().Where(c => c.GetParameters().Length == 0)
-                                                                                                                                                                   .First().Invoke(null))).ToArray();
+        IRegionProperty[] _regionProperties = Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(IRegionProperty).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                                                                                        .Select(t => (IRegionProperty)t.GetConstructors().Where(c => c.GetParameters().Length == 0)
+                                                                                                                                         .First().Invoke(null)).ToArray();
         DatabaseTable<RegionPropertyDBUnit> _database;
 
         public IRegionProperty[] RegionProperties { get { return _regionProperties; } }
