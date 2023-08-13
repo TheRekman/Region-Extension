@@ -20,7 +20,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         private static List<(NPC, Region)?> _npcsToChange = new List<(NPC, Region)?>();
         private static List<(NPC, int)?> _npcsToIgnoreNetId = new List<(NPC, int)?>();
         public string[] Names => new[] { "spawnrewrite", "sr" };
-        public string Description => "";
+        public string Description => "Rewrites npc spawn in the region.";
         public string Permission => Permissions.PropertySpawnRewrite;
         public ICommandParam[] CommandParams => new[] { new ArrayParam<NPC>("npcs...", "Npcs which will be spawn in region.") };
         public Region[] DefinedRegions => _npcs.Keys.ToArray();

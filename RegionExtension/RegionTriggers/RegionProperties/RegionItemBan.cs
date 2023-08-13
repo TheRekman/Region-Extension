@@ -21,7 +21,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public string[] Names => new[] { "itemban", "ib"};
         public string Description => "Ban items in the region.";
         public string Permission => Permissions.PropertyItem;
-        public ICommandParam[] CommandParams => new[] { new ArrayParam<Item>("items...", "Items which will be banned in region.", 0, true, new Item[0])};
+        public ICommandParam[] CommandParams => new[] { new ArrayParam<Item>("items...", "Items which will be banned in region.")};
         public Region[] DefinedRegions =>_itemsBan.Keys.ToArray();
 
         private Dictionary<Region, ConditionDataPair<int>> _itemsBan = new Dictionary<Region, ConditionDataPair<int>>();
