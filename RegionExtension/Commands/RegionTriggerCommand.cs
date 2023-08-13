@@ -23,7 +23,8 @@ namespace RegionExtension.Commands
             new EventList(),
             new ConditionList(),
             new AddTriggerCondition(),
-            new RemoveTriggerCondition()
+            new RemoveTriggerCondition(),
+            new ClearTriggers()
         }.Concat(base.SubCommands).ToArray();
     }
 }

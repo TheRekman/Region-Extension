@@ -1,5 +1,6 @@
 ﻿using RegionExtension.Commands.Parameters;
 using RegionExtension.Database;
+using RegionExtension.Database.EventsArgs;
 using RegionExtension.RegionTriggers.Conditions;
 using RegionExtension.RegionTriggers.RegionProperties;
 using System;
@@ -49,6 +50,13 @@ namespace RegionExtension.RegionTriggers
                     _regionProperties.FirstOrDefault(p => p.Names[0].Equals(propInfo.PropertyName)).SetFromString(region, new(propInfo.Conditions, propInfo.Args));
                 }
             }
+            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
+        }
+
+        private void OnRegionDeleted(BaseRegionArgs args)
+        {
+            var region = args.Region;
+            RemoveAllProperties(region);
         }
 
         public IRegionProperty GetProperty(string name) =>
@@ -112,6 +120,13 @@ namespace RegionExtension.RegionTriggers
                 return;
             prop.ClearProperties(region);
             _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), prop.Names[0]) });
+        }
+
+        public bool RemoveAllProperties(Region region)
+        {
+            foreach (var item in _regionProperties.Where(p => p.DefinedRegions.Contains(region)))
+                item.ClearProperties(region);
+            return _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using OTAPI;
 using RegionExtension.Database;
+using RegionExtension.Database.EventsArgs;
 using RegionExtension.RegionTriggers.Actions;
 using RegionExtension.RegionTriggers.Conditions;
 using RegionExtension.RegionTriggers.RegionProperties;
@@ -83,6 +84,20 @@ namespace RegionExtension.RegionTriggers
                     }
                 }    
             }
+            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
+        }
+
+        private void OnRegionDeleted(BaseRegionArgs args)
+        {
+            if (!_triggers.ContainsKey(args.Region))
+                return;
+            ClearTriggers(args.Region);
+        }
+
+        public bool ClearTriggers(Region region)
+        {
+            _triggers.Remove(region);
+            return _database.RemoveByColumn(new[] { (nameof(TriggerDBUnit.RegionId), (object)region.ID) });
         }
 
         public void OnPlayerEnter(GreetPlayerEventArgs args)

@@ -21,7 +21,8 @@ namespace RegionExtension.Commands
             new PropertyList(),
             new PropertyInfo(),
             new AddPropertyCondition(),
-            new RemovePropertyCondition()
+            new RemovePropertyCondition(),
+            new ClearProperties()
         }.Concat(base.SubCommands).ToArray();
     }
 }
