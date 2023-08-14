@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     public class RestoreSubCommand : SubCommand
     {
         public override string[] Names => new[] { "restore", "res" };
-        public override string Description => "restore region from deleted regions.";
+        public override string Description => "RegionRestoreDesc";
 
         public override void InitializeParams()
         {

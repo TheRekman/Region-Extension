@@ -7,7 +7,7 @@ using TShockAPI;
 
 namespace RegionExtension.Commands.Parameters
 {
-    internal class IntParam : CommandParam<int>
+    public class IntParam : CommandParam<int>
     {
         public IntParam(string name, string description, bool optional = false, int defaultValue = default(int)) :
             base(name, description, optional, defaultValue)

@@ -10,7 +10,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "listact", "la" };
 
-        public override string Description => "Get list of last active regions.";
+        public override string Description => "LastActiveDesc";
 
         public override void InitializeParams()
         {

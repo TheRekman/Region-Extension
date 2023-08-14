@@ -16,6 +16,7 @@ using System.Linq;
 using Steamworks;
 using TShockAPI.Configuration;
 using Microsoft.Xna.Framework;
+using RegionExtension.RegionTriggers;
 
 namespace RegionExtension.Database
 {
@@ -53,6 +54,8 @@ namespace RegionExtension.Database
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
         public RegionInfoManager InfoManager { get { return _regionInfoManager; } }
         public RegionRequestManager RegionRequestManager { get => _regionRequestManager; }
+        public TriggerManager TriggerManager { get; private set; }
+        public PropertyManager PropertyManager { get; private set; }
 
         public RegionExtManager(IDbConnection db)
         {
@@ -60,7 +63,7 @@ namespace RegionExtension.Database
             EventHandler();
         }
 
-        public void InitializeDatabase()
+        public void InitializeDatabase(TerrariaPlugin plugin)
         {
             IDbConnection database;
             if (TShock.Config.Settings.StorageType.ToLower() == "sqlite")
@@ -94,16 +97,25 @@ namespace RegionExtension.Database
                 throw new Exception("Invalid storage type");
             }
             _regionInfoManager = new RegionInfoManager(database);
+            TShock.Log.Info("Info manager loaded.");
             _historyManager = new RegionHistoryManager(database);
+            TShock.Log.Info("History manager loaded.");
             _deletedRegionsDB = new DeletedRegionsDB(database);
+            TShock.Log.Info("Deleted region database loaded.");
             _regionRequestManager = new RegionRequestManager(database);
-            if(OnPostInitialize != null)
+            TShock.Log.Info("Request manager loaded.");
+            TriggerManager = new TriggerManager(database);
+            TShock.Log.Info("Trigger manager loaded.");
+            PropertyManager = new PropertyManager(database, plugin);
+            TShock.Log.Info("Property manager loaded.");
+            if (OnPostInitialize != null)
                 OnPostInitialize();
+            TShock.Log.Info("Region extension manager fully loaded!");
         }
 
-        public void PostInitialize()
+        public void PostInitialize(TerrariaPlugin plugin)
         {
-            InitializeDatabase();
+            InitializeDatabase(plugin);
             _regionInfoManager.PostInitialize();
         }
 
@@ -269,6 +281,7 @@ namespace RegionExtension.Database
 
         public void Update()
         {
+            TriggerManager.OnUpdate();
             if (DateTime.UtcNow < _lastUpdate.AddSeconds(10))
                 return;
             var requestsToRemove = _regionRequestManager.Requests.Where(r =>
@@ -286,7 +299,7 @@ namespace RegionExtension.Database
             var timePeriod = StringTime.FromString(Plugin.Config.NotificationPeriod);
             if (!timePeriod.IsZero() && _lastNotify + timePeriod < DateTime.UtcNow)
             {
-                var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+                var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.RegionExtCmd));
                 foreach (var plr in players)
                     SendRequestNotify(plr, _regionRequestManager.GetSortedRegionRequestsNames());
                 _lastNotify = DateTime.UtcNow;
@@ -296,7 +309,7 @@ namespace RegionExtension.Database
 
         public void SendRequestNotify(TSPlayer player, IEnumerable<string> strings)
         {
-            var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.manageregion));
+            var players = TShock.Players.Where(p => p != null && p.Account != null && p.HasPermission(Permissions.RegionExtCmd));
                 PaginationTools.SendPage(player, 0, PaginationTools.BuildLinesFromTerms(strings, null, ", ", 240), new PaginationTools.Settings()
                 {
                     HeaderFormat = "Active region requests:",

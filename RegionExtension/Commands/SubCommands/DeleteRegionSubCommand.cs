@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "delete", "del" };
-        public override string Description => "Deletes the given region.";
+        public override string Description => "DeleteRegionDesc";
 
         public override void InitializeParams()
         {

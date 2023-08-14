@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "setowner", "so" };
-        public override string Description => "Set region owner";
+        public override string Description => "SetOwnerDesc";
 
         public override void InitializeParams()
         {

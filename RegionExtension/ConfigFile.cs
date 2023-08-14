@@ -15,6 +15,7 @@ namespace RegionExtension
         public bool AutoCompleteSameName = true;
         public string AutoCompleteSameNameFormat = "{0}:{1}"; //{0} - region name, {1} - region number
         public string NotificationPeriod = "10m";
+        public string DefaultLocalization = "EN";
         public RequestSettings[] RequestSettings = new RequestSettings[]
             {
                 new RequestSettings {},

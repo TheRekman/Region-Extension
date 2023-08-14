@@ -9,7 +9,7 @@ namespace RegionExtension.Commands.SubCommands
         private bool _checkRegionOwn;
 
         public override string[] Names => new[] { "remove", "r" };
-        public override string Description => "Removes a user from a region.";
+        public override string Description => "RegionRemoveDesc";
 
         public override void InitializeParams()
         {

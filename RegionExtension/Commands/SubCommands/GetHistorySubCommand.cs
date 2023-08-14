@@ -15,7 +15,7 @@ namespace RegionExtension.Commands.SubCommands
 
         public override string[] Names => new string[] { "history", "h" };
 
-        public override string Description => "gets history about region.";
+        public override string Description => "GetHistoryDesc";
 
         public override void InitializeParams()
         {

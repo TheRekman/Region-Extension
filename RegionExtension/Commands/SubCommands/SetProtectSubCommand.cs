@@ -12,7 +12,7 @@ namespace RegionExtension.Commands.SubCommands
     internal class SetProtectSubCommand : SubCommand
     {
         public override string[] Names => new[] { "protect", "p" };
-        public override string Description => "Sets whether the tiles inside the region are protected or not.";
+        public override string Description => "SetProtectDesc";
 
         public override void InitializeParams()
         {

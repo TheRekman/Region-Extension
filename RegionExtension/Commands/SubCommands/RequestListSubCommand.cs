@@ -14,7 +14,7 @@ namespace RegionExtension.Commands.SubCommands
     {
         public override string[] Names => new string[] { "listrequest", "lr" };
 
-        public override string Description => "Lists all region requests.";
+        public override string Description => "RequestListDesc";
 
         public override void InitializeParams()
         {

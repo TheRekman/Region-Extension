@@ -110,6 +110,9 @@ namespace RegionExtension.Database
                         _deletedInfo.Add(info);
                     }
                 }
+                _deletedInfo = _deletedInfo.OrderBy(r => r.DeletionDate)
+                                           .Reverse().ToList();
+                Task.Run(() => RemoveMoreThanMaxRegions());
                 return true;
             }
             catch (Exception ex)
@@ -119,11 +122,31 @@ namespace RegionExtension.Database
             }
         }
 
+        public bool RemoveMoreThanMaxRegions()
+        {
+            var max = 64;
+            try
+            {
+                while ( _deletedInfo.Count > max )
+                {
+                    var lastReg = _deletedInfo.Last();
+                    _deletedInfo.Remove(lastReg);
+                    _database.Query($"DELETE FROM {_table.Name} WHERE RegionId={lastReg.RegionExt.Region.ID}");
+                }
+            }
+            catch (Exception ex)
+            {
+                TShock.Log.Error(ex.Message);
+                return false;
+            }
+            return true;
+        }
+
         public List<string> GetRegionsInfo() => 
             _deletedInfo.OrderBy(r => r.DeletionDate)
-                               .Reverse()
-                               .Select(r => string.Join(' ', r.DeletionDate.ToString(Utils.DateFormat), r.RegionName, r.DeleterUser))
-                               .ToList();
+                        .Reverse()
+                        .Select(r => string.Join(' ', r.DeletionDate.ToString(Utils.DateFormat), r.RegionName, r.DeleterUser))
+                        .ToList();
 
         public bool RemoveRegionFromDeleted(int regionId)
         {

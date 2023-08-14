@@ -52,7 +52,7 @@ namespace RegionExtension.Commands.Parameters
             return true;
         }
 
-        public override bool TrySetDefaultValue(CommandArgs args = null)
+        public override bool TrySetDefaultValue(CommandArgsExtension args = null)
         {
             _defaultValue = args.Player.Account;
             return base.TrySetDefaultValue();

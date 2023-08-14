@@ -7,7 +7,7 @@ namespace RegionExtension.Commands.SubCommands
     internal class FastRegionBreakSubCommand : SubCommand
     {
         public override string[] Names => new[] { "fastregionbreak", "frb" };
-        public override string Description => "Breaks fast region request.";
+        public override string Description => "BreakFRRequestDesc";
 
         public override void Execute(CommandArgsExtension args)
         {
