@@ -45,7 +45,7 @@ namespace RegionExtension.Commands.SubCommands
                             HeaderFormat = "Region triggers ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} {3} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName, region.Name),
-                            NothingToDisplayString = "There are currently no regions."
+                            NothingToDisplayString = "There are currently no triggers."
                         });
         }
     }

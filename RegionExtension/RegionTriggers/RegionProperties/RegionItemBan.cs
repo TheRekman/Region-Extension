@@ -86,7 +86,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         private void SendCorrectiveMessage(TSPlayer player, string itemName)
         {
-            player.SendErrorMessage("{0} is banned! Remove it!".SFormat(itemName));
+            player.SendErrorMessage("{0} is banned in this region! Remove it!".SFormat(itemName));
         }
 
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)

@@ -54,15 +54,13 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
             {
                 var id = reader.ReadInt16();
-                reader.ReadVector2();
-                reader.ReadVector2();
-                reader.ReadByte();
+                reader.BaseStream.Seek(2 + 4 + 4 + 1, SeekOrigin.Begin);
                 var type = reader.ReadInt16();
                 if (items.Data.Contains(type))
                 {
                     string itemName = Lang._projectileNameCache[type].Value;
-                    player.Disable($"Used banned projectile: {itemName}", DisableFlags.None);
-                    player.SendErrorMessage($"Used banned projectile: {itemName}", DisableFlags.None);
+                    player.Disable($"Used banned projectile in this region: {itemName}", DisableFlags.None);
+                    player.SendErrorMessage($"Used banned projectile in this region: {itemName}", DisableFlags.None);
                     NetMessage.SendData(29, player.Index, -1, null, id);
                     args.Handled = true;
                 }

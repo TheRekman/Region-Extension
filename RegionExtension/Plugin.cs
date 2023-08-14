@@ -241,11 +241,7 @@ namespace RegionExtension
                         id = reader.ReadInt16();
                         if (id >= 400 || ItemRewrites[id] == null || !ItemRewrites[id].Active)
                             return;
-                        reader.ReadVector2();
-                        reader.ReadVector2();
-                        reader.ReadInt16();
-                        reader.ReadByte();
-                        reader.ReadByte();
+                        reader.BaseStream.Seek(2+4+4+2+1+1, SeekOrigin.Begin);
                         int num56 = (int)reader.ReadInt16();
                         if (num56 == 0)
                             ItemRewrites[id].Active = false;

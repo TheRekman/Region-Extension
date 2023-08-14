@@ -32,7 +32,7 @@ namespace RegionExtension.Commands
                         args.Player.SendInfoMessage("Trigger ignore is " + (Plugin.TriggerIgnores[args.Player.Index] ? "activated!" : "disabled!"));
                     },
                     "triggerignore", "ti")
-                    { HelpText = "Ignores any trigger and property activation." });
+                    { HelpText = "Ignores any trigger and some property activation." });
             TShockAPI.Commands.ChatCommands.Add(
                     new Command(
                     TShockAPI.Permissions.managegroup,
@@ -54,7 +54,7 @@ namespace RegionExtension.Commands
                             TShock.Log.Info("[RegionExtensionPermissions] " + item);
                     },
                     "reperm")
-                    { HelpText = "Returns all permissions used by Region Extension plugin" });
+                    { HelpText = "Returns all permissions used by Region Extension plugin." });
             TShockAPI.Commands.ChatCommands.Add(
                     new Command(
                     args =>
