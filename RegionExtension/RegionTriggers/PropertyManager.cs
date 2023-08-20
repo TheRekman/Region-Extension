@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
+using TShockAPI.Hooks;
 
 namespace RegionExtension.RegionTriggers
 {
@@ -37,19 +38,7 @@ namespace RegionExtension.RegionTriggers
             var triggers = new List<Trigger>();
             foreach (var prop in _regionProperties)
                 prop.InitializeEventHandler(plugin);
-            foreach (var region in TShock.Regions.Regions)
-            {
-                var list = _database.GetValues(RegionPropertyDBUnit.Reader, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) }).Select(p => (p.PropertyName, p.Conditions, p.Args));
-                foreach(var propInfo in list)
-                {
-                    if (string.IsNullOrEmpty(propInfo.Args))
-                    {
-                        _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), (object)propInfo.PropertyName) });
-                        continue;
-                    }
-                    _regionProperties.FirstOrDefault(p => p.Names[0].Equals(propInfo.PropertyName)).SetFromString(region, new(propInfo.Conditions, propInfo.Args));
-                }
-            }
+            LoadProperties();
             Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
         }
 
@@ -127,6 +116,31 @@ namespace RegionExtension.RegionTriggers
             foreach (var item in _regionProperties.Where(p => p.DefinedRegions.Contains(region)))
                 item.ClearProperties(region);
             return _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) });
+        }
+
+        public void Reload(ReloadEventArgs e)
+        {
+            foreach (var property in _regionProperties)
+                foreach (var region in property.DefinedRegions)
+                    property.ClearProperties(region);
+            LoadProperties();
+        }
+
+        private void LoadProperties()
+        {
+            foreach (var region in TShock.Regions.Regions)
+            {
+                var list = _database.GetValues(RegionPropertyDBUnit.Reader, new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID) }).Select(p => (p.PropertyName, p.Conditions, p.Args));
+                foreach (var propInfo in list)
+                {
+                    if (string.IsNullOrEmpty(propInfo.Args))
+                    {
+                        _database.RemoveByColumn(new[] { (nameof(RegionPropertyDBUnit.RegionId), (object)region.ID), (nameof(RegionPropertyDBUnit.PropertyName), (object)propInfo.PropertyName) });
+                        continue;
+                    }
+                    _regionProperties.FirstOrDefault(p => p.Names[0].Equals(propInfo.PropertyName)).SetFromString(region, new(propInfo.Conditions, propInfo.Args));
+                }
+            }
         }
     }
 }

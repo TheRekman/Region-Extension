@@ -67,24 +67,29 @@ namespace RegionExtension.RegionTriggers
         public void Initialize()
         {
             _database.InitializeTable();
+            LoadTriggers();
+            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
+        }
+
+        private void LoadTriggers()
+        {
             var triggers = new List<Trigger>();
             foreach (var region in TShock.Regions.Regions)
             {
                 var list = _database.GetValues(TriggerDBUnit.Reader, new[] { (nameof(TriggerDBUnit.RegionId), (object)region.ID) }).Select(t => t.ParseToTrigger()).ToList();
-                if(list.Count != 0)
+                if (list.Count != 0)
                 {
                     _triggers.Add(region, list);
                     for (int i = 0; i < _triggers[region].Count; i++)
                     {
-                        if(_triggers[region][i].LocalId != i)
+                        if (_triggers[region][i].LocalId != i)
                         {
                             _triggers[region][i].LocalId = i;
                             _database.UpdateByColumn(nameof(TriggerDBUnit.LocalId), i, new[] { (nameof(TriggerDBUnit.Id), (object)_triggers[region][i].Id) });
                         }
                     }
-                }    
+                }
             }
-            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
         }
 
         private void OnRegionDeleted(BaseRegionArgs args)
@@ -204,6 +209,12 @@ namespace RegionExtension.RegionTriggers
                 res = _database.UpdateByColumn(nameof(TriggerDBUnit.Conditions), ConditionManager.GenerateConditionsString(triggers[i].Conditions), new[] { (nameof(TriggerDBUnit.Id), (object)triggers[i].Id) });
             }
             return res;
+        }
+
+        internal void Reload(ReloadEventArgs e)
+        {
+            _triggers = new Dictionary<Region, List<Trigger>>();
+            LoadTriggers();
         }
     }
 

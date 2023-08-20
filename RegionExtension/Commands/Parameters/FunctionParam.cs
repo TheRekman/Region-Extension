@@ -27,7 +27,7 @@ namespace RegionExtension.Commands.Parameters
 
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
         {
-            var value = Function.GetFunction(args.Player, RegionParam.LastUsedRegion[args.Player.Index], str);
+            var value = Function.GetFunction(args.Player, args.Player.Index == -1 ? null : RegionParam.LastUsedRegion[args.Player.Index], str);
             if (value == null)
             {
                 args?.Player.SendErrorMessage("Failed implement function: {0}".SFormat(str));

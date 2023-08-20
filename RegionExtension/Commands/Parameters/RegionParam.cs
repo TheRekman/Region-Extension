@@ -39,6 +39,8 @@ namespace RegionExtension.Commands.Parameters
                 return false;
             }
             _value = region;
+            if (args.Player.Index == -1)
+                return true;
             LastUsedRegion[args.Player.Index] = region;
             return true;
         }

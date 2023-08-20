@@ -342,5 +342,11 @@ namespace RegionExtension.Database
             _regionInfoManager.UpdateLastUpdate(region.ID, DateTime.UtcNow);
             _regionInfoManager.UpdateLastUser(region.ID, executor.Account.ID);
         }
+
+        internal void Reload(ReloadEventArgs e)
+        {
+            TriggerManager.Reload(e);
+            PropertyManager.Reload(e);
+        }
     }
 }

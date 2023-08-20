@@ -58,12 +58,20 @@ namespace RegionExtension
             ServerApi.Hooks.GamePostUpdate.Register(this, OnPostUpdate);
             ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer);
             ServerApi.Hooks.NetSendData.Register(this, OnSendData);
+            GeneralHooks.ReloadEvent += OnReload;
             _sendingItemDrop += OnSendItemDrop;
             PlayerHooks.PlayerLogout += OnPlayerLogout;
             PlayerHooks.PlayerPostLogin += OnPlayerLogin;
             PlayerHooks.PlayerCommand += OnPlayerCommand;
             PlayerHooks.PlayerHasBuildPermission += OnHasPlayerPermission;
             RegionExtensionManager = new RegionExtManager(TShock.DB);
+        }
+
+        private void OnReload(ReloadEventArgs e)
+        {
+            Config = ConfigFile.Read();
+            RegionExtensionManager.Reload(e);
+            e.Player.SendInfoMessage("[RegionExt] Config and triggers reloaded.");
         }
 
         private void OnSendItemDrop(SendDataEventArgs args)
