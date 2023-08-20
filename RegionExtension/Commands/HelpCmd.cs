@@ -22,7 +22,7 @@ namespace RegionExtension.Commands
 
         public override string[] Names => new string[] { "help", "he" };
 
-        public override string Description => "Returns all info about this command.";
+        public override string Description => "HelpCommandDesc";
 
         public override void InitializeParams()
         {

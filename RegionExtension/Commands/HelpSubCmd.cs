@@ -16,7 +16,7 @@ namespace RegionExtension.Commands
 
         public override string[] Names => new string[] { "helpsc", "hs"};
 
-        public override string Description => "Returns all info about this sub-command.";
+        public override string Description => "HelpSubCommandDesc";
 
         public override void InitializeParams()
         {

@@ -70,6 +70,10 @@ namespace RegionExtension
                 {"TriggerHelpDesc", "Returns all info about given trigger." },
                 {"UndoHistoryDesc", "Undo actions on region." },
                 {"PropertyHelpDesc", "Returns all info about given property." },
+                #region Common commands
+                {"HelpCommandDesc", "Returns all info about this command." },
+                {"HelSubCommandDesc", "Returns all info about this sub-command." },
+                #endregion
                 #endregion
                 #region Triggers Description
                 {"BuffTriggerDesc", "Buffs player." },
@@ -144,6 +148,7 @@ namespace RegionExtension
                 {"RegionRemoveGroupDesc", "Удаляет группу из региона." },
                 {"RemovePropertyDesc", "Удаляет свойство из региона." },
                 {"RemovePropertyConditionDesc", "Удаляет условие из свойства" },
+                {"RemoveTriggerConditionDesc", "Удаляет условие из триггера" },
                 {"RegionRemoveDesc", "Удаляет пользователя из региона." },
                 {"RenameRegionDesc", "Переименовывает заданный регион." },
                 {"RequestAcceptDesc", "Принимает запрос." },
@@ -164,6 +169,10 @@ namespace RegionExtension
                 {"TriggerHelpDesc", "Отображает информацию о триггере." },
                 {"UndoHistoryDesc", "Отменяет действие над регионом." },
                 {"PropertyHelpDesc", "Отображает информацию о свойстве." },
+                #region Common commands
+                {"HelpCommandDesc", "Отображает всю информацию о данной команде." },
+                {"HelpSubCommandDesc", "Отображает всю информацию о данной под-команде." },
+                #endregion
                 #endregion
                 #region Triggers Description
                 {"BuffTriggerDesc", "Баффает игрока." },
