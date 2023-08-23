@@ -33,9 +33,9 @@ namespace RegionExtension.RegionTriggers.Actions
             var commandParams = commandString.Split(' ');
             var cmd = TShockAPI.Commands.ChatCommands.FirstOrDefault(c => c.Name == commandParams[0] || c.Names.Contains(commandParams[0]));
             if (cmd == null)
-                return (null, "Command эє{0} was not founded!".SFormat(commandParams[0]));
+                return (null, "Command '{0}' was not founded!".SFormat(commandParams[0]));
             if(Plugin.Config.BannedTriggerCommands.Any(c => cmd.Names.Contains(c)))
-                return (null, "Command {0} was banned for trigger use!".SFormat(cmd.Name));
+                return (null, "Command '{0}' was banned for trigger use!".SFormat(cmd.Name));
             bool havePermission = false;
             foreach(var perm in cmd.Permissions)
                 if(player.HasPermission(perm))
