@@ -16,7 +16,12 @@ namespace RegionExtension.Commands.Parameters
 
         public override bool TrySetValue(string str, CommandArgsExtension args = null)
         {
-            var buff = TShock.Utils.GetBuffByName(str);
+            var id = -1;
+            var buff = new List<int>();
+            if (int.TryParse(str, out id) && id >= 0 && Terraria.ID.BuffID.Count > id)
+                buff.Add(id); 
+            else
+                buff = TShock.Utils.GetBuffByName(str);
             if (buff == null || buff.Count == 0)
             {
                 args.Player.SendErrorMessage("Failed found buff {0}!".SFormat(str));
