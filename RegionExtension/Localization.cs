@@ -105,6 +105,7 @@ namespace RegionExtension
                 {"NPCRewritePropDesc", "Rewrites npc spawn in the region." },
                 {"ProjBanPropDesc", "Prevents projectile creation from player." },
                 {"ItemBanPropDesc", "Ban items in the region." },
+                {"ClearItemsPropDesc", "Clears items from region." },
                 #endregion
                 #region Events Description
                 {"OnEnterEventDesc", "Activates when player enters in region." },
@@ -186,6 +187,7 @@ namespace RegionExtension
                 {"SpawnNpcTriggerDesc", "Призывает НИПа." },
                 {"TeleportPosTriggerDesc", "Телепортирует игрока на позицию." },
                 {"TeleportWartTriggerDesc", "Телепортирует игрока на варп." },
+                {"ClearItemsPropDesc", "Чистит предметы из региона." },
                 #endregion
                 #region Condition Description
                 {"AllowCondDesc", "Если игрок добавлен в регион." },

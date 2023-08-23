@@ -29,7 +29,7 @@ Commands for owners of regions. The commands are identical to the main ones, how
 - `fastregion/fr <region>` - Create new region with two given point and params. Also send request.
 - `fastregionbreak/frb` - Breaks fast region request.
 #### RegionHistory (/rh, /regiohistory)
-Команды для истории регионов.
+Commands for region history.
 - `undo/u <count> [region]` - Undo actions on region.
 - `redo/r <count> [region]` - Redo actions on region.
 - `restore/res <regionname>` - Restore region from deleted regions.
@@ -71,7 +71,7 @@ A player located in the region ($t) automatically turns on PvP mode and is not a
 Conditions also work on properties, however not all properties are subject to them, and not all conditions will be valid for a property\
 Example: By setting the condition - /rp ac $t !a ap\
 The property will only affect players not added to the region.
-#### Доступные триггеры
+#### Available triggers.
 - `command/cmd <command>` - Command trigger.
 > There are constants for commands:
 > @r - replaced by the name of the region
@@ -96,12 +96,12 @@ All available features:
 - `rd` - will return a random number from 0 to 1.
 - `lx, ly` - will be replaced by the local coordinate of the player in the region that set the trigger.
 - `gx, gy` - will be replaced by the coordinate of the player who set the trigger.
-#### Доступные события
+#### Available events
 - `onenter/enter/e` - Activates when player enters in region.
 - `onleave/leave/l` - Activates when player leaves from region.
 - `onin/in/i` - Activates while player in the region.
 Update happens every half second
-#### Доступные условия 
+#### Available conditions
 - `allowed/a`  - If player is allowed in the region.
 - `exact/e <count>` - If players count in the region.
 - `less/l <count>` - If less players in the region than count.
@@ -109,9 +109,10 @@ Update happens every half second
 - `owner/o`  - If player is owner of the region.
 - `pause/p [time]` - Pauses trigger in given time after activation. Format: 0d0h0m0s
 - `playerpause/pp [time]` - Pauses trigger for player in given time after activation. Format: 0d0h0m0s
-####  Доступные свойства
+#### Available properties
 - `alwayspvp/ap` - Activates player pvp and prevents trying to change it.
 - `banhostile/bh` - Removes any hostile NPCs and projectiles from region, and prevents bosses from entering the region.
+- `clearitems/ci` - Clears items from region.
 - `maxspawn/ms <ratio>` - Rewrite near NPCs count for players.
 > Property changes the number of NPCs calculated by the game by multiplying by a factor, thus allowing you to increase or decrease the actual spawning of NPCs near the player in the region. Example: If there are 10 NPCs near the player and the ratio is 0.5, then 10 NPCs will be counted as 5, increasing spawn, with 1.5 - 10 NPCs will be counted as 15, decreasing spawn.
 - `nopvp/np` - Deactivates player pvp and prevents trying to change it.
@@ -119,7 +120,7 @@ Update happens every half second
 > Only NPCs in the region are changed, regardless of the presence of the player or his position, the list is given in the format {Name or id}:{Weight} - where weight is the probability of a particular NPC appearing, relative to the weight of other entered NPCs. Example: With a list of 1:1 3:0.5 - 1 zombie will appear for every 2 slimes, or by probabilities 1/1.5 = 66% 0.5/1.5 = 33%. Default weight - 1
 - `projban/pb <projs...>` - Prevents projectile creation from player.
 - `itemban/ib <items...>` - Ban items in the region.
-#### Вспомогательные команды
+#### Utils commands
 - `context` - Return all available context commands.
 - `reperm` - Returns all permissions used by Region Extension plugin.
 - `reloc` - Changes Region extension localization. Available EN/RU.
@@ -202,7 +203,7 @@ P.S. Максимальный буффер для удаленных регио�
 - `command/cmd <command>` - Вызывает команду.
 > Присутствуют константы для команд:
 > @r - заменится на название региона
-> @p - заменится на игрока, активировавшего   
+> @p - заменится на игрока, активировавшего триггер
 - `push/p` - Выталкивает игрока из региона.
 - `packet/pa <int> [text] [data...]` - Отправляет пакет игроку.
 - `message/msg <text...>` - Отправляет сообщение игроку.
@@ -239,6 +240,7 @@ P.S. Максимальный буффер для удаленных регио�
 ####  Доступные свойства
 - `alwayspvp/ap` - Включает режим PvP игрока и предотвращает его изменение.
 - `banhostile/bh` - Удаляет всех враждебных НИПов и снаряды, также не позволяет боссу зайти в регион.
+- `clearitems/ci` - Чистит предметы из региона.
 - `maxspawn/ms <ratio>` - Переписывает количество НИПов возле игрока.
 > Де-факто свойство изменяет количество НИПов просчитанное игрой, умножая на коэффициент, тем самым позволяя увеличить или уменьшить фактическое появление НИПов вокруг игрока в регионе. Пример: Если вокруг игрока 10 НИПов и коэффициент - 0.5, то 10 нипов будут считаться как 5, увеличивая появление, при 1.5 - аналогично 10 НИПов будут считаться как 15, уменьшая появление.
 - `nopvp/np` - Выключает режим PvP игрока и предотвращает его изменение.
