@@ -73,6 +73,9 @@ Example: By setting the condition - /rp ac $t !a ap\
 The property will only affect players not added to the region.
 #### Доступные триггеры
 - `command/cmd <command>` - Command trigger.
+> There are constants for commands:
+> @r - replaced by the name of the region
+> @p - replaced by the player who activated trigger
 - `push/p` - Pushes player from region.
 - `packet/pa <int> [text] [data...]` - Отправляет пакет игроку.
 - `message/msg <text...>` - Send message to the player.
@@ -197,6 +200,9 @@ P.S. Максимальный буффер для удаленных регио�
 Свойство будет действовать только на игроков, не добавленных в регион.
 #### Доступные триггеры
 - `command/cmd <command>` - Вызывает команду.
+> Присутствуют константы для команд:
+> @r - заменится на название региона
+> @p - заменится на игрока, активировавшего   
 - `push/p` - Выталкивает игрока из региона.
 - `packet/pa <int> [text] [data...]` - Отправляет пакет игроку.
 - `message/msg <text...>` - Отправляет сообщение игроку.
@@ -285,6 +291,10 @@ P.S. Максимальный буффер для удаленных регио�
   "AutoCompleteSameNameFormat": "{0}:{1}", //Name format {0}-name {1}-num/Формат имени - {0}-имя {1}-число
   "NotificationPeriod": "10m", //Notification period for requests format: 0d0h0m0s/Период оповещения о запросах
   "DefaultLocalization": "EN", //Default localization for commands/Стандартная локализация для команд
+  "BannedTriggerCommands": [ //Banned commands for trigger/Запрещенные команды для триггеров
+    "group",
+    "user"
+  ],
   "RequestSettings": [
     {
       "GroupName": "default", //Used group/Используемая группа
@@ -293,7 +303,7 @@ P.S. Максимальный буффер для удаленных регио�
       "AutoApproveRequest": false, //Approve region on time end or delete/Подтверждать регион по окончанию временного промежутка или удалять.
       "MaxRequestArea": 10000, //Max area (width*height) of requested region/Максимальная площадь (ширина*высота) запрошенного региона
       "MaxRequestHeight": 100, //Max height of requested region/Максимальная высота запрошенного региона.
-      "MaxRequestWidth": 100, //Max Width of requested region/Максимальная высота запрошенного региона.
+      "MaxRequestWidth": 100, //Max Width of requested region/Максимальная ширина запрошенного региона.
       "ProtectRequestedRegion": true, //Protect requested region/Защита запрошенных регионов.
       "DefaultRequestZ": 0 //Default requested region order/Стандартный приоритет запрошенного региона
     },
