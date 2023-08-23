@@ -134,5 +134,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _itemsBan[region].Conditions = _itemsBan[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
+
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.GamePostUpdate.Deregister(plugin, OnPostUpdate);
+        }
     }
 }

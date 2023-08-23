@@ -1,4 +1,5 @@
 ﻿using NuGet.Packaging;
+using NuGet.Protocol.Plugins;
 using Org.BouncyCastle.Ocsp;
 using RegionExtension.Commands.Parameters;
 using RegionExtension.RegionTriggers.Actions;
@@ -113,6 +114,13 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (!_regions.ContainsKey(region))
                 return;
             _regions[region] = _regions[region].Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
+        }
+
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.NetGetData.Deregister(plugin, OnGetData);
+            TriggerManager.OnEnter -= OnEnter;
+            TriggerManager.OnIn -= OnIn;
         }
     }
 }

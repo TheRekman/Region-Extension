@@ -126,6 +126,12 @@ namespace RegionExtension.RegionTriggers
             LoadProperties();
         }
 
+        public void Dispose(Plugin plugin)
+        {
+            foreach (var property in _regionProperties)
+                property.Dispose(plugin);
+        }
+
         private void LoadProperties()
         {
             foreach (var region in TShock.Regions.Regions)

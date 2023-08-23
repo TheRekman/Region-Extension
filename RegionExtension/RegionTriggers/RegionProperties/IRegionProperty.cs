@@ -25,6 +25,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         void SetFromString(Region region, ConditionStringPair pair);
         void AddCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition);
         void RemoveCondition(Region region, ICommandParam[] commandParams, IRegionCondition condition);
+        void Dispose(Plugin plugin);
 
     }
 }

@@ -140,5 +140,14 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _npcs[region].Conditions = _npcs[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
+
+
+        public void Dispose(Plugin plugin)
+        {
+            OTAPI.Hooks.NPC.Spawn -= OnNPCSpawn;
+            OTAPI.Hooks.NPC.Create -= OnNPCCreate;
+            ServerApi.Hooks.NetSendData.Deregister(plugin, OnSendData);
+        }
+
     }
 }

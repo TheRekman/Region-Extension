@@ -78,5 +78,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _regions[region].Conditions = _regions[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
+
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.GameUpdate.Deregister(plugin, OnUpdate);
+        }
     }
 }

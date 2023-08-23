@@ -169,6 +169,7 @@ namespace RegionExtension
                 PlayerHooks.PlayerPostLogin -= OnPlayerLogin;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
+                RegionExtensionManager.PropertyManager.Dispose(this);
             }
         }
 

@@ -113,5 +113,10 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _projBans[region].Conditions = _projBans[region].Conditions.Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
+
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.NetGetData.Deregister(plugin, OnGetData);
+        }
     }
 }

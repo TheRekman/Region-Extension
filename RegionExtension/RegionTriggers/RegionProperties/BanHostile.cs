@@ -229,6 +229,17 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             _regions[region] = _regions[region].Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
 
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.NpcAIUpdate.Deregister(plugin, OnAIUpdate);
+            ServerApi.Hooks.GameUpdate.Deregister(plugin, OnUpdate);
+            ServerApi.Hooks.GamePostUpdate.Deregister(plugin, OnPostUpdate);
+            ServerApi.Hooks.NpcSpawn.Deregister(plugin, OnNpcSpawn);
+            ServerApi.Hooks.NpcKilled.Deregister(plugin, OnNpcKilled);
+            ServerApi.Hooks.ProjectileAIUpdate.Deregister(plugin, OnProjectileUpdate);
+            OTAPI.Hooks.NPC.Create -= OnNPCCreate;
+        }
+
         struct NPCInfo
         {
             public NPCInfo()

@@ -110,5 +110,12 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 return;
             _regions[region] = _regions[region].Where(p => !p.GetNames()[0].Equals(condition.GetNames()[0])).ToList();
         }
+
+        public void Dispose(Plugin plugin)
+        {
+            ServerApi.Hooks.NetGetData.Deregister(plugin, OnGetData);
+            TriggerManager.OnEnter -= OnEnter;
+            TriggerManager.OnIn -= OnIn;
+        }
     }
 }
