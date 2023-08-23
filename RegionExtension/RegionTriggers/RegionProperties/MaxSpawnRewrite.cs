@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
@@ -22,6 +23,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 
         private Dictionary<Region, ConditionDataPair<float>> _regions = new Dictionary<Region, ConditionDataPair<float>>();
+        private DateTime _lastUpdate;
 
         public void InitializeEventHandler(TerrariaPlugin plugin)
         {
@@ -30,11 +32,14 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         private void OnUpdate(EventArgs args)
         {
-            foreach(var plr in TShock.Players.Where(p => p != null && p.Active && p.CurrentRegion != null))
+            foreach (var plr in TShock.Players.Where(p => p != null && p.Active && p.CurrentRegion != null))
             {
                 if (!_regions.ContainsKey(plr.CurrentRegion))
                     continue;
-                plr.TPlayer.nearbyActiveNPCs *= _regions[plr.CurrentRegion].Data[0];
+                if (_regions[plr.CurrentRegion].Data[0] == 0)
+                    plr.TPlayer.nearbyActiveNPCs = int.MaxValue;
+                else
+                    plr.TPlayer.nearbyActiveNPCs *= _regions[plr.CurrentRegion].Data[0];
             }
         }
 
