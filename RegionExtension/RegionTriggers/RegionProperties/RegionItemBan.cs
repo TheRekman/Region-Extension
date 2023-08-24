@@ -52,6 +52,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (items.Data.Contains(player.TPlayer.inventory[player.TPlayer.selectedItem].netID))
             {
                 string itemName = player.TPlayer.inventory[player.TPlayer.selectedItem].Name;
+                Taint(player);
                 SendCorrectiveMessage(player, itemName);
             }
             if (!Main.ServerSideCharacter || (Main.ServerSideCharacter && player.IsLoggedIn))
@@ -66,8 +67,8 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         private void Taint(TSPlayer player)
         {
             player.SetBuff(BuffID.Frozen, 120, true);
-            player.SetBuff(BuffID.Stoned, 120, true);
-            player.SetBuff(BuffID.Webbed, 120, true);
+            player.SetBuff(BuffID.Stoned, 330, true);
+            player.SetBuff(BuffID.Webbed, 330, true);
         }
 
         private void CheckItemInventoryBan(TSPlayer player, IEnumerable<Item> playerItems, IEnumerable<int> bannedId)
