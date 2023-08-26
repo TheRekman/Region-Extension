@@ -82,9 +82,9 @@ namespace RegionExtension.RegionTriggers.Conditions
 
         public static void Reload(Plugin plugin)
         {
-            ForcedDelayedTriggers.Clear();
-            InRegionDelayedTriggers.Clear();
-            AlwaysInRegionDelayedTriggers.Clear();
+            ForcedDelayedTriggers = new SortedList<DateTime, DelayInfo>();
+            InRegionDelayedTriggers = new SortedList<DateTime, DelayInfo>();
+            AlwaysInRegionDelayedTriggers = new SortedList<DateTime, DelayInfo>();
         }
 
         public static void RegisterDelay(DelayInfo delay, string delayFlag, DateTime activation)

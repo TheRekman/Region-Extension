@@ -74,6 +74,8 @@ namespace RegionExtension.Commands.SubCommands
             foreach (var param in dynamicParams)
                 if (!param.TrySetDynamicValue(args))
                     return false;
+            foreach (var param in paramsCopy)
+                param.Clear();
             return true;
         }
 

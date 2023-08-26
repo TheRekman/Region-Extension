@@ -54,5 +54,12 @@ namespace RegionExtension.Commands.Parameters
             _value = _tempParams.Select(p => (T)p.Value).ToArray();
             return true;
         }
+
+        public override void Clear()
+        {
+            _index = 0;
+            _tempParams = new List<ICommandParam>();
+            base.Clear();
+        }
     }
 }

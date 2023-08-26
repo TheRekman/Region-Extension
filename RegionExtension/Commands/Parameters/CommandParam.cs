@@ -61,5 +61,9 @@ namespace RegionExtension.Commands.Parameters
 
         public virtual ICommandParam[] GetAdditionalParams() =>
             new ICommandParam[0];
+
+        public virtual void Clear()
+        {
+        }
     }
 }
