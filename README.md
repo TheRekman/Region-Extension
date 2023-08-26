@@ -109,6 +109,12 @@ Update happens every half second
 - `owner/o`  - If player is owner of the region.
 - `pause/p [time]` - Pauses trigger in given time after activation. Format: 0d0h0m0s
 - `playerpause/pp [time]` - Pauses trigger for player in given time after activation. Format: 0d0h0m0s
+- `delay/d [time] [flag]` - Activates the trigger only after the given time.
+- `playerdelay/pd [time] [flag]` - Activates the trigger only after the given time for the player.
+> Flags - additional conditions under which the delay trigger is activated.
+> - `-f` - The trigger is activated at the end of the delay, regardless of the presence of a player in the region. Default.
+> - `-i` - The trigger is activated if the player is in the region at the end of the delay.
+> - `-a` - The trigger is activated if the player was in the region during the delay.
 #### Available properties
 - `alwayspvp/ap` - Activates player pvp and prevents trying to change it.
 - `banhostile/bh` - Removes any hostile NPCs and projectiles from region, and prevents bosses from entering the region.
@@ -237,6 +243,12 @@ P.S. Максимальный буффер для удаленных регио�
 - `owner/o`  - Если игрок - владелец региона.
 - `pause/p [time]` - Останавливает триггер на заданное время. Формат: 0d0h0m0s
 - `playerpause/pp [time]` - Останавливает триггер на заданное время для игрока. Формат: 0d0h0m0s
+- `delay/d [time] [flag]` - Активирует триггер только после заданного времени.
+- `playerdelay/pd [time] [flag]` - Активирует триггер только после заданного времени для игрока.
+> Флаги - дополнительные условия при котором триггер задержки активируется.
+> - `-f` - Триггер активируется по окончанию задержки независимо от наличия игрока в регионе. Стандартный.
+> - `-i` - Триггер активируется если игрок в момент окончания задержки находится в регионе.
+> - `-a` - Триггер активируется если игрок всё время задержки находился в регионе.
 ####  Доступные свойства
 - `alwayspvp/ap` - Включает режим PvP игрока и предотвращает его изменение.
 - `banhostile/bh` - Удаляет всех враждебных НИПов и снаряды, также не позволяет боссу зайти в регион.
