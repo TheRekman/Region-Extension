@@ -13,8 +13,8 @@ All commands integrated with /region, also change all default commands.
 - `listrequest/lr [page]` - Lists all region requests.
 - `requestinfo/ri [region] [page]` - Displays several information about the given request.
 - `requestaccept/ra [region]` - Accept region request.
-- `requestdeny/rd [region]` - Deny region request.
-P.S. Requests are sent from the player who created the region via the /regionown command, the player who has access to the main commands must check the request, otherwise the closed region will be deleted according to the settings.
+- `requestdeny/rd [region]` - Deny region request.\
+P.S. Requests are sent from the player who created the region via the /regionown command, the player who has access to the main commands must check the request, otherwise the region will be deleted according to the settings.
 #### RegionOwn (/ro, /regionown)
 Commands for owners of regions. The commands are identical to the main ones, however, each checks whether the player is the owner of the region
 - `setowner/so [useraccount] [region]` - Set region owner.
@@ -48,7 +48,7 @@ Commands for region triggers.
 - `conditionlist/cl [page]` - List available conditions.
 - `addcond/ac <region> <condition> [ids...]` - Adds conditions to the trigger.
 - `removecond/rc <region> <condition> [ids...]` - Removes condition from the trigger.
-- `clear/c [region]` - Clears triggers from the region.
+- `clear/c [region]` - Clears triggers from the region.\
 Trigger - an action that takes place on a given event.\
 Example: By setting the trigger /rt a $t e msg Hello world!\
 To the player who entered (event - e/enter) in region ($t) will be sent a message (action - msg/message) "Hello world!".\
@@ -64,7 +64,7 @@ If a trigger has more than 1 condition, all conditions must be true for the trig
 - `helpproperty/hp <property> [page]` - Returns all info about given property.
 - `addcond/ac <region> <condition> <property>` - Adds condition to the property.
 - `removecond/rc <region> <condition> <property>` - Removes condition from the property.
-- `clear/c [region]` - Clears properties from the region.
+- `clear/c [region]` - Clears properties from the region.\
 Properties - certain rules by which the region exists and events change.\
 Example: By setting the property - /rp a $t ap\
 A player located in the region ($t) automatically turns on PvP mode and is not able to turn it off (property - ap/alwayspvp)\
@@ -85,7 +85,7 @@ The property will only affect players not added to the region.
 - `tppos <x> <y>` - Teleports player to the position.
 - `warp <warp>` - Teleports player to the warp.
 - `kill/k` - Kills player.
-- `buff/b <buff> [time]` - Buffs player. Time in Seconds.
+- `buff/b <buff> [time]` - Buffs player. Time in Seconds.\
 In coordinates, you can set a function that is calculated when the trigger fires.\
 Example: The trigger is /rt a $t e g 1 1 0 px+1 py+1. Throws out an iron pick at the player's coordinates.\
 All available features:
@@ -99,7 +99,7 @@ All available features:
 #### Available events
 - `onenter/enter/e` - Activates when player enters in region.
 - `onleave/leave/l` - Activates when player leaves from region.
-- `onin/in/i` - Activates while player in the region.
+- `onin/in/i` - Activates while player in the region.\
 Update happens every half second
 #### Available conditions
 - `allowed/a`  - If player is allowed in the region.
@@ -147,7 +147,7 @@ Update happens every half second
 - `listrequest/lr [page]` - Отображает все активные запросы.
 - `requestinfo/ri [region] [page]` - Отображает информацию о запросе.
 - `requestaccept/ra [region]` - Принимает запрос.
-- `requestdeny/rd [region]` - Отклоняет запрос.
+- `requestdeny/rd [region]` - Отклоняет запрос.\
 P.S. Запросы отправляются от игрока, который создает регион через команды /regionown, игрок, имеющий доступ к основным командам, должен подтвердить запрос, иначе запрошенный регион будет удален согласно настройкам. 
 #### RegionOwn (/ro, /regionown)
 Команды для владельцев регионов. Команды индентичны основным, однако в каждой проверяется является ли игрок владельцем региона
@@ -169,7 +169,7 @@ P.S. Запросы отправляются от игрока, который �
 - `restore/res <regionname>` - Восстанавливает регион из удаленных.
 - `restoreuser/resu <user> [count]` - Восстанавливает регионы из удаленных по пользователю.
 - `history/h [page] [region]` - Получает всю историю действий на регион.
-- `dellist/dl [page]` - Перечисляет все удаленные регионы.
+- `dellist/dl [page]` - Перечисляет все удаленные регионы.\
 P.S. Максимальный буффер для удаленных регионов - 64 записи.
 #### RegionTrigger (/rt, /regiontrigger)
 Команды для триггеров регионов.
@@ -182,7 +182,7 @@ P.S. Максимальный буффер для удаленных регио�
 - `conditionlist/cl [page]` - Перечисляет все доступные условия.
 - `addcond/ac <region> <condition> [ids...]` - Добавляет условие к триггеру региона.
 - `removecond/rc <region> <condition> [ids...]` - удаляет условие с триггера.
-- `clear/c [region]` - Удаляет все триггеры из региона.
+- `clear/c [region]` - Удаляет все триггеры из региона.\
 Триггер - действие, совершающееся при заданном событии.\
 Пример: Задав триггер /rt a $t e msg Привет мир!\
 Игроку, который зашел (событие - e/enter) в регион ($t), отправится сообщение (действие - msg/message) "Привет мир!".\
@@ -198,7 +198,7 @@ P.S. Максимальный буффер для удаленных регио�
 - `helpproperty/hp <property> [page]` - Отображает информацию о свойстве.
 - `addcond/ac <region> <condition> <property>` - Добавляет условие к свойству региона.
 - `removecond/rc <region> <condition> <property>` - Удаляет условие из свойства
-- `clear/c [region]` - Удаляет все свойства из региона.
+- `clear/c [region]` - Удаляет все свойства из региона.\
 Свойства - определенные правила по которым существует регион и изменяются события.\
 Пример: Задав свойство - /rp a $t ap\
 У игрока, находящегося в регионе ($t), автоматически включается режим PvP и он не способен его выключить (свойство - ap/alwayspvp)\
@@ -219,7 +219,7 @@ P.S. Максимальный буффер для удаленных регио�
 - `tppos <x> <y>` - Телепортирует игрока на позицию.
 - `warp <warp>` - Телепортирует игрока на варп.
 - `kill/k` - Убивает игрока.
-- `buff/b <buff> [time]` - Баффает игрока. Время в секундах.
+- `buff/b <buff> [time]` - Баффает игрока. Время в секундах.\
 В координатах можно задать функцию, которая просчитывается когда срабатывает триггер.\
 Пример: Триггер - /rt a $t e g 1 1 0 px+1 py+1. Выкинет железную кирку по координатам игрока.\
 Все доступные функции:
@@ -233,7 +233,7 @@ P.S. Максимальный буффер для удаленных регио�
 #### Доступные события
 - `onenter/enter/e` - Активируется когда игрок заходит в регион.
 - `onleave/leave/l` - Активируется когда игрок выходит из региона.
-- `onin/in/i` - Активируется пока игрок находится в регионе.
+- `onin/in/i` - Активируется пока игрок находится в регионе.\
 Обновление происходит каждые пол секунды
 #### Доступные условия 
 - `allowed/a`  - Если игрок добавлен в регион.
