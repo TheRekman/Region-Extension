@@ -36,7 +36,7 @@ namespace RegionExtension.RegionTriggers.Conditions
 
         public string[] GetNames() => Names;
 
-        public bool Check(TSPlayer player, Region region)
+        public bool Check(TSPlayer player, Region region, Trigger trigger = null)
         {
             var count = TShock.Players.Where(p => p != null && p.Active && p.CurrentRegion == region).Count();
             return (count < _count) ^ Reversed;

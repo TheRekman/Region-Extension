@@ -96,6 +96,8 @@ namespace RegionExtension
                 {"OwnerCondDesc", "If player is owner of the region." },
                 {"PauseCondDesc", "Pauses trigger in given time after activation." },
                 {"PausePlayerCondDesc", "Pauses trigger for player in given time after activation." },
+                {"DelayCondDesc", "Activates trigger after given time. Flags: -f, -a, -i" },
+                {"PlayerDelayCondDesc", "Activates trigger after given time for player. Flags: -f, -a, -i" },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Activates player pvp and prevents trying to change it." },
@@ -195,8 +197,10 @@ namespace RegionExtension
                 {"LessCondDesc", "Если игроков в регионе больше заданного количества." },
                 {"MoreCondDesc", "Если игроков в регионе меньше заданного количества." },
                 {"OwnerCondDesc", "Если игрок - владелец региона." },
-                {"PauseCondDesc", "Останавливает триггер на заданное время. Формат: 0d0h0m0s" },
+                {"PauseCondDesc", "Останавливает триггер на заданное время для региона. Формат: 0d0h0m0s" },
                 {"PausePlayerCondDesc", "Останавливает триггер на заданное время для игрока. Формат: 0d0h0m0s" },
+                {"DelayCondDesc", "Активирует триггер после заданного времени для региона. Флаги: -f, -a, -i" },
+                {"PlayerDelayCondDesc", "Активирует триггер после заданного времени для игрока. Флаги: -f, -a, -i" },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Включает режим PvP игрока и предотвращает его изменение." },

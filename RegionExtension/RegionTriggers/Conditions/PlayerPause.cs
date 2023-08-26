@@ -37,7 +37,7 @@ namespace RegionExtension.RegionTriggers.Conditions
 
         public string[] GetNames() => Names;
 
-        public bool Check(TSPlayer player, Region region)
+        public bool Check(TSPlayer player, Region region, Trigger trigger = null)
         {
             var res = _lastCheck[player.Index] + _time < DateTime.Now;
             if (res)

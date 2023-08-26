@@ -180,7 +180,7 @@ namespace RegionExtension.RegionTriggers
         {
             if (region == null || !_triggers.ContainsKey(region))
                 return;
-            foreach (var trigger in _triggers[region].Where(t => t.Event == events && t.Conditions.CheckConditions(player, region)))
+            foreach (var trigger in _triggers[region].Where(t => t.Event == events && t.Conditions.CheckConditions(player, region, t)))
                 trigger.Action.Execute(new TriggerActionArgs(player, region));
         }
 

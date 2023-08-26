@@ -17,6 +17,7 @@ using System.Security.AccessControl;
 using System.Threading.Tasks;
 using RegionExtension.Commands.Parameters;
 using Terraria.ID;
+using RegionExtension.RegionTriggers.Conditions;
 
 namespace RegionExtension
 {
@@ -71,6 +72,7 @@ namespace RegionExtension
         {
             Config = ConfigFile.Read();
             RegionExtensionManager.Reload(e);
+            DelayManager.Reload(this);
             e.Player.SendInfoMessage("[RegionExt] Config and triggers reloaded.");
         }
 
@@ -140,6 +142,7 @@ namespace RegionExtension
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
             RegionExtensionManager.PostInitialize(this);
+            DelayManager.Initialize(this);
         }
 
         private void OnHasPlayerPermission(PlayerHasBuildPermissionEventArgs e)
@@ -170,6 +173,7 @@ namespace RegionExtension
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
                 RegionExtensionManager.PropertyManager.Dispose(this);
+                DelayManager.Dispose(this);
             }
         }
 

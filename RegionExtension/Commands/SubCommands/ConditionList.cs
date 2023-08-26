@@ -31,8 +31,8 @@ namespace RegionExtension.Commands.SubCommands
 
         private void ListProperties(CommandArgsExtension args, int page)
         {
-            var triggers = ConditionManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join('/', f.Names), string.Join(" ", f.CommandParams.Select(p => p.GetBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)));
-            var usedName = args.Message.Split(' ')[0].Remove(0, 1);
+            var triggers = ConditionManager.Formers.Select(f => "{0} {1} - {2}".SFormat(string.Join("/", f.Names.Select(n => Utils.ColorCommand(n))), string.Join(' ', f.CommandParams.Select(p => p.GetColoredBracketName())), Localization.GetStringForPlayer(f.Description, args.Player)).Replace("  ", " "));
+            var usedName = args.Message.Split(' ')[0];
             var usedSubCommandName = args.Parameters[0];
             PaginationTools.SendPage(args.Player, page, triggers.ToList(),
                         new PaginationTools.Settings

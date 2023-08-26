@@ -13,7 +13,7 @@ namespace RegionExtension.RegionTriggers.Conditions
         static ConditionFormer ConditionFormer { get; }
         string[] GetNames();
         bool IsReversed();
-        bool Check(TSPlayer player, Region region);
+        bool Check(TSPlayer player, Region region, Trigger trigger = null);
         string GetString();
     }
 }
