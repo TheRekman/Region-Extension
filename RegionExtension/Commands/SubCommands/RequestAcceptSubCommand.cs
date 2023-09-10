@@ -36,7 +36,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendRegionInfo(CommandArgsExtension args, Region region)
         {
-            if(Plugin.RegionExtensionManager.RemoveRequest(region, args.Player, true))
+            if(Plugin.RegionExtensionManager.RemoveRequest(region, args.Player.Account, true))
             {
                 args.Player.SendSuccessMessage("Region '{0}' accepted!".SFormat(region.Name));
             }

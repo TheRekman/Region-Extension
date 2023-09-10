@@ -68,7 +68,7 @@ namespace RegionExtension.RegionTriggers
         {
             _database.InitializeTable();
             LoadTriggers();
-            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
+            RegionExtManager.OnRegionDeleted += OnRegionDeleted;
         }
 
         private void LoadTriggers()

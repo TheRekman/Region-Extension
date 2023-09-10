@@ -30,25 +30,25 @@ namespace RegionExtension.Database
         private DateTime _lastUpdate = DateTime.UtcNow;
         private DateTime _lastNotify = DateTime.UtcNow;
 
-        public event Action<AllowArgs> OnRegionAllow;
-        public event Action<RemoveArgs> OnRegionRemove;
-        public event Action<SetZArgs> OnRegionSetZ;
-        public event Action<ProtectArgs> OnRegionProtect;
-        public event Action<ResizeArgs> OnRegionResize;
-        public event Action<AllowGroupArgs> OnRegionAllowGroup;
-        public event Action<RemoveGroupArgs> OnRegionRemoveGroup;
-        public event Action<MoveArgs> OnRegionMove;
-        public event Action<RenameArgs> OnRegionRename;
-        public event Action<ChangeOwnerArgs> OnRegionChangeOwner;
+        public static event Action<AllowArgs> OnRegionAllow;
+        public static event Action<RemoveArgs> OnRegionRemove;
+        public static event Action<SetZArgs> OnRegionSetZ;
+        public static event Action<ProtectArgs> OnRegionProtect;
+        public static event Action<ResizeArgs> OnRegionResize;
+        public static event Action<AllowGroupArgs> OnRegionAllowGroup;
+        public static event Action<RemoveGroupArgs> OnRegionRemoveGroup;
+        public static event Action<MoveArgs> OnRegionMove;
+        public static event Action<RenameArgs> OnRegionRename;
+        public static event Action<ChangeOwnerArgs> OnRegionChangeOwner;
 
-        public event Action<BaseRegionArgs> OnRegionDelete;
-        public event Action<BaseRegionArgs> OnRegionDeleted;
-        public event Action<BaseRegionArgs> OnRegionDefined;
+        public static event Action<BaseRegionArgs> OnRegionDelete;
+        public static event Action<BaseRegionArgs> OnRegionDeleted;
+        public static event Action<BaseRegionArgs> OnRegionDefined;
 
-        public event Action OnPostInitialize;
-
-        public event Action<RequestCreatedArgs> OnRequestCreated;
-        public event Action<RequestRemovedArgs> OnRequestRemoved;
+        public static event Action OnPostInitialize;
+        
+        public static event Action<RequestCreatedArgs> OnRequestCreated;
+        public static event Action<RequestRemovedArgs> OnRequestRemoved;
 
         public RegionHistoryManager HistoryManager { get { return _historyManager; } }
         public DeletedRegionsDB DeletedRegions { get { return _deletedRegionsDB; } }
@@ -141,13 +141,12 @@ namespace RegionExtension.Database
             OnRegionDeleted += (args) =>
             {
                 if (_regionRequestManager.Requests.Any(r => r.Region.ID == args.Region.ID))
-                    _regionRequestManager.DeleteRequest(args.Region);
+                    RemoveRequest(args.Region, args.UserExecutor.Account, false);
             };
             OnRequestRemoved += (args) =>
             {
-                if (!args.Approved)
+                if (!args.Approved && TShock.Regions.Regions.Any(r => args.Request.Region.ID == r.ID))
                     TShock.Regions.DeleteRegion(args.Request.Region.ID);
-
             };
             OnRegionDefined += (args) =>
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
@@ -263,7 +262,53 @@ namespace RegionExtension.Database
             return true;
         }
 
-        public bool RemoveRequest(Region region, TSPlayer user, bool approved)
+        public bool ApproveRequest(UserAccount user, int regionId)
+        {
+            var req = _regionRequestManager.Requests.FirstOrDefault(req => req.Region.ID == regionId);
+            if (req == null)
+                return false;
+            return ApproveRequest(user, req);
+        }
+
+        public bool ApproveRequest(UserAccount user, Region region)
+        {
+            var req = _regionRequestManager.Requests.FirstOrDefault(req => req.Region.ID == region.ID);
+            if (req == null)
+                return false;
+            return ApproveRequest(user, req);
+        }
+
+        public bool ApproveRequest(UserAccount user, Request request)
+        {
+            if (!_regionRequestManager.Requests.Contains(request))
+                return false;
+            return RemoveRequest(request.Region, user, true);
+        }
+
+        public bool DenyRequest(UserAccount user, int regionId)
+        {
+            var req = _regionRequestManager.Requests.FirstOrDefault(req => req.Region.ID == regionId);
+            if (req == null)
+                return false;
+            return DenyRequest(user, req);
+        }
+
+        public bool DenyRequest(UserAccount user, Region region)
+        {
+            var req = _regionRequestManager.Requests.FirstOrDefault(req => req.Region.ID == region.ID);
+            if (req == null)
+                return false;
+            return DenyRequest(user, req);
+        }
+
+        public bool DenyRequest(UserAccount user, Request request)
+        {
+            if (!_regionRequestManager.Requests.Contains(request))
+                return false;
+            return RemoveRequest(request.Region, user, false);
+        }
+
+        public bool RemoveRequest(Region region, UserAccount user, bool approved)
         {
             if (region == null)
                 return false;
@@ -271,11 +316,8 @@ namespace RegionExtension.Database
             if (req == null)
                 return false;
             bool res = _regionRequestManager.DeleteRequest(region);
-            if (res)
-            {
-                if (OnRequestRemoved != null)
-                    OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
-            }
+            if (res && OnRequestRemoved != null)
+                OnRequestRemoved(new RequestRemovedArgs(user, req, approved));
             return res;
         }
 
@@ -294,7 +336,7 @@ namespace RegionExtension.Database
             }).ToArray();
             foreach(var req in requestsToRemove)
             {
-                RemoveRequest(req.Region, TSPlayer.Server, Utils.GetSettingsByUserAccount(req.User).AutoApproveRequest);
+                RemoveRequest(req.Region, null, Utils.GetSettingsByUserAccount(req.User).AutoApproveRequest);
             }
             var timePeriod = StringTime.FromString(Plugin.Config.NotificationPeriod);
             if (!timePeriod.IsZero() && _lastNotify + timePeriod < DateTime.UtcNow)

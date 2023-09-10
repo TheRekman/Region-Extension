@@ -39,7 +39,7 @@ namespace RegionExtension.RegionTriggers
             foreach (var prop in _regionProperties)
                 prop.InitializeEventHandler(plugin);
             LoadProperties();
-            Plugin.RegionExtensionManager.OnRegionDeleted += OnRegionDeleted;
+            RegionExtManager.OnRegionDeleted += OnRegionDeleted;
         }
 
         private void OnRegionDeleted(BaseRegionArgs args)

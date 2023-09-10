@@ -10,14 +10,14 @@ namespace RegionExtension.Database.EventsArgs
 {
     public class RequestRemovedArgs
     {
-        public RequestRemovedArgs(TSPlayer user, Request req, bool approved)
+        public RequestRemovedArgs(UserAccount user, Request req, bool approved)
         {
            User = user;
            Request = req;
            Approved = approved;
         }
 
-        public TSPlayer User { get; set; }
+        public UserAccount User { get; set; }
         public Request Request { get; set; }
         public bool Approved { get; set; }
     }

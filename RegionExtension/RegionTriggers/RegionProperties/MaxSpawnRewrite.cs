@@ -23,7 +23,6 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 
         private Dictionary<Region, ConditionDataPair<float>> _regions = new Dictionary<Region, ConditionDataPair<float>>();
-        private DateTime _lastUpdate;
 
         public void InitializeEventHandler(TerrariaPlugin plugin)
         {

@@ -36,7 +36,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendRegionInfo(CommandArgsExtension args, Region region)
         {
-            if (Plugin.RegionExtensionManager.RemoveRequest(region, args.Player, false))
+            if (Plugin.RegionExtensionManager.RemoveRequest(region, args.Player.Account, false))
             {
                 args.Player.SendSuccessMessage("Region '{0}' denied!".SFormat(region.Name));
             }

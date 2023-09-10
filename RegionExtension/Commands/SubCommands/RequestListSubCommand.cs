@@ -43,7 +43,7 @@ namespace RegionExtension.Commands.SubCommands
                             HeaderFormat = "Requests ({0}/{1}):",
                             FooterFormat = "Type {0}{1} {2} {{0}} for more."
                                            .SFormat(TShockAPI.Commands.Specifier, usedName, usedSubCommandName),
-                            NothingToDisplayString = "There are currently no regions."
+                            NothingToDisplayString = "There are currently no regions requests."
                         });
         }
     }
