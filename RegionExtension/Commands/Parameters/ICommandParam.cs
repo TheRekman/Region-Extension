@@ -17,6 +17,7 @@ namespace RegionExtension.Commands.Parameters
         bool TrySetValue(string str, CommandArgsExtension args = null);
         bool TrySetDefaultValue(CommandArgsExtension args = null);
         bool TrySetDynamicValue(CommandArgsExtension args = null);
+        void Clear();
         public ICommandParam[] GetAdditionalParams();
     }
 }

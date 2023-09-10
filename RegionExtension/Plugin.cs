@@ -70,10 +70,13 @@ namespace RegionExtension
 
         private void OnReload(ReloadEventArgs e)
         {
-            Config = ConfigFile.Read();
-            RegionExtensionManager.Reload(e);
-            DelayManager.Reload(this);
-            e.Player.SendInfoMessage("[RegionExt] Config and triggers reloaded.");
+            Task.Run(() =>
+            {
+                Config = ConfigFile.Read();
+                RegionExtensionManager.Reload(e);
+                DelayManager.Reload(this);
+                e.Player.SendInfoMessage("[RegionExt] Config and triggers reloaded.");
+            });
         }
 
         private void OnSendItemDrop(SendDataEventArgs args)
