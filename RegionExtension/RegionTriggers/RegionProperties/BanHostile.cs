@@ -27,6 +27,8 @@ namespace RegionExtension.RegionTriggers.RegionProperties
     {
         private NPCInfo[] _ignoreNpc = new NPCInfo[Main.npc.Length];
         private Queue<NPC> _registerNPC = new Queue<NPC>();
+        DateTime[] lastSend = new DateTime[Main.npc.Length];
+
 
         public string[] Names => new[] { "banhostile", "bh" };
         public string Description => "BanHostilePropDesc";
@@ -101,19 +103,19 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                 var npc = Main.npc[boss.whoAmI];
                 var x = (int)(npc.position.X / 16);
                 var y = (int)(npc.position.Y / 16);
-                var pairs = _regions.Where(p => p.Key.InArea(x, (int)(boss.LasPosition.Y / 16)));
+                var pairs = _regions.Where(p => p.Key.InArea(x, (int)(boss.LastPosition.Y / 16)));
                 var resX = false;
                 var resY = false;
                 if (pairs.Count() != 0)
                 {
-                    npc.position.X = boss.LasPosition.X;
+                    npc.position.X = boss.LastPosition.X;
                     npc.velocity.X = 0;
                     resX = true;
                 }
-                pairs = _regions.Where(p => p.Key.InArea((int)(boss.LasPosition.X / 16), y));
+                pairs = _regions.Where(p => p.Key.InArea((int)(boss.LastPosition.X / 16), y));
                 if (pairs.Count() != 0)
                 {
-                    npc.position.Y = boss.LasPosition.Y;
+                    npc.position.Y = boss.LastPosition.Y;
                     npc.velocity.Y = 0;
                     resY = true;
                 }
@@ -152,7 +154,11 @@ namespace RegionExtension.RegionTriggers.RegionProperties
                     //skeletron prime fix
                     if (npc.type == 127 || npc.ai[1] == 32)
                         npc.ai[1] = 0;
-                    NetMessage.SendData(23, number: npc.whoAmI);
+                    if (lastSend[npc.whoAmI].AddMilliseconds(100) < DateTime.Now)
+                    {
+                        NetMessage.SendData(23, number: npc.whoAmI);
+                        lastSend[npc.whoAmI] = DateTime.Now;
+                    }
                 }    
             }   
         }
@@ -161,7 +167,12 @@ namespace RegionExtension.RegionTriggers.RegionProperties
         {
             for (int i = 0; i < _ignoreNpc.Length; i++)
                 if (_ignoreNpc[i].Ignore)
-                    _ignoreNpc[i].LasPosition = Main.npc[i].position;
+                {
+                    if (!Main.npc[i].active)
+                        _ignoreNpc[i].Ignore = false;
+                    else
+                        _ignoreNpc[i].LastPosition = Main.npc[i].position;
+                }
         }
 
         private void OnAIUpdate(NpcAiUpdateEventArgs args)
@@ -249,12 +260,12 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             public NPCInfo(bool ignore, Vector2 lasPosition)
             {
                 Ignore = ignore;
-                LasPosition = lasPosition;
+                LastPosition = lasPosition;
             }
 
             public int whoAmI { get; set; } = 0;
             public bool Ignore { get; set; } = true;
-            public Vector2 LasPosition { get; set; } = new Vector2();
+            public Vector2 LastPosition { get; set; } = new Vector2();
         }
     }
 }
