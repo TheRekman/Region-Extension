@@ -59,12 +59,15 @@ namespace RegionExtension.RegionTriggers.Actions
 
         public void Execute(TriggerActionArgs args)
         {
-            _commandString = _commandString.Replace("@p", args.Player.Name);
-            _commandString = _commandString.Replace("@r", args.Region.Name);
+            var strCopy = _commandString;
+            strCopy = strCopy.Replace("@i", "tsi:" + args.Player.Index);
+            strCopy = strCopy.Replace("@p", "\"" + args.Player.Name + "\"");
+            strCopy = strCopy.Replace("@r", "\"" + args.Region.Name + "\"");
             try
             {
-                TShockAPI.Commands.HandleCommand(TSPlayer.Server, "." + _commandString);
-            } catch (Exception ex)
+                TShockAPI.Commands.HandleCommand(TSPlayer.Server, "." + strCopy);
+            }
+            catch (Exception ex)
             {
                 TShock.Log.Error(ex.Message);
                 args.Player.SendErrorMessage("Failed initialize trigger command!");
