@@ -139,9 +139,13 @@ namespace RegionExtension
 
         private void OnPostInitialize(EventArgs args)
         {
+            InitializePlugin();
+        }
+
+        private void InitializePlugin()
+        {
             Contexts = new ContextManager();
             Contexts.Initialize();
-            PluginCommands.Initialize(this);
             Config = ConfigFile.Read();
             FastRegions = new List<FastRegion>();
             RegionExtensionManager.PostInitialize(this);
@@ -165,6 +169,10 @@ namespace RegionExtension
         {
             if (disposing)
             {
+                PluginCommands.Dispose();
+                RegionExtensionManager.PropertyManager.Dispose(this);
+                RegionExtensionManager.Dispose();
+                DelayManager.Dispose(this);
                 ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
                 ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
@@ -175,8 +183,7 @@ namespace RegionExtension
                 PlayerHooks.PlayerPostLogin -= OnPlayerLogin;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
-                RegionExtensionManager.PropertyManager.Dispose(this);
-                DelayManager.Dispose(this);
+                _sendingItemDrop -= OnSendItemDrop;
             }
         }
 
@@ -201,6 +208,7 @@ namespace RegionExtension
 
         private void OnInitialize(EventArgs args)
         {
+            PluginCommands.Initialize(this);
         }
         #endregion
 
