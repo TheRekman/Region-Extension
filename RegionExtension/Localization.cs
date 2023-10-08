@@ -98,6 +98,7 @@ namespace RegionExtension
                 {"PausePlayerCondDesc", "Pauses trigger for player in given time after activation." },
                 {"DelayCondDesc", "Activates trigger after given time. Flags: -f, -a, -i" },
                 {"PlayerDelayCondDesc", "Activates trigger after given time for player. Flags: -f, -a, -i" },
+                {"RecheckCondDesc", "Rechecks the actual presence of the player in region." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Activates player pvp and prevents trying to change it." },
@@ -203,6 +204,7 @@ namespace RegionExtension
                 {"PausePlayerCondDesc", "Останавливает триггер на заданное время для игрока. Формат: 0d0h0m0s" },
                 {"DelayCondDesc", "Активирует триггер после заданного времени для региона. Флаги: -f, -a, -i" },
                 {"PlayerDelayCondDesc", "Активирует триггер после заданного времени для игрока. Флаги: -f, -a, -i" },
+                {"RecheckCondDesc", "Перепроверяет действительное наличие игрока в данном регионе." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Включает режим PvP игрока и предотвращает его изменение." },

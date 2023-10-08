@@ -113,6 +113,7 @@ Update happens every half second
 - `playerpause/pp [time]` - Pauses trigger for player in given time after activation. Format: 0d0h0m0s
 - `delay/d [time] [flag]` - Activates the trigger only after the given time.
 - `playerdelay/pd [time] [flag]` - Activates the trigger only after the given time for the player.
+- `recheck/rc` - Rechecks the actual presence of the player in region.
 > Flags - additional conditions under which the delay trigger is activated.
 > - `-f` - The trigger is activated at the end of the delay, regardless of the presence of a player in the region. Default.
 > - `-i` - The trigger is activated if the player is in the region at the end of the delay.
@@ -249,6 +250,7 @@ P.S. Максимальный буффер для удаленных регио�
 - `playerpause/pp [time]` - Останавливает триггер на заданное время для игрока. Формат: 0d0h0m0s
 - `delay/d [time] [flag]` - Активирует триггер только после заданного времени.
 - `playerdelay/pd [time] [flag]` - Активирует триггер только после заданного времени для игрока.
+- `recheck/rc` - Перепроверяет действительное наличие игрока в регионе.
 > Флаги - дополнительные условия при котором триггер задержки активируется.
 > - `-f` - Триггер активируется по окончанию задержки независимо от наличия игрока в регионе. Стандартный.
 > - `-i` - Триггер активируется если игрок в момент окончания задержки находится в регионе.
