@@ -152,6 +152,24 @@ namespace RegionExtension.Database
                 _regionInfoManager.AddNewRegion(args.Region.ID, args.UserExecutor.Account.ID);
         }
 
+        public void Dispose()
+        {
+            OnRegionMove = null;
+            OnRegionAllow = null;
+            OnRegionRemove = null;
+            OnRegionChangeOwner = null;
+            OnRegionAllowGroup = null;
+            OnRegionRemoveGroup = null;
+            OnRegionRename = null;
+            OnRegionResize = null;
+            OnRegionSetZ = null;
+            OnRegionProtect = null;
+            OnRegionDelete = null;
+            OnRegionDeleted = null;
+            OnRequestRemoved = null;
+            OnRegionDefined = null;
+        }
+
         public void RegisterAction(IAction action, BaseRegionArgs args)
         {
             RegisterCommand(args.UserExecutor, args.Region);

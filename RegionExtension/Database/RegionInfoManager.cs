@@ -79,10 +79,11 @@ namespace RegionExtension.Database
         {
             try
             {
-                var reader = _database.QueryReader($"SELECT 1 FROM {_table.Name} WHERE Id=@0", id);
-                if (reader.Read() == true)
-                    return true;
-                
+                using(var reader = _database.QueryReader($"SELECT * FROM {_table.Name} WHERE Id=@0", id))
+                {
+                    if (reader.Read() == true)
+                        return true;
+                }
                 var variablesString = string.Join(", ", _table.Columns.Select(c => c.Name));
                 var values = "'" + string.Join("', '",
                              id.ToString(), Main.worldID, DateTime.UtcNow.ToString(), userId.ToString(), DateTime.UtcNow.ToString(), DateTime.UtcNow.ToString()) + "'";
@@ -193,7 +194,12 @@ namespace RegionExtension.Database
             {
                 lines.Add("Region is not shared with any groups.");
             }
-            var extInfo = RegionsInfo.First(ri => ri.Id == id);
+            var extInfo = RegionsInfo.FirstOrDefault(ri => ri.Id == id);
+            if (extInfo == null)
+            {
+                AddNewRegion(id, TShock.UserAccounts.GetUserAccountByName(region.Owner).ID);
+                extInfo = RegionsInfo.FirstOrDefault(ri => ri.Id == id);
+            }
             var user = TShock.UserAccounts.GetUserAccountByID(extInfo.LastUserId);
             var userName = user == null ? "N/A" : user.Name;
             lines.Add(string.Concat("Last user: ", userName));

@@ -10,12 +10,19 @@ namespace RegionExtension.Commands
 {
     public class CommandsInitializer
     {
+        private static IEnumerable<Command> ReplacedCommands;
+        private static CommandExtension[] AddedCommands;
         public static void InitializeCommands(Plugin plugin, params CommandExtension[] commands)
         {
+
+            AddedCommands = commands;
             foreach (var command in commands)
             {
-                foreach(var name in command.Names) 
+                foreach(var name in command.Names)
+                {
+                    ReplacedCommands = TShockAPI.Commands.ChatCommands.Where(c => c.Names.Contains(name) || c.Name == name);
                     TShockAPI.Commands.ChatCommands.RemoveAll(c => c.Names.Contains(name) || c.Name == name);
+                }
                 TShockAPI.Commands.ChatCommands.Add(
                     new Command(
                     command.Permissions.ToList(),
@@ -70,6 +77,12 @@ namespace RegionExtension.Commands
                     },
                     "reloc")
                     { HelpText = "Changes Region extension localization.", AllowServer = false });
+        }
+
+        public static void Dispose()
+        {
+            TShockAPI.Commands.ChatCommands.RemoveAll(p => AddedCommands.Any(c => c.Names.Contains(p.Name) || p.Name == "reperm" || p.Name == "reloc" || p.Name == "triggerignore"));
+            TShockAPI.Commands.ChatCommands.AddRange(ReplacedCommands);
         }
     }
 }

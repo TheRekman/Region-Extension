@@ -33,5 +33,10 @@ namespace RegionExtension
         {
             CommandsInitializer.InitializeCommands(plugin, commands);
         }
+
+        public static void Dispose()
+        {
+            CommandsInitializer.Dispose();
+        }
     }
 }

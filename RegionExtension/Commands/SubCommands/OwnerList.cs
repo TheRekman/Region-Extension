@@ -17,8 +17,8 @@ namespace RegionExtension.Commands.SubCommands
         {
             _params = new ICommandParam[]
             {
-                new IntParam("page", "page of the list. Default: 1", true, 1),
-                new UserAccountParam("username", "which useraccount check. Default: your account", true)
+                new UserAccountParam("username", "which useraccount check. Default: your account", true),
+                new IntParam("page", "page of the list. Default: 1", true, 1)
             };
         }
 

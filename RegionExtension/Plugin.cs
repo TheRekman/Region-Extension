@@ -139,13 +139,14 @@ namespace RegionExtension
 
         private void OnPostInitialize(EventArgs args)
         {
-            Contexts = new ContextManager();
-            Contexts.Initialize();
-            PluginCommands.Initialize(this);
-            Config = ConfigFile.Read();
-            FastRegions = new List<FastRegion>();
+            Task.Run(() => InitializePlugin());
+        }
+
+        private void InitializePlugin()
+        {
             RegionExtensionManager.PostInitialize(this);
             DelayManager.Initialize(this);
+            TShock.Log.ConsoleInfo("Region extension loaded!");
         }
 
         private void OnHasPlayerPermission(PlayerHasBuildPermissionEventArgs e)
@@ -165,6 +166,10 @@ namespace RegionExtension
         {
             if (disposing)
             {
+                PluginCommands.Dispose();
+                RegionExtensionManager.PropertyManager.Dispose(this);
+                RegionExtensionManager.Dispose();
+                DelayManager.Dispose(this);
                 ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
                 ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
                 ServerApi.Hooks.GamePostInitialize.Deregister(this, OnPostInitialize);
@@ -175,8 +180,7 @@ namespace RegionExtension
                 PlayerHooks.PlayerPostLogin -= OnPlayerLogin;
                 PlayerHooks.PlayerCommand -= OnPlayerCommand;
                 PlayerHooks.PlayerHasBuildPermission -= OnHasPlayerPermission;
-                RegionExtensionManager.PropertyManager.Dispose(this);
-                DelayManager.Dispose(this);
+                _sendingItemDrop -= OnSendItemDrop;
             }
         }
 
@@ -201,6 +205,11 @@ namespace RegionExtension
 
         private void OnInitialize(EventArgs args)
         {
+            PluginCommands.Initialize(this);
+            Contexts = new ContextManager();
+            Contexts.Initialize();
+            FastRegions = new List<FastRegion>();
+            Config = ConfigFile.Read();
         }
         #endregion
 
