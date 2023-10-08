@@ -63,16 +63,27 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         private void OnGetData(GetDataEventArgs args)
         {
-            var reg = TShock.Players[args.Msg.whoAmI].CurrentRegion;
+            var plr = TShock.Players[args.Msg.whoAmI];
+            if (plr == null)
+                return;
+            var reg = plr.CurrentRegion;
             if (reg == null || !_regions.ContainsKey(reg))
                 return;
-            if (!_regions[reg].CheckConditions(TShock.Players[args.Msg.whoAmI], reg))
+            if (!_regions[reg].CheckConditions(plr, reg))
                 return;
             switch (args.MsgID)
             {
                 case PacketTypes.TogglePvp:
-                    TShock.Players[args.Msg.whoAmI].SetPvP(true);
-                    TShock.Players[args.Msg.whoAmI].SendErrorMessage("You cannot change pvp in this region.");
+                    bool hostile;
+                    using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
+                    {
+                        reader.BaseStream.Seek(1, SeekOrigin.Begin);
+                        hostile = reader.ReadBoolean();
+                    }
+                    if (hostile)
+                        return;
+                    plr.SetPvP(true);
+                    plr.SendErrorMessage("You cannot change pvp in this region.");
                     args.Handled = true;
                     break;
             }

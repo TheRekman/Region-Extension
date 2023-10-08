@@ -3,6 +3,7 @@ using RegionExtension.RegionTriggers.Actions;
 using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,6 @@ namespace RegionExtension.RegionTriggers.RegionProperties
             if (!_regions[reg].CheckConditions(obj.Player, reg))
                 return;
             obj.Player.SetPvP(false);
-            obj.Player.SendErrorMessage("You cannot change pvp in this region.");
         }
 
         private void OnEnter(TriggerActionArgs obj)
@@ -58,16 +58,25 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         private void OnGetData(GetDataEventArgs args)
         {
-            var reg = TShock.Players[args.Msg.whoAmI].CurrentRegion;
+            var plr = TShock.Players[args.Msg.whoAmI];
+            var reg = plr.CurrentRegion;
             if (reg == null || !_regions.ContainsKey(reg))
                 return;
-            if (!_regions[reg].CheckConditions(TShock.Players[args.Msg.whoAmI], reg))
+            if (!_regions[reg].CheckConditions(plr, reg))
                 return;
             switch (args.MsgID)
             {
                 case PacketTypes.TogglePvp:
-                    TShock.Players[args.Msg.whoAmI].SetPvP(false);
-                    TShock.Players[args.Msg.whoAmI].SendErrorMessage("You cannot change pvp in this region.");
+                    bool hostile;
+                    using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
+                    {
+                        reader.BaseStream.Seek(1, SeekOrigin.Begin);
+                        hostile = reader.ReadBoolean();
+                    }
+                    if (!hostile)
+                        return;
+                    plr.SetPvP(false);
+                    plr.SendErrorMessage("You cannot change pvp in this region.");
                     args.Handled = true;
                     break;
             }
