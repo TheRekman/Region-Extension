@@ -19,7 +19,7 @@ namespace RegionExtension.Commands.SubCommands
             _params = new ICommandParam[]
             {
                 new BoolParam("state", "can user build on region. true/false"),
-                new RegionParam("regionn", "name of region. Default: region in your location", true),
+                new RegionParam("region", "name of region. Default: region in your location", true),
             };
         }
 
