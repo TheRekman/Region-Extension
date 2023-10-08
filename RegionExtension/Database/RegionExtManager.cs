@@ -30,6 +30,8 @@ namespace RegionExtension.Database
         private DateTime _lastUpdate = DateTime.UtcNow;
         private DateTime _lastNotify = DateTime.UtcNow;
 
+        private bool _fullyLoaded = false;
+
         public static event Action<AllowArgs> OnRegionAllow;
         public static event Action<RemoveArgs> OnRegionRemove;
         public static event Action<SetZArgs> OnRegionSetZ;
@@ -110,6 +112,7 @@ namespace RegionExtension.Database
             TShock.Log.Info("Property manager loaded.");
             if (OnPostInitialize != null)
                 OnPostInitialize();
+            _fullyLoaded = true;
             TShock.Log.Info("Region extension manager fully loaded!");
         }
 
@@ -341,6 +344,8 @@ namespace RegionExtension.Database
 
         public void Update()
         {
+            if (!_fullyLoaded)
+                return;
             TriggerManager.OnUpdate();
             if (DateTime.UtcNow < _lastUpdate.AddSeconds(10))
                 return;
