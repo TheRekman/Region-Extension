@@ -7,6 +7,7 @@ using RegionExtension.RegionTriggers.RegionProperties;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -24,13 +25,16 @@ namespace RegionExtension.RegionTriggers
         private DateTime _lastUpdate = DateTime.UtcNow;
         private DatabaseTable<TriggerDBUnit> _database;
         private Region[] _lastRegions = new Region[TShock.Players.Length];
+        private bool[] _lastHostile = new bool[TShock.Players.Length];
         Dictionary<Region, List<Trigger>> _triggers = new Dictionary<Region, List<Trigger>>();
 
         public static readonly RegionEvent[] Events = new RegionEvent[]
         {
             new RegionEvent(new[] {"onenter", "enter", "e" }, "OnEnterEventDesc", RegionEvents.OnEnter),
             new RegionEvent(new[] {"onleave", "leave", "l" }, "OnLeaveEventDesc", RegionEvents.OnLeave),
-            new RegionEvent(new[] {"onin", "in", "i" }, "OnInEventDesc", RegionEvents.OnIn)
+            new RegionEvent(new[] {"onin", "in", "i" }, "OnInEventDesc", RegionEvents.OnIn),
+            new RegionEvent(new[] {"onpvpon", "pvpon"}, "OnPvpOnEventDesc", RegionEvents.OnPvpOn),
+            new RegionEvent(new[] {"onpvpoff", "pvpoff"}, "OnPvpOffEventDesc", RegionEvents.OnPvpOff)
         };
 
         public TriggerManager(IDbConnection dbConnection)
@@ -153,27 +157,43 @@ namespace RegionExtension.RegionTriggers
                 if (DateTime.UtcNow < lasUpd.AddMilliseconds(500))
                     return;
                 for (int i = 0; i < TShock.Players.Length; i++)
-                    if (TShock.Players[i] != null && TShock.Players[i].Active && !Plugin.TriggerIgnores[i])
+                {
+                    var player = TShock.Players[i];
+                    if (player != null && player.Active && !Plugin.TriggerIgnores[i])
                     {
-                        var lastRegion = _lastRegions[i];
-                        var player = TShock.Players[i];
-                        if (lastRegion != player.CurrentRegion)
-                        {
-                            TriggerEvent(RegionEvents.OnEnter, player, player.CurrentRegion);
-                            if (OnEnter != null)
-                                OnEnter(new TriggerActionArgs(player, player.CurrentRegion));
-                            TriggerEvent(RegionEvents.OnLeave, player, lastRegion);
-                            if (OnLeave != null)
-                                OnLeave(new TriggerActionArgs(player, lastRegion));
-                            _lastRegions[i] = player.CurrentRegion;
-                        }
-                        TriggerEvent(RegionEvents.OnIn, player, player.CurrentRegion);
-                        if (OnIn != null)
-                            OnIn(new TriggerActionArgs(player, lastRegion));
+                        CheckRegionUpdate(player);
+                        CheckPvpUpdate(player);
                     }
-
+                }
                 _lastUpdate = DateTime.UtcNow;
             });
+        }
+
+        private void CheckPvpUpdate(TSPlayer player)
+        {
+            if(!(player.TPlayer.hostile && _lastHostile[player.Index]))
+            {
+                TriggerEvent(player.TPlayer.hostile ? RegionEvents.OnPvpOn : RegionEvents.OnPvpOff, player, player.CurrentRegion);
+                _lastHostile[player.Index] = player.TPlayer.hostile;
+            }
+        }
+
+        private void CheckRegionUpdate(TSPlayer player)
+        {
+            var lastRegion = _lastRegions[player.Index];
+            if (lastRegion != player.CurrentRegion)
+            {
+                TriggerEvent(RegionEvents.OnEnter, player, player.CurrentRegion);
+                if (OnEnter != null)
+                    OnEnter(new TriggerActionArgs(player, player.CurrentRegion));
+                TriggerEvent(RegionEvents.OnLeave, player, lastRegion);
+                if (OnLeave != null)
+                    OnLeave(new TriggerActionArgs(player, lastRegion));
+                _lastRegions[player.Index] = player.CurrentRegion;
+            }
+            TriggerEvent(RegionEvents.OnIn, player, player.CurrentRegion);
+            if (OnIn != null)
+                OnIn(new TriggerActionArgs(player, lastRegion));
         }
 
         private void TriggerEvent(RegionEvents events, TSPlayer player, Region region)
@@ -224,7 +244,9 @@ namespace RegionExtension.RegionTriggers
         None,
         OnEnter,
         OnLeave,
-        OnIn
+        OnIn,
+        OnPvpOn,
+        OnPvpOff
     }
 
     public class RegionEvent

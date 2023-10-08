@@ -112,7 +112,9 @@ namespace RegionExtension
                 #region Events Description
                 {"OnEnterEventDesc", "Activates when player enters in region." },
                 {"OnLeaveEventDesc", "Activates when player leaves from region." },
-                {"OnInEventDesc", "Activates while player in the region." }
+                {"OnInEventDesc", "Activates while player in the region." },
+                {"OnPvpOnEventDesc", "Activates when players Pvp enabled." },
+                {"OnPvpOffEventDesc", "Activates when player Pvp disabled." }
                 #endregion
             } },
             { "RU", new Dictionary<string, string>
@@ -214,7 +216,9 @@ namespace RegionExtension
                 #region Events Description
                 {"OnEnterEventDesc", "Активируется когда игрок заходит в регион." },
                 {"OnLeaveEventDesc", "Активируется когда игрок выходит из региона." },
-                {"OnInEventDesc", "Активируется пока игрок находится в регионе." }
+                {"OnInEventDesc", "Активируется пока игрок находится в регионе." },
+                {"OnPvpOnEventDesc", "Активируется когда включается режим Пвп игрока." },
+                {"OnPvpOffEventDesc", "Активируется когда отключается режим Пвп игрока." }
                 #endregion
             } },
         };

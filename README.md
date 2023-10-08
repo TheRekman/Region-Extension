@@ -77,7 +77,7 @@ The property will only affect players not added to the region.
 > @r - replaced by the name of the region
 > @p - replaced by the player who activated trigger
 - `push/p` - Pushes player from region.
-- `packet/pa <int> [text] [data...]` - Отправляет пакет игроку.
+- `packet/pa <int> [text] [data...]` - Send packet to the player.
 - `message/msg <text...>` - Send message to the player.
 - `spawnnpc/spawnmob/sn/sm <npc> [count] [x] [y] [health] [strength]` - Spawns npc.
 - `spawnproj/sp <projectile> [count] [damage] [knockback] [x] [y] [speedX] [speedY]` - Spawns projectile.
@@ -99,7 +99,9 @@ All available features:
 #### Available events
 - `onenter/enter/e` - Activates when player enters in region.
 - `onleave/leave/l` - Activates when player leaves from region.
-- `onin/in/i` - Activates while player in the region.\
+- `onin/in/i` - Activates while player in the region.
+- `onpvpon/pvpon` - Activates when players Pvp enabled.
+- `onpvpoff/pvpoff` - Activates when players Pvp disabled.\
 Update happens every half second
 #### Available conditions
 - `allowed/a`  - If player is allowed in the region.
@@ -233,7 +235,9 @@ P.S. Максимальный буффер для удаленных регио�
 #### Доступные события
 - `onenter/enter/e` - Активируется когда игрок заходит в регион.
 - `onleave/leave/l` - Активируется когда игрок выходит из региона.
-- `onin/in/i` - Активируется пока игрок находится в регионе.\
+- `onin/in/i` - Активируется пока игрок находится в регионе.
+- `onpvpon/pvpon` - Активируется когда включается режим Пвп игрока.
+- `onpvpoff/pvpoff` - Активируется когда отключается режим Пвп игрока.\
 Обновление происходит каждые пол секунды
 #### Доступные условия 
 - `allowed/a`  - Если игрок добавлен в регион.
