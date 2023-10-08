@@ -85,7 +85,8 @@ The property will only affect players not added to the region.
 - `tppos <x> <y>` - Teleports player to the position.
 - `warp <warp>` - Teleports player to the warp.
 - `kill/k` - Kills player.
-- `buff/b <buff> [time]` - Buffs player. Time in Seconds.\
+- `buff/b <buff> [time]` - Buffs player. Time in Seconds.
+- `pvp` - Changes player pvp mode.\
 In coordinates, you can set a function that is calculated when the trigger fires.\
 Example: The trigger is /rt a $t e g 1 1 0 px+1 py+1. Throws out an iron pick at the player's coordinates.\
 All available features:
@@ -185,7 +186,8 @@ P.S. Максимальный буффер для удаленных регио�
 - `conditionlist/cl [page]` - Перечисляет все доступные условия.
 - `addcond/ac <region> <condition> [ids...]` - Добавляет условие к триггеру региона.
 - `removecond/rc <region> <condition> [ids...]` - удаляет условие с триггера.
-- `clear/c [region]` - Удаляет все триггеры из региона.\
+- `clear/c [region]` - Удаляет все триггеры из региона.
+- `pvp` - Переключает режим PvP игрока.\
 Триггер - действие, совершающееся при заданном событии.\
 Пример: Задав триггер /rt a $t e msg Привет мир!\
 Игроку, который зашел (событие - e/enter) в регион ($t), отправится сообщение (действие - msg/message) "Привет мир!".\

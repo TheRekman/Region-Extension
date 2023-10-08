@@ -59,7 +59,8 @@ namespace RegionExtension.RegionTriggers
             TeleportToPosition.Former,
             TeleportToWarp.Former,
             Kill.Former,
-            BuffTrigger.Former
+            BuffTrigger.Former,
+            PvpMode.Former
         };}
 
         public static ActionFormer GetFormer(string name)

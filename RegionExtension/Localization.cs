@@ -87,6 +87,7 @@ namespace RegionExtension
                 {"SpawnNpcTriggerDesc", "Spawns npc." },
                 {"TeleportPosTriggerDesc", "Teleports player to the position." },
                 {"TeleportWartTriggerDesc", "Teleports player to the warp." },
+                {"PvpTriggerDesc", "Change player pvp mode." },
                 #endregion
                 #region Condition Description
                 {"AllowCondDesc", "If player is allowed in the region." },
@@ -99,6 +100,7 @@ namespace RegionExtension
                 {"DelayCondDesc", "Activates trigger after given time. Flags: -f, -a, -i" },
                 {"PlayerDelayCondDesc", "Activates trigger after given time for player. Flags: -f, -a, -i" },
                 {"RecheckCondDesc", "Rechecks the actual presence of the player in region." },
+                {"HostileCondDesc", "If player pvp enabled." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Activates player pvp and prevents trying to change it." },
@@ -193,6 +195,7 @@ namespace RegionExtension
                 {"TeleportPosTriggerDesc", "Телепортирует игрока на позицию." },
                 {"TeleportWartTriggerDesc", "Телепортирует игрока на варп." },
                 {"ClearItemsPropDesc", "Чистит предметы из региона." },
+                {"PvpTriggerDesc", "Переключает режим PvP игрока." },
                 #endregion
                 #region Condition Description
                 {"AllowCondDesc", "Если игрок добавлен в регион." },
@@ -205,6 +208,7 @@ namespace RegionExtension
                 {"DelayCondDesc", "Активирует триггер после заданного времени для региона. Флаги: -f, -a, -i" },
                 {"PlayerDelayCondDesc", "Активирует триггер после заданного времени для игрока. Флаги: -f, -a, -i" },
                 {"RecheckCondDesc", "Перепроверяет действительное наличие игрока в данном регионе." },
+                {"HostileCondDesc", "Если режим PvP игрока включен." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Включает режим PvP игрока и предотвращает его изменение." },
@@ -219,8 +223,8 @@ namespace RegionExtension
                 {"OnEnterEventDesc", "Активируется когда игрок заходит в регион." },
                 {"OnLeaveEventDesc", "Активируется когда игрок выходит из региона." },
                 {"OnInEventDesc", "Активируется пока игрок находится в регионе." },
-                {"OnPvpOnEventDesc", "Активируется когда включается режим Пвп игрока." },
-                {"OnPvpOffEventDesc", "Активируется когда отключается режим Пвп игрока." }
+                {"OnPvpOnEventDesc", "Активируется когда включается режим PvP игрока." },
+                {"OnPvpOffEventDesc", "Активируется когда отключается режим PvP игрока." }
                 #endregion
             } },
         };
