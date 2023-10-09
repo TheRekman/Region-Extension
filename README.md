@@ -302,12 +302,15 @@ P.S. Максимальный буффер для удаленных регио�
 - `regionext.trigger.spawnproj` - spawnproj/sp
 - `regionext.trigger.kill` - kill/k
 - `regionext.trigger.buff` - buff/b
+- `regionext.trigger.pvp` - pvp
 - `regionext.property.pvp` - alwayspvp/ap nopvp/np
 - `regionext.property.banhostile` - banhostile/bh
 - `regionext.property.spawnrewrite` - spawnrewrite/sr
 - `regionext.property.projban` - projban/pb
 - `regionext.property.itemban` - itemban/ib
 - `regionext.property.maxspawn` - maxspawn/m
+- `regionext.property.blocktileframe` - blocktileframe/btf
+- `regionext.property.blockdoortoggle` - blockdoortoggle/bdt
 ## Config
 ```
 {

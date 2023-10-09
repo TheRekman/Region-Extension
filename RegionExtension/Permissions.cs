@@ -26,6 +26,7 @@ namespace RegionExtension
         public static readonly string TriggerProjetile = string.Join('.', RegionTriggerCmd, "spawnproj");
         public static readonly string TriggerKill = string.Join('.', RegionTriggerCmd, "kill");
         public static readonly string TriggerBuff = string.Join('.', RegionTriggerCmd, "buff");
+        public static readonly string TriggerPvp = string.Join(".", RegionPropertyCmd, "pvp");
         public static readonly string PropertyPvp = string.Join(".", RegionPropertyCmd, "pvp");
         public static readonly string PropertyBanHostile = string.Join(".", RegionPropertyCmd, "banhostile");
         public static readonly string PropertySpawnRewrite = string.Join(".", RegionPropertyCmd, "spawnrewrite");
@@ -33,6 +34,8 @@ namespace RegionExtension
         public static readonly string PropertyItem = string.Join(".", RegionPropertyCmd, "itemban");
         public static readonly string PropertyMaxSpawn = string.Join(".", RegionPropertyCmd, "maxspawn");
         public static readonly string PropertyBlockTileFrame = string.Join(".", RegionPropertyCmd, "blocktileframe");
+        public static readonly string PropertyBlockDoorToggle = string.Join(".", RegionPropertyCmd, "blockdoortoggle");
+
 
         private static readonly IEnumerable<string> PermissionList = typeof(Permissions).GetFields(System.Reflection.BindingFlags.Static |
                                                                                                    System.Reflection.BindingFlags.Public |

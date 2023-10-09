@@ -23,7 +23,7 @@ namespace RegionExtension.RegionTriggers.Actions
                                                                       },
                                                                       (param, args) => CreateTriggerAction(param, args),
                                                                       s => new PvpMode(s))
-        { Permission = Permissions.TriggerKill };
+        { Permission = Permissions.TriggerPvp };
 
         private PvpMode(string text)
         {
