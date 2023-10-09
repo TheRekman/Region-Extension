@@ -47,7 +47,7 @@ namespace RegionExtension.Database
         public static event Action<BaseRegionArgs> OnRegionDeleted;
         public static event Action<BaseRegionArgs> OnRegionDefined;
 
-        public static event Action OnPostInitialize;
+        public static event Action<IDbConnection> OnPostInitialize;
         
         public static event Action<RequestCreatedArgs> OnRequestCreated;
         public static event Action<RequestRemovedArgs> OnRequestRemoved;
@@ -111,7 +111,7 @@ namespace RegionExtension.Database
             PropertyManager = new PropertyManager(database, plugin);
             TShock.Log.Info("Property manager loaded.");
             if (OnPostInitialize != null)
-                OnPostInitialize();
+                OnPostInitialize(database);
             _fullyLoaded = true;
             TShock.Log.Info("Region extension manager fully loaded!");
         }
