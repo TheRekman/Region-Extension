@@ -1,47 +1,38 @@
-﻿using RegionExtension.Commands.Parameters;
+﻿using Terraria;
+using RegionExtension.Commands.Parameters;
 using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
 
 namespace RegionExtension.RegionTriggers.RegionProperties
 {
-    internal class ClearItems : IRegionProperty
+    internal class BlockTileFrame : IRegionProperty
     {
-        public string[] Names => new[] { "clearitems", "ci" };
-        public string Description => "ClearItemsPropDesc";
+        public string[] Names => new[] { "blocktileframe", "btf" };
+        public string Description => "BlockTileFramePropDesc";
         public string Permission => Permissions.PropertyBlockTileFrame;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 
         private Dictionary<Region, List<IRegionCondition>> _regions = new Dictionary<Region, List<IRegionCondition>>();
-        private DateTime _lastUpdate;
 
         public void InitializeEventHandler(TerrariaPlugin plugin)
         {
-            ServerApi.Hooks.GameUpdate.Register(plugin, OnUpdate);
+            On.Terraria.WorldGen.TileFrame += OnTileFrame;
         }
 
-        private void OnUpdate(EventArgs args)
+        private void OnTileFrame(On.Terraria.WorldGen.orig_TileFrame orig, int i, int j, bool resetFrame, bool noBreak)
         {
-            if (DateTime.Now.AddSeconds(-2) < _lastUpdate)
+            if (_regions.Any(r => r.Key.InArea(i, j)))
                 return;
-            Task.Run(() =>
-            {
-                foreach (var item in Terraria.Main.item.Where(i => i != null && i.active && _regions.Keys.Any(r => r.InArea((int)Math.Floor(i.position.X / 16), (int)Math.Floor(i.position.Y / 16)))))
-                {
-
-                    item.active = false;
-                    NetMessage.SendData((int)PacketTypes.UpdateItemDrop, number:item.whoAmI);
-                }    
-            });
-            _lastUpdate = DateTime.Now;
+            orig.Invoke(i, j, resetFrame, noBreak);
         }
 
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)
@@ -84,7 +75,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         public void Dispose(Plugin plugin)
         {
-            ServerApi.Hooks.GameUpdate.Deregister(plugin, OnUpdate);
+            On.Terraria.WorldGen.TileFrame -= OnTileFrame;
         }
     }
 }

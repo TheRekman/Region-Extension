@@ -2,46 +2,52 @@
 using RegionExtension.RegionTriggers.Conditions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Net;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
 
 namespace RegionExtension.RegionTriggers.RegionProperties
 {
-    internal class ClearItems : IRegionProperty
+    internal class BlockDoorToggle : IRegionProperty
     {
-        public string[] Names => new[] { "clearitems", "ci" };
-        public string Description => "ClearItemsPropDesc";
-        public string Permission => Permissions.PropertyBlockTileFrame;
+        public string[] Names => new[] { "blockdoortoggle", "bdt" };
+        public string Description => "BlockDoorTogglePropDesc";
+        public string Permission => Permissions.PropertyBlockDoorToggle;
         public ICommandParam[] CommandParams => new ICommandParam[0];
         public Region[] DefinedRegions => _regions.Keys.ToArray();
 
         private Dictionary<Region, List<IRegionCondition>> _regions = new Dictionary<Region, List<IRegionCondition>>();
-        private DateTime _lastUpdate;
 
         public void InitializeEventHandler(TerrariaPlugin plugin)
         {
-            ServerApi.Hooks.GameUpdate.Register(plugin, OnUpdate);
+            ServerApi.Hooks.NetGetData.Register(plugin, OnGetData);
         }
 
-        private void OnUpdate(EventArgs args)
+        private void OnGetData(GetDataEventArgs args)
         {
-            if (DateTime.Now.AddSeconds(-2) < _lastUpdate)
-                return;
-            Task.Run(() =>
+            switch (args.MsgID)
             {
-                foreach (var item in Terraria.Main.item.Where(i => i != null && i.active && _regions.Keys.Any(r => r.InArea((int)Math.Floor(i.position.X / 16), (int)Math.Floor(i.position.Y / 16)))))
-                {
-
-                    item.active = false;
-                    NetMessage.SendData((int)PacketTypes.UpdateItemDrop, number:item.whoAmI);
-                }    
-            });
-            _lastUpdate = DateTime.Now;
+                case PacketTypes.DoorUse:
+                    short x, y;
+                    using (var reader = new BinaryReader(new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)))
+                    {
+                        reader.BaseStream.Seek(1, SeekOrigin.Begin);
+                        x = reader.ReadInt16();
+                        y = reader.ReadInt16();
+                    }
+                    if (TShock.Regions.CanBuild(x, y, TShock.Players[args.Msg.whoAmI]))
+                        return;
+                    var region = TShock.Regions.GetTopRegion(TShock.Regions.InAreaRegion(x, y));
+                    if (_regions.ContainsKey(region))
+                        args.Handled = true;
+                    break;
+            }
         }
 
         public void AddRegionProperties(Region region, ICommandParam[] commandParams)
@@ -84,7 +90,7 @@ namespace RegionExtension.RegionTriggers.RegionProperties
 
         public void Dispose(Plugin plugin)
         {
-            ServerApi.Hooks.GameUpdate.Deregister(plugin, OnUpdate);
+            ServerApi.Hooks.NetGetData.Deregister(plugin, OnGetData);
         }
     }
 }

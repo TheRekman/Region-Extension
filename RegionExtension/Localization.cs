@@ -112,6 +112,8 @@ namespace RegionExtension
                 {"ProjBanPropDesc", "Prevents projectile creation from player." },
                 {"ItemBanPropDesc", "Ban items in the region." },
                 {"ClearItemsPropDesc", "Clears items from region." },
+                {"BlockDoorTogglePropDesc", "Block door toggle from server side." },
+                {"BlockTileFramePropDesc", "Block tile frame check from server side." },
                 #endregion
                 #region Events Description
                 {"OnEnterEventDesc", "Activates when player enters in region." },
@@ -220,6 +222,8 @@ namespace RegionExtension
                 {"NPCRewritePropDesc", "Изменяет естественное появление НИПов в регионе." },
                 {"ProjBanPropDesc", "Предотвращает использование снаряда игроком." },
                 {"ItemBanPropDesc", "Предотвращает использование предмета игроком." },
+                {"BlockDoorTogglePropDesc", "Предотвращает использование дверей со стороны сервера." },
+                {"BlockTileFramePropDesc", "Предотвращает проверку фреймов тайла со стороны сервера." },
                 #endregion
                 #region Events Description
                 {"OnEnterEventDesc", "Активируется когда игрок заходит в регион." },

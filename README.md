@@ -64,7 +64,8 @@ If a trigger has more than 1 condition, all conditions must be true for the trig
 - `helpproperty/hp <property> [page]` - Returns all info about given property.
 - `addcond/ac <region> <condition> <property>` - Adds condition to the property.
 - `removecond/rc <region> <condition> <property>` - Removes condition from the property.
-- `clear/c [region]` - Clears properties from the region.\
+- `clear/c [region]` - Clears properties from the region.
+- `blockdoortoggle/bdt` - Block door toggle from server side.\
 Properties - certain rules by which the region exists and events change.\
 Example: By setting the property - /rp a $t ap\
 A player located in the region ($t) automatically turns on PvP mode and is not able to turn it off (property - ap/alwayspvp)\
@@ -204,7 +205,8 @@ P.S. Максимальный буффер для удаленных регио�
 - `helpproperty/hp <property> [page]` - Отображает информацию о свойстве.
 - `addcond/ac <region> <condition> <property>` - Добавляет условие к свойству региона.
 - `removecond/rc <region> <condition> <property>` - Удаляет условие из свойства
-- `clear/c [region]` - Удаляет все свойства из региона.\
+- `clear/c [region]` - Удаляет все свойства из региона.
+- `blockdoortoggle/bdt` - Предотвращает использование дверей со стороны сервера.\
 Свойства - определенные правила по которым существует регион и изменяются события.\
 Пример: Задав свойство - /rp a $t ap\
 У игрока, находящегося в регионе ($t), автоматически включается режим PvP и он не способен его выключить (свойство - ap/alwayspvp)\
