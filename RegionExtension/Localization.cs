@@ -101,6 +101,7 @@ namespace RegionExtension
                 {"PlayerDelayCondDesc", "Activates trigger after given time for player. Flags: -f, -a, -i" },
                 {"RecheckCondDesc", "Rechecks the actual presence of the player in region." },
                 {"HostileCondDesc", "If player pvp enabled." },
+                {"HasItemCondDesc", "If player has item." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Activates player pvp and prevents trying to change it." },
@@ -209,6 +210,7 @@ namespace RegionExtension
                 {"PlayerDelayCondDesc", "Активирует триггер после заданного времени для игрока. Флаги: -f, -a, -i" },
                 {"RecheckCondDesc", "Перепроверяет действительное наличие игрока в данном регионе." },
                 {"HostileCondDesc", "Если режим PvP игрока включен." },
+                {"HasItemCondDesc", "Если у игрока есть предмет." },
                 #endregion
                 #region Property Description
                 {"AlwaysPvpPropDesc", "Включает режим PvP игрока и предотвращает его изменение." },
