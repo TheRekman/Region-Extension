@@ -60,7 +60,8 @@ namespace RegionExtension.RegionTriggers
             TeleportToWarp.Former,
             Kill.Former,
             BuffTrigger.Former,
-            PvpMode.Former
+            PvpMode.Former,
+            ResetSection.Former
         };}
 
         public static ActionFormer GetFormer(string name)

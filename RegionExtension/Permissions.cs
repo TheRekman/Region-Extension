@@ -42,6 +42,7 @@ namespace RegionExtension
                                                                                                    System.Reflection.BindingFlags.GetField)
                                                                                         .Select(f => (string)f.GetValue(null));
 
+        public static string ResetSectionTrigger { get; internal set; }
 
         public static IEnumerable<string> GetAllPermissions() => 
             typeof(Permissions).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.GetField).Select(f => (string)f.GetValue(null));

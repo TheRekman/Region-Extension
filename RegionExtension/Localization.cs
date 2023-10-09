@@ -88,6 +88,7 @@ namespace RegionExtension
                 {"TeleportPosTriggerDesc", "Teleports player to the position." },
                 {"TeleportWartTriggerDesc", "Teleports player to the warp." },
                 {"PvpTriggerDesc", "Change player pvp mode." },
+                {"ResetSectionDesc", "Updates tiles in the region." },
                 #endregion
                 #region Condition Description
                 {"AllowCondDesc", "If player is allowed in the region." },
@@ -199,6 +200,7 @@ namespace RegionExtension
                 {"TeleportWartTriggerDesc", "Телепортирует игрока на варп." },
                 {"ClearItemsPropDesc", "Чистит предметы из региона." },
                 {"PvpTriggerDesc", "Переключает режим PvP игрока." },
+                {"ResetSectionDesc", "Обновляет блоки в регионе." },
                 #endregion
                 #region Condition Description
                 {"AllowCondDesc", "Если игрок добавлен в регион." },
