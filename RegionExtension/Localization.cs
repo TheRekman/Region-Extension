@@ -70,6 +70,7 @@ namespace RegionExtension
                 {"TriggerHelpDesc", "Returns all info about given trigger." },
                 {"UndoHistoryDesc", "Undo actions on region." },
                 {"PropertyHelpDesc", "Returns all info about given property." },
+                {"AllowedListDesc", "Returns all regions with allowed user." },
                 #region Common commands
                 {"HelpCommandDesc", "Returns all info about this command." },
                 {"HelSubCommandDesc", "Returns all info about this sub-command." },
@@ -181,6 +182,7 @@ namespace RegionExtension
                 {"TriggerHelpDesc", "Отображает информацию о триггере." },
                 {"UndoHistoryDesc", "Отменяет действие над регионом." },
                 {"PropertyHelpDesc", "Отображает информацию о свойстве." },
+                {"AllowedListDesc", "Отображает все регионы, где данный пользователь добавлен." },
                 #region Common commands
                 {"HelpCommandDesc", "Отображает всю информацию о данной команде." },
                 {"HelpSubCommandDesc", "Отображает всю информацию о данной под-команде." },

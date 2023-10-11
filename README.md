@@ -8,7 +8,8 @@ All commands integrated with /region, also change all default commands.
 - `clearmembers/cm [regionname]` - Remove all members from region.
 - `fastregion/fr <regionname> [ownername] [z] [protect]` - Create new region with two given point and params.
 - `frbreak` - Breaks fast region request.
-- `ownerlist/ol [page] [username]` - Get list of regions in which the given player is owner.
+- `ownerlist/ol [username] [page]` - Get list of regions in which the given player is owner.
+- `allowedlist/al [username] [page]` - Get list of regions in which the given player is owner.
 - `listact/la [page]` - Get list of last active regions.
 - `listrequest/lr [page]` - Lists all region requests.
 - `requestinfo/ri [region] [page]` - Displays several information about the given request.
@@ -147,7 +148,8 @@ Update happens every half second
 - `clearmembers/cm [regionname]` - Очищает список всех игроков, что могут строить в регионе.
 - `fastregion/fr <regionname> [ownername] [z] [protect]` - Задает регион с указанными параметрами и запрашивает точки региона. Зону можно указать с помощью The Grand Design.
 - `frbreak` - Отменяет активный запрос на быстрый регион (fastregion).
-- `ownerlist/ol [page] [username]` - Перечисляет все регионы с заданным владельцем
+- `ownerlist/ol [username] [page]` - Перечисляет все регионы с заданным владельцем
+- `allowelist/al [username] [page]`, "Отображает все регионы, где данный пользователь добавлен.
 - `contexts [page]` - Отображение всех доступных контекстных команд.
 - `listact/la [page]` - Перечисляет все регионы в порядке активности.
 - `listrequest/lr [page]` - Отображает все активные запросы.

@@ -1,17 +1,20 @@
 ﻿using RegionExtension.Commands.Parameters;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Terraria;
-using TShockAPI;
+using System.Text;
+using System.Threading.Tasks;
 using TShockAPI.DB;
+using TShockAPI;
+using Terraria;
 
 namespace RegionExtension.Commands.SubCommands
 {
-    public class OwnerList : SubCommand
+    public class AllowList : SubCommand
     {
-        public override string[] Names => new string[] { "ownerlist", "ol" };
+        public override string[] Names => new string[] { "allowedlist", "al" };
 
-        public override string Description => "OwnerListDesc";
+        public override string Description => "AllowedListDesc";
 
         public override void InitializeParams()
         {
@@ -31,7 +34,7 @@ namespace RegionExtension.Commands.SubCommands
 
         private void SendOwnerList(CommandArgsExtension args, int page, UserAccount userAccount)
         {
-            var regionNames = TShock.Regions.Regions.Where(r => r.Owner == userAccount.Name && r.WorldID == Main.worldID.ToString())
+            var regionNames = TShock.Regions.Regions.Where(r => r.AllowedIDs.Contains(userAccount.ID) || (r.Owner == userAccount.Name) && r.WorldID == Main.worldID.ToString())
                                                     .Select(r => r.Name)
                                                     .ToList();
             var usedName = args.Message.Split(' ')[0].Remove(0, 1);
