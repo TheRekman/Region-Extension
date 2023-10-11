@@ -38,6 +38,7 @@ namespace RegionExtension.Commands
             new FastRegionSubCommand(),
             new FastRegionBreakSubCommand(),
             new OwnerList(),
+            new AllowList(),
             new LastActiveList(),
             new RequestListSubCommand(),
             new RequestInfoSubCommand(),
