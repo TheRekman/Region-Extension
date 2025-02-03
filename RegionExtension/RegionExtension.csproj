@@ -28,7 +28,7 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TShock" Version="5.2.0" />
+    <PackageReference Include="TShock" Version="5.2.2" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(TargetPath)&quot; ..\..\TShock-5.2-for-Terraria-1.4.4.9-win-x64-Release\ServerPlugins" />
